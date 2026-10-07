@@ -1,0 +1,14 @@
+docs/**
+test/**
+tests/**
+.github/**
+.gitlab-ci.yml
+.travis.yml
+git_push.sh
+tox.ini
+README.md
+src/test/**
+src/*.Test/**
+spec/**
+api/openapi.yaml
+appveyor.yml
