@@ -12,6 +12,11 @@ import AnyCodable
 
 public struct UpdateCreativeDto: Codable, JSONEncodable, Hashable {
 
+    static let durationRule = NumericRule<Double>(minimum: 1, exclusiveMinimum: false, maximum: 600, exclusiveMaximum: false, multipleOf: nil)
+    static let skipOffsetSecRule = NumericRule<Double>(minimum: 0, exclusiveMinimum: false, maximum: 600, exclusiveMaximum: false, multipleOf: nil)
+    static let vpaidUrlRule = StringRule(minLength: nil, maxLength: 2048, pattern: nil)
+    static let companionsRule = ArrayRule(minItems: nil, maxItems: 5, uniqueItems: false)
+    static let vastTagUrlRule = StringRule(minLength: nil, maxLength: 2048, pattern: nil)
     public var assetUrl: String?
     public var landingUrl: String?
     public var title: String?
@@ -24,8 +29,18 @@ public struct UpdateCreativeDto: Codable, JSONEncodable, Hashable {
     public var width: Double?
     public var height: Double?
     public var weight: Double?
+    public var carouselItems: [CarouselItemDto]?
+    public var duration: Double?
+    /** >0 makes the linear ad skippable after N seconds (VAST skipoffset). */
+    public var skipOffsetSec: Double?
+    /** Interactive VPAID (application/javascript) creative file, https. */
+    public var vpaidUrl: String?
+    /** Companion banners (VAST CompanionAds), max 5. */
+    public var companions: [CompanionDto]?
+    /** Third-party VAST tag (the advertiser's own ad server), https. Only valid for type video/audio. Makes assetUrl optional: with no assetUrl the engine serves a VAST <Wrapper> pointing at this tag; when both are set the inline asset wins. */
+    public var vastTagUrl: String?
 
-    public init(assetUrl: String? = nil, landingUrl: String? = nil, title: String? = nil, description: String? = nil, iconUrl: String? = nil, mainImageUrl: String? = nil, cta: String? = nil, brandName: String? = nil, starRating: Double? = nil, width: Double? = nil, height: Double? = nil, weight: Double? = nil) {
+    public init(assetUrl: String? = nil, landingUrl: String? = nil, title: String? = nil, description: String? = nil, iconUrl: String? = nil, mainImageUrl: String? = nil, cta: String? = nil, brandName: String? = nil, starRating: Double? = nil, width: Double? = nil, height: Double? = nil, weight: Double? = nil, carouselItems: [CarouselItemDto]? = nil, duration: Double? = nil, skipOffsetSec: Double? = nil, vpaidUrl: String? = nil, companions: [CompanionDto]? = nil, vastTagUrl: String? = nil) {
         self.assetUrl = assetUrl
         self.landingUrl = landingUrl
         self.title = title
@@ -38,6 +53,12 @@ public struct UpdateCreativeDto: Codable, JSONEncodable, Hashable {
         self.width = width
         self.height = height
         self.weight = weight
+        self.carouselItems = carouselItems
+        self.duration = duration
+        self.skipOffsetSec = skipOffsetSec
+        self.vpaidUrl = vpaidUrl
+        self.companions = companions
+        self.vastTagUrl = vastTagUrl
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
@@ -53,6 +74,12 @@ public struct UpdateCreativeDto: Codable, JSONEncodable, Hashable {
         case width
         case height
         case weight
+        case carouselItems
+        case duration
+        case skipOffsetSec
+        case vpaidUrl
+        case companions
+        case vastTagUrl
     }
 
     // Encodable protocol methods
@@ -71,6 +98,12 @@ public struct UpdateCreativeDto: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(width, forKey: .width)
         try container.encodeIfPresent(height, forKey: .height)
         try container.encodeIfPresent(weight, forKey: .weight)
+        try container.encodeIfPresent(carouselItems, forKey: .carouselItems)
+        try container.encodeIfPresent(duration, forKey: .duration)
+        try container.encodeIfPresent(skipOffsetSec, forKey: .skipOffsetSec)
+        try container.encodeIfPresent(vpaidUrl, forKey: .vpaidUrl)
+        try container.encodeIfPresent(companions, forKey: .companions)
+        try container.encodeIfPresent(vastTagUrl, forKey: .vastTagUrl)
     }
 }
 

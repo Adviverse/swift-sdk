@@ -50,6 +50,39 @@ open class RewardsAPI {
 
     /**
 
+     - parameter createOnchainPoolDto: (body)  
+     - returns: Void
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    open class func rewardsControllerCreateOnchainPool(createOnchainPoolDto: CreateOnchainPoolDto) async throws {
+        return try await rewardsControllerCreateOnchainPoolWithRequestBuilder(createOnchainPoolDto: createOnchainPoolDto).execute().body
+    }
+
+    /**
+     - POST /v1/rewards/pools/onchain
+     - parameter createOnchainPoolDto: (body)  
+     - returns: RequestBuilder<Void> 
+     */
+    open class func rewardsControllerCreateOnchainPoolWithRequestBuilder(createOnchainPoolDto: CreateOnchainPoolDto) -> RequestBuilder<Void> {
+        let localVariablePath = "/v1/rewards/pools/onchain"
+        let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
+        let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createOnchainPoolDto)
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            "Content-Type": "application/json",
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+    }
+
+    /**
+
      - parameter fundPoolDto: (body)  
      - returns: Void
      */
@@ -256,5 +289,41 @@ open class RewardsAPI {
         let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+    }
+
+    /**
+
+     - parameter campaignId: (path)  
+     - returns: Void
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    open class func rewardsControllerVoucherSecret(campaignId: String) async throws {
+        return try await rewardsControllerVoucherSecretWithRequestBuilder(campaignId: campaignId).execute().body
+    }
+
+    /**
+     - GET /v1/rewards/pools/{campaignId}/voucher-secret
+     - parameter campaignId: (path)  
+     - returns: RequestBuilder<Void> 
+     */
+    open class func rewardsControllerVoucherSecretWithRequestBuilder(campaignId: String) -> RequestBuilder<Void> {
+        var localVariablePath = "/v1/rewards/pools/{campaignId}/voucher-secret"
+        let campaignIdPreEscape = "\(APIHelper.mapValueToPathItem(campaignId))"
+        let campaignIdPostEscape = campaignIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        localVariablePath = localVariablePath.replacingOccurrences(of: "{campaignId}", with: campaignIdPostEscape, options: .literal, range: nil)
+        let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
+        let localVariableParameters: [String: Any]? = nil
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            :
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 }

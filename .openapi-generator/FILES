@@ -67,6 +67,7 @@ Sources/AdviverseAPI/Models/ClaimScreenDto.swift
 Sources/AdviverseAPI/Models/ClaimSurfaceDto.swift
 Sources/AdviverseAPI/Models/ClientPingDto.swift
 Sources/AdviverseAPI/Models/ComboUnitDto.swift
+Sources/AdviverseAPI/Models/CompanionDto.swift
 Sources/AdviverseAPI/Models/ConsentConfigDto.swift
 Sources/AdviverseAPI/Models/ConsentDto.swift
 Sources/AdviverseAPI/Models/CreateAppDto.swift
@@ -80,6 +81,7 @@ Sources/AdviverseAPI/Models/CreateDestinationDto.swift
 Sources/AdviverseAPI/Models/CreateFeedDto.swift
 Sources/AdviverseAPI/Models/CreateGuideDto.swift
 Sources/AdviverseAPI/Models/CreateKeyDto.swift
+Sources/AdviverseAPI/Models/CreateOnchainPoolDto.swift
 Sources/AdviverseAPI/Models/CreatePlacementDto.swift
 Sources/AdviverseAPI/Models/CreatePortalConfigDto.swift
 Sources/AdviverseAPI/Models/CreatePostDto.swift
