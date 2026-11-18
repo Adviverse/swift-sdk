@@ -13,23 +13,32 @@ import AnyCodable
 open class ComboAPI {
 
     /**
-
+     Provision a combo of placements on a property
+     
      - parameter propertyId: (path)  
      - parameter createComboDto: (body)  
-     - returns: Void
+     - returns: ComboControllerCreateCombo201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func comboControllerCreateCombo(propertyId: String, createComboDto: CreateComboDto) async throws {
+    open class func comboControllerCreateCombo(propertyId: String, createComboDto: CreateComboDto) async throws -> ComboControllerCreateCombo201Response {
         return try await comboControllerCreateComboWithRequestBuilder(propertyId: propertyId, createComboDto: createComboDto).execute().body
     }
 
     /**
+     Provision a combo of placements on a property
      - POST /v1/publisher/properties/{propertyId}/combos
+     - Creates several placements at once under one generated `comboId` and returns a single combined embed snippet to paste before `</body>`. Send either `presetKey` or a custom `units` array (formats banner, native, popunder, social_bar, interstitial, in_page_push, direct_link), plus optional `namePrefix` and shared floor/rev-share/auction/house settings applied to every unit. Adds a warning if the property already has a popunder. 400 for an unknown preset or a non-combinable format; 404/403 if the property is missing or not yours.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter propertyId: (path)  
      - parameter createComboDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ComboControllerCreateCombo201Response> 
      */
-    open class func comboControllerCreateComboWithRequestBuilder(propertyId: String, createComboDto: CreateComboDto) -> RequestBuilder<Void> {
+    open class func comboControllerCreateComboWithRequestBuilder(propertyId: String, createComboDto: CreateComboDto) -> RequestBuilder<ComboControllerCreateCombo201Response> {
         var localVariablePath = "/v1/publisher/properties/{propertyId}/combos"
         let propertyIdPreEscape = "\(APIHelper.mapValueToPathItem(propertyId))"
         let propertyIdPostEscape = propertyIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -45,27 +54,36 @@ open class ComboAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComboControllerCreateCombo201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List combos on a property
+     
      - parameter propertyId: (path)  
-     - returns: Void
+     - returns: ComboControllerListCombos200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func comboControllerListCombos(propertyId: String) async throws {
+    open class func comboControllerListCombos(propertyId: String) async throws -> ComboControllerListCombos200Response {
         return try await comboControllerListCombosWithRequestBuilder(propertyId: propertyId).execute().body
     }
 
     /**
+     List combos on a property
      - GET /v1/publisher/properties/{propertyId}/combos
+     - Groups the property's live placements by `combo_id` (ungrouped placements are omitted) and rebuilds each group's combined snippet. 404/403 if the property is missing or not yours.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter propertyId: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ComboControllerListCombos200Response> 
      */
-    open class func comboControllerListCombosWithRequestBuilder(propertyId: String) -> RequestBuilder<Void> {
+    open class func comboControllerListCombosWithRequestBuilder(propertyId: String) -> RequestBuilder<ComboControllerListCombos200Response> {
         var localVariablePath = "/v1/publisher/properties/{propertyId}/combos"
         let propertyIdPreEscape = "\(APIHelper.mapValueToPathItem(propertyId))"
         let propertyIdPostEscape = propertyIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -81,25 +99,34 @@ open class ComboAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComboControllerListCombos200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List combo layout presets
+     
+     - returns: ComboControllerListPresets200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func comboControllerListPresets() async throws {
+    open class func comboControllerListPresets() async throws -> ComboControllerListPresets200Response {
         return try await comboControllerListPresetsWithRequestBuilder().execute().body
     }
 
     /**
+     List combo layout presets
      - GET /v1/publisher/combo-presets
-     - returns: RequestBuilder<Void> 
+     - Returns the static catalog of combo presets (`standard_combo`, `leaderboard_pop`, `social_push`, `sticky_interstitial`, `full_monetization`), each with the placement units it provisions. Preset keys are stable.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ComboControllerListPresets200Response> 
      */
-    open class func comboControllerListPresetsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func comboControllerListPresetsWithRequestBuilder() -> RequestBuilder<ComboControllerListPresets200Response> {
         let localVariablePath = "/v1/publisher/combo-presets"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -112,8 +139,8 @@ open class ComboAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComboControllerListPresets200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

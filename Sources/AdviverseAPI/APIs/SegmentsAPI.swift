@@ -13,19 +13,28 @@ import AnyCodable
 open class SegmentsAPI {
 
     /**
-
-     - returns: Void
+     Get the targetable interest catalog
+     
+     - returns: [AudienceCatalogEntry]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func segmentsControllerCatalog() async throws {
+    open class func segmentsControllerCatalog() async throws -> [AudienceCatalogEntry] {
         return try await segmentsControllerCatalogWithRequestBuilder().execute().body
     }
 
     /**
+     Get the targetable interest catalog
      - GET /v1/advertiser/segments/catalog
-     - returns: RequestBuilder<Void> 
+     - Lists every non-sensitive taxonomy node with two ways to target it. `contextualKeywords` goes into targeting.contextual_include, is matched against page content at serve time and is free. `behavioral` is a network preset segment for targeting.audience_include and carries a data CPM; it is null until the preset reaches its k-anonymity minimum, and `behavioralBuilding` reports progress while it builds.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AudienceCatalogEntry]> 
      */
-    open class func segmentsControllerCatalogWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func segmentsControllerCatalogWithRequestBuilder() -> RequestBuilder<[AudienceCatalogEntry]> {
         let localVariablePath = "/v1/advertiser/segments/catalog"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,25 +47,34 @@ open class SegmentsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AudienceCatalogEntry]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Contribute an audience to the co-op
+     
+     - returns: SegmentsControllerContribute201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func segmentsControllerContribute() async throws {
+    open class func segmentsControllerContribute() async throws -> SegmentsControllerContribute201Response {
         return try await segmentsControllerContributeWithRequestBuilder().execute().body
     }
 
     /**
+     Contribute an audience to the co-op
      - POST /v1/advertiser/segments/contribute
-     - returns: RequestBuilder<Void> 
+     - Shares one of the caller's audiences (`audienceId`) as a co-op segment that other advertisers can license. `taxonomyId` is optional: when omitted the niche is auto-detected from the members, and unknown or sensitive niches leave the segment uncategorized. `revShare` (default 0.5, clamped to 0-0.9) sets the contributor's share of data fees. Re-contributing updates the existing segment. Members are materialized minus opted-out ids. Returns 404 if the audience is not owned.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<SegmentsControllerContribute201Response> 
      */
-    open class func segmentsControllerContributeWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func segmentsControllerContributeWithRequestBuilder() -> RequestBuilder<SegmentsControllerContribute201Response> {
         let localVariablePath = "/v1/advertiser/segments/contribute"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -69,25 +87,34 @@ open class SegmentsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SegmentsControllerContribute201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List your co-op contributions
+     
+     - returns: [SegmentsControllerContributions200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func segmentsControllerContributions() async throws {
+    open class func segmentsControllerContributions() async throws -> [SegmentsControllerContributions200ResponseInner] {
         return try await segmentsControllerContributionsWithRequestBuilder().execute().body
     }
 
     /**
+     List your co-op contributions
      - GET /v1/advertiser/segments/contributions
-     - returns: RequestBuilder<Void> 
+     - Returns the caller's contributed co-op segments, newest first, with their size, rev-share and the number of advertisers that have licensed each one.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[SegmentsControllerContributions200ResponseInner]> 
      */
-    open class func segmentsControllerContributionsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func segmentsControllerContributionsWithRequestBuilder() -> RequestBuilder<[SegmentsControllerContributions200ResponseInner]> {
         let localVariablePath = "/v1/advertiser/segments/contributions"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -100,27 +127,36 @@ open class SegmentsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[SegmentsControllerContributions200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Detect an audience's interest niche
+     
      - parameter audienceId: (query)  
-     - returns: Void
+     - returns: SegmentsControllerDetectNiche200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func segmentsControllerDetectNiche(audienceId: String) async throws {
+    open class func segmentsControllerDetectNiche(audienceId: String) async throws -> SegmentsControllerDetectNiche200Response {
         return try await segmentsControllerDetectNicheWithRequestBuilder(audienceId: audienceId).execute().body
     }
 
     /**
+     Detect an audience's interest niche
      - GET /v1/advertiser/segments/detect-niche
+     - Previews the taxonomy node that best matches the members of `audienceId`, scored by keyword overlap. This is the niche contribute would assign. Returns nulls when nothing matches and 404 when the audience is not owned by the caller.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter audienceId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SegmentsControllerDetectNiche200Response> 
      */
-    open class func segmentsControllerDetectNicheWithRequestBuilder(audienceId: String) -> RequestBuilder<Void> {
+    open class func segmentsControllerDetectNicheWithRequestBuilder(audienceId: String) -> RequestBuilder<SegmentsControllerDetectNiche200Response> {
         let localVariablePath = "/v1/advertiser/segments/detect-niche"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -136,25 +172,34 @@ open class SegmentsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SegmentsControllerDetectNiche200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Co-op data-fee statement
+     
+     - returns: SegmentsControllerEarnings200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func segmentsControllerEarnings() async throws {
+    open class func segmentsControllerEarnings() async throws -> SegmentsControllerEarnings200Response {
         return try await segmentsControllerEarningsWithRequestBuilder().execute().body
     }
 
     /**
+     Co-op data-fee statement
      - GET /v1/advertiser/segments/earnings
-     - returns: RequestBuilder<Void> 
+     - Reads the ledger for co-op data-fee movements. Returns the total earned as a contributor (rev-share credits) and the total spent as a licensee, a per-segment earnings rollup, and the 50 most recent earning and spend entries. Totals are rounded to cents.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<SegmentsControllerEarnings200Response> 
      */
-    open class func segmentsControllerEarningsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func segmentsControllerEarningsWithRequestBuilder() -> RequestBuilder<SegmentsControllerEarnings200Response> {
         let localVariablePath = "/v1/advertiser/segments/earnings"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -167,27 +212,36 @@ open class SegmentsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SegmentsControllerEarnings200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     License a co-op, preset or in-market segment
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: SegmentsControllerLicense201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func segmentsControllerLicense(id: String) async throws {
+    open class func segmentsControllerLicense(id: String) async throws -> SegmentsControllerLicense201Response {
         return try await segmentsControllerLicenseWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     License a co-op, preset or in-market segment
      - POST /v1/advertiser/segments/{id}/license
+     - Grants the advertiser the right to target segment `id`, recording the data CPM that is charged on delivery and shared with the contributor. Returns 404 if the segment is not a coop/preset/in_market segment. Returns 400 if the caller owns it, if it is sensitive, or if it is below the k-anonymity threshold. Licensing is idempotent; add the returned `segmentId` to a campaign's targeting.audience_include.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SegmentsControllerLicense201Response> 
      */
-    open class func segmentsControllerLicenseWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func segmentsControllerLicenseWithRequestBuilder(id: String) -> RequestBuilder<SegmentsControllerLicense201Response> {
         var localVariablePath = "/v1/advertiser/segments/{id}/license"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -203,25 +257,34 @@ open class SegmentsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SegmentsControllerLicense201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List licensed segments
+     
+     - returns: [SegmentsControllerLicenses200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func segmentsControllerLicenses() async throws {
+    open class func segmentsControllerLicenses() async throws -> [SegmentsControllerLicenses200ResponseInner] {
         return try await segmentsControllerLicensesWithRequestBuilder().execute().body
     }
 
     /**
+     List licensed segments
      - GET /v1/advertiser/segments/licenses
-     - returns: RequestBuilder<Void> 
+     - Returns the segments the advertiser has licensed, newest first, with the data CPM locked at license time and the segment's name, taxonomy node, size and scope.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[SegmentsControllerLicenses200ResponseInner]> 
      */
-    open class func segmentsControllerLicensesWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func segmentsControllerLicensesWithRequestBuilder() -> RequestBuilder<[SegmentsControllerLicenses200ResponseInner]> {
         let localVariablePath = "/v1/advertiser/segments/licenses"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -234,25 +297,28 @@ open class SegmentsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[SegmentsControllerLicenses200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Opt a user out of all audience segments
+     
+     - returns: SegmentsControllerOptOut201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func segmentsControllerOptOut() async throws {
+    open class func segmentsControllerOptOut() async throws -> SegmentsControllerOptOut201Response {
         return try await segmentsControllerOptOutWithRequestBuilder().execute().body
     }
 
     /**
+     Opt a user out of all audience segments
      - POST /v1/privacy/audience-optout
-     - returns: RequestBuilder<Void> 
+     - Public privacy endpoint, typically called by a preference center with the visitor's `adnet_uid` cookie or canonical id as `id`. The id is recorded as opted out and excluded from every future segment rebuild, and it is removed from live segment sets straight away on a best-effort basis. A missing `id` returns 400.  Auth: public, no credentials required.
+     - returns: RequestBuilder<SegmentsControllerOptOut201Response> 
      */
-    open class func segmentsControllerOptOutWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func segmentsControllerOptOutWithRequestBuilder() -> RequestBuilder<SegmentsControllerOptOut201Response> {
         let localVariablePath = "/v1/privacy/audience-optout"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -265,25 +331,34 @@ open class SegmentsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SegmentsControllerOptOut201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Force a segment rebuild
+     
+     - returns: SegmentsControllerRebuild201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func segmentsControllerRebuild() async throws {
+    open class func segmentsControllerRebuild() async throws -> SegmentsControllerRebuild201Response {
         return try await segmentsControllerRebuildWithRequestBuilder().execute().body
     }
 
     /**
+     Force a segment rebuild
      - POST /v1/admin/segments/rebuild
-     - returns: RequestBuilder<Void> 
+     - Runs, in order, the jobs that normally run on a timer: network preset classification, co-op niche union, in-market segments, and per-account first-party interest segments. Returns each job's count. Can be slow on large datasets because it scans ClickHouse keyword data for each taxonomy node.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<SegmentsControllerRebuild201Response> 
      */
-    open class func segmentsControllerRebuildWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func segmentsControllerRebuildWithRequestBuilder() -> RequestBuilder<SegmentsControllerRebuild201Response> {
         let localVariablePath = "/v1/admin/segments/rebuild"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -296,27 +371,36 @@ open class SegmentsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SegmentsControllerRebuild201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Stop sharing a contributed segment
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: SegmentsControllerRevoke201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func segmentsControllerRevoke(id: String) async throws {
+    open class func segmentsControllerRevoke(id: String) async throws -> SegmentsControllerRevoke201Response {
         return try await segmentsControllerRevokeWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Stop sharing a contributed segment
      - POST /v1/advertiser/segments/{id}/revoke
+     - Unshares the co-op segment `id` and removes its contribution record, so it earns no further data fees. Only affects segments the caller owns; other ids are silently ignored.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SegmentsControllerRevoke201Response> 
      */
-    open class func segmentsControllerRevokeWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func segmentsControllerRevokeWithRequestBuilder(id: String) -> RequestBuilder<SegmentsControllerRevoke201Response> {
         var localVariablePath = "/v1/advertiser/segments/{id}/revoke"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -332,25 +416,34 @@ open class SegmentsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SegmentsControllerRevoke201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get the interest taxonomy
+     
+     - returns: [AudienceTaxonomyNode]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func segmentsControllerTaxonomy() async throws {
+    open class func segmentsControllerTaxonomy() async throws -> [AudienceTaxonomyNode] {
         return try await segmentsControllerTaxonomyWithRequestBuilder().execute().body
     }
 
     /**
+     Get the interest taxonomy
      - GET /v1/segments/taxonomy
-     - returns: RequestBuilder<Void> 
+     - Returns every node of the Audience Cloud interest taxonomy with its parent, display name, matching keywords and whether it is a sensitive category. Sensitive nodes are never built into shareable or licensable segments.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AudienceTaxonomyNode]> 
      */
-    open class func segmentsControllerTaxonomyWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func segmentsControllerTaxonomyWithRequestBuilder() -> RequestBuilder<[AudienceTaxonomyNode]> {
         let localVariablePath = "/v1/segments/taxonomy"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -363,27 +456,36 @@ open class SegmentsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AudienceTaxonomyNode]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List the segments containing an id
+     
      - parameter idHash: (path)  
-     - returns: Void
+     - returns: SegmentsControllerUserSegments200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func segmentsControllerUserSegments(idHash: String) async throws {
+    open class func segmentsControllerUserSegments(idHash: String) async throws -> SegmentsControllerUserSegments200Response {
         return try await segmentsControllerUserSegmentsWithRequestBuilder(idHash: idHash).execute().body
     }
 
     /**
+     List the segments containing an id
      - GET /v1/admin/segments/user/{idHash}
+     - Admin transparency tool: checks every non-empty segment for membership of `idHash` (a canonical id or uid) and returns the matching segments with their scope and taxonomy node.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter idHash: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SegmentsControllerUserSegments200Response> 
      */
-    open class func segmentsControllerUserSegmentsWithRequestBuilder(idHash: String) -> RequestBuilder<Void> {
+    open class func segmentsControllerUserSegmentsWithRequestBuilder(idHash: String) -> RequestBuilder<SegmentsControllerUserSegments200Response> {
         var localVariablePath = "/v1/admin/segments/user/{idHash}"
         let idHashPreEscape = "\(APIHelper.mapValueToPathItem(idHash))"
         let idHashPostEscape = idHashPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -399,8 +501,8 @@ open class SegmentsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SegmentsControllerUserSegments200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

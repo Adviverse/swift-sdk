@@ -13,21 +13,30 @@ import AnyCodable
 open class GuidesAPI {
 
     /**
-
+     List all guides
+     
      - parameter locale: (query)  
-     - returns: Void
+     - returns: [Guide]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func guidesControllerAdminList(locale: String) async throws {
+    open class func guidesControllerAdminList(locale: String) async throws -> [Guide] {
         return try await guidesControllerAdminListWithRequestBuilder(locale: locale).execute().body
     }
 
     /**
+     List all guides
      - GET /v1/admin/guides
+     - Returns every guide, including unpublished ones, optionally filtered by `locale`.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter locale: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[Guide]> 
      */
-    open class func guidesControllerAdminListWithRequestBuilder(locale: String) -> RequestBuilder<Void> {
+    open class func guidesControllerAdminListWithRequestBuilder(locale: String) -> RequestBuilder<[Guide]> {
         let localVariablePath = "/v1/admin/guides"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -43,27 +52,36 @@ open class GuidesAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[Guide]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create or replace a guide
+     
      - parameter createGuideDto: (body)  
-     - returns: Void
+     - returns: Guide
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func guidesControllerCreate(createGuideDto: CreateGuideDto) async throws {
+    open class func guidesControllerCreate(createGuideDto: CreateGuideDto) async throws -> Guide {
         return try await guidesControllerCreateWithRequestBuilder(createGuideDto: createGuideDto).execute().body
     }
 
     /**
+     Create or replace a guide
      - POST /v1/admin/guides
+     - Creates a guide from `slug` and `title` with optional `locale` (`en`), `category` (`Guides`), `summary`, Markdown `body`, `position` (0) and `published` (true). An existing guide with the same slug and locale is overwritten (upsert). Clears the public read cache.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createGuideDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<Guide> 
      */
-    open class func guidesControllerCreateWithRequestBuilder(createGuideDto: CreateGuideDto) -> RequestBuilder<Void> {
+    open class func guidesControllerCreateWithRequestBuilder(createGuideDto: CreateGuideDto) -> RequestBuilder<Guide> {
         let localVariablePath = "/v1/admin/guides"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createGuideDto)
@@ -76,29 +94,32 @@ open class GuidesAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<Guide>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get a published guide
+     
      - parameter slug: (path)  
      - parameter locale: (query)  
-     - returns: Void
+     - returns: GuidesControllerGet200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func guidesControllerGet(slug: String, locale: String) async throws {
+    open class func guidesControllerGet(slug: String, locale: String) async throws -> GuidesControllerGet200Response {
         return try await guidesControllerGetWithRequestBuilder(slug: slug, locale: locale).execute().body
     }
 
     /**
+     Get a published guide
      - GET /v1/guides/{slug}
+     - Public. Returns a published guide by `slug` and `locale` (default `en`). An unknown or unpublished slug returns HTTP 200 with `{ error: \"not_found\" }`, not 404.  Auth: public, no credentials required.
      - parameter slug: (path)  
      - parameter locale: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<GuidesControllerGet200Response> 
      */
-    open class func guidesControllerGetWithRequestBuilder(slug: String, locale: String) -> RequestBuilder<Void> {
+    open class func guidesControllerGetWithRequestBuilder(slug: String, locale: String) -> RequestBuilder<GuidesControllerGet200Response> {
         var localVariablePath = "/v1/guides/{slug}"
         let slugPreEscape = "\(APIHelper.mapValueToPathItem(slug))"
         let slugPostEscape = slugPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -117,25 +138,28 @@ open class GuidesAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<GuidesControllerGet200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Render the public docs index page
+     
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func guidesControllerIndexHtml() async throws {
+    open class func guidesControllerIndexHtml() async throws -> String {
         return try await guidesControllerIndexHtmlWithRequestBuilder().execute().body
     }
 
     /**
+     Render the public docs index page
      - GET /guides
-     - returns: RequestBuilder<Void> 
+     - Public, server-rendered HTML for /guides: a card per published English guide plus category navigation. Cached (max-age 300, s-maxage 3600) for search engines.  Auth: public, no credentials required.
+     - returns: RequestBuilder<String> 
      */
-    open class func guidesControllerIndexHtmlWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func guidesControllerIndexHtmlWithRequestBuilder() -> RequestBuilder<String> {
         let localVariablePath = "/guides"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -148,29 +172,32 @@ open class GuidesAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     List published guides
+     
      - parameter locale: (query)  
      - parameter category: (query)  
-     - returns: Void
+     - returns: [Guide]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func guidesControllerList(locale: String, category: String) async throws {
+    open class func guidesControllerList(locale: String, category: String) async throws -> [Guide] {
         return try await guidesControllerListWithRequestBuilder(locale: locale, category: category).execute().body
     }
 
     /**
+     List published guides
      - GET /v1/guides
+     - Public. Returns published guides for `locale` (default `en`), ordered by category, position and title, optionally filtered by `category`. Reads are cached in Redis for 60 seconds. This is the in-app docs feed, separate from the OpenAPI reference at /v1/docs.  Auth: public, no credentials required.
      - parameter locale: (query)  
      - parameter category: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[Guide]> 
      */
-    open class func guidesControllerListWithRequestBuilder(locale: String, category: String) -> RequestBuilder<Void> {
+    open class func guidesControllerListWithRequestBuilder(locale: String, category: String) -> RequestBuilder<[Guide]> {
         let localVariablePath = "/v1/guides"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -187,27 +214,30 @@ open class GuidesAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[Guide]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Render a public guide page
+     
      - parameter slug: (path)  
-     - returns: Void
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func guidesControllerPageHtml(slug: String) async throws {
+    open class func guidesControllerPageHtml(slug: String) async throws -> String {
         return try await guidesControllerPageHtmlWithRequestBuilder(slug: slug).execute().body
     }
 
     /**
+     Render a public guide page
      - GET /guides/{slug}
+     - Public, server-rendered HTML for one English guide, with its Markdown body rendered escape-first (raw HTML is neutralized), TechArticle JSON-LD and canonical URL. Unknown slugs return a 404 HTML page.  Auth: public, no credentials required.
      - parameter slug: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<String> 
      */
-    open class func guidesControllerPageHtmlWithRequestBuilder(slug: String) -> RequestBuilder<Void> {
+    open class func guidesControllerPageHtmlWithRequestBuilder(slug: String) -> RequestBuilder<String> {
         var localVariablePath = "/guides/{slug}"
         let slugPreEscape = "\(APIHelper.mapValueToPathItem(slug))"
         let slugPostEscape = slugPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -223,27 +253,36 @@ open class GuidesAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Delete a guide
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdminControllerSetStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func guidesControllerRemove(id: String) async throws {
+    open class func guidesControllerRemove(id: String) async throws -> AdminControllerSetStatus201Response {
         return try await guidesControllerRemoveWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete a guide
      - DELETE /v1/admin/guides/{id}
+     - Deletes the guide and clears the public cache. Returns `{ ok: true }` even for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
      */
-    open class func guidesControllerRemoveWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func guidesControllerRemoveWithRequestBuilder(id: String) -> RequestBuilder<AdminControllerSetStatus201Response> {
         var localVariablePath = "/v1/admin/guides/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -259,25 +298,28 @@ open class GuidesAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get the docs sitemap
+     
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func guidesControllerSitemap() async throws {
+    open class func guidesControllerSitemap() async throws -> String {
         return try await guidesControllerSitemapWithRequestBuilder().execute().body
     }
 
     /**
+     Get the docs sitemap
      - GET /guides/sitemap.xml
-     - returns: RequestBuilder<Void> 
+     - Public XML sitemap listing /guides and every published English guide page.  Auth: public, no credentials required.
+     - returns: RequestBuilder<String> 
      */
-    open class func guidesControllerSitemapWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func guidesControllerSitemapWithRequestBuilder() -> RequestBuilder<String> {
         let localVariablePath = "/guides/sitemap.xml"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -290,29 +332,38 @@ open class GuidesAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Update a guide
+     
      - parameter id: (path)  
      - parameter updateGuideDto: (body)  
-     - returns: Void
+     - returns: Guide
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func guidesControllerUpdate(id: String, updateGuideDto: UpdateGuideDto) async throws {
+    open class func guidesControllerUpdate(id: String, updateGuideDto: UpdateGuideDto) async throws -> Guide {
         return try await guidesControllerUpdateWithRequestBuilder(id: id, updateGuideDto: updateGuideDto).execute().body
     }
 
     /**
+     Update a guide
      - PATCH /v1/admin/guides/{id}
+     - Partially updates any of slug, locale, title, category, summary, body, position and published, and clears the public cache. Returns the updated guide, or null for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter updateGuideDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<Guide> 
      */
-    open class func guidesControllerUpdateWithRequestBuilder(id: String, updateGuideDto: UpdateGuideDto) -> RequestBuilder<Void> {
+    open class func guidesControllerUpdateWithRequestBuilder(id: String, updateGuideDto: UpdateGuideDto) -> RequestBuilder<Guide> {
         var localVariablePath = "/v1/admin/guides/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -328,8 +379,8 @@ open class GuidesAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<Guide>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

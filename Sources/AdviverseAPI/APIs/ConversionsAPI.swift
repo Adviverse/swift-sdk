@@ -13,7 +13,8 @@ import AnyCodable
 open class ConversionsAPI {
 
     /**
-
+     Retargeting pixel: add the visitor to an audience
+     
      - returns: Void
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
@@ -22,7 +23,9 @@ open class ConversionsAPI {
     }
 
     /**
+     Retargeting pixel: add the visitor to an audience
      - GET /v1/track/audience
+     - Adds the visitor's `adnet_uid` first-party cookie (minted on first contact) to audience `aud`, plus an advertiser-supplied `uid` when given. Only existing audiences accept members, and each audience has a size cap. GPC or `ac=0`/`ac=n` opts the visitor out: no cookie is set and no membership is recorded. Always responds with a 1x1 GIF.  Auth: public, no credentials required.
      - returns: RequestBuilder<Void> 
      */
     open class func conversionsControllerTrackAudienceWithRequestBuilder() -> RequestBuilder<Void> {
@@ -44,19 +47,22 @@ open class ConversionsAPI {
     }
 
     /**
-
-     - returns: Void
+     Record an S2S conversion postback (GET)
+     
+     - returns: ConversionsControllerTrackGet200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func conversionsControllerTrackGet() async throws {
+    open class func conversionsControllerTrackGet() async throws -> ConversionsControllerTrackGet200Response {
         return try await conversionsControllerTrackGetWithRequestBuilder().execute().body
     }
 
     /**
+     Record an S2S conversion postback (GET)
      - GET /v1/track/conversion
-     - returns: RequestBuilder<Void> 
+     - Advertiser server-to-server postback keyed by `click_id`, with optional `value`, `order_id` and `order_value` query params. The click context cached by the ad engine resolves the campaign; the billed payout always comes from the campaign's server-side CPA config (flat or percent of order), never from the request. One conversion per click and one per (advertiser, order_id); orders below the configured minimum are rejected, and sponsored CPC clicks are skipped because they bill on the click. A recorded conversion emits the conversion event and fires the advertiser's outbound postback if one is configured.  Auth: public, no credentials required.
+     - returns: RequestBuilder<ConversionsControllerTrackGet200Response> 
      */
-    open class func conversionsControllerTrackGetWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func conversionsControllerTrackGetWithRequestBuilder() -> RequestBuilder<ConversionsControllerTrackGet200Response> {
         let localVariablePath = "/v1/track/conversion"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -69,27 +75,30 @@ open class ConversionsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ConversionsControllerTrackGet200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Record an S2S conversion postback (POST)
+     
      - parameter trackConversionDto: (body)  
-     - returns: Void
+     - returns: ConversionsControllerTrackPost201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func conversionsControllerTrackPost(trackConversionDto: TrackConversionDto) async throws {
+    open class func conversionsControllerTrackPost(trackConversionDto: TrackConversionDto) async throws -> ConversionsControllerTrackPost201Response {
         return try await conversionsControllerTrackPostWithRequestBuilder(trackConversionDto: trackConversionDto).execute().body
     }
 
     /**
+     Record an S2S conversion postback (POST)
      - POST /v1/track/conversion
+     - JSON form of the conversion postback. Accepts `clickId`/`click_id`, `value`, `orderId`/`order_id` and `orderValue`/`order_value`, in camelCase or snake_case. Behaviour matches the GET form: dedup per click and per order, payout from the server-side CPA config, minimum-order check, and a `postbackId` returned when recorded. Unknown body fields are rejected with 400.  Auth: public, no credentials required.
      - parameter trackConversionDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ConversionsControllerTrackPost201Response> 
      */
-    open class func conversionsControllerTrackPostWithRequestBuilder(trackConversionDto: TrackConversionDto) -> RequestBuilder<Void> {
+    open class func conversionsControllerTrackPostWithRequestBuilder(trackConversionDto: TrackConversionDto) -> RequestBuilder<ConversionsControllerTrackPost201Response> {
         let localVariablePath = "/v1/track/conversion"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: trackConversionDto)
@@ -102,27 +111,30 @@ open class ConversionsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ConversionsControllerTrackPost201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Report a refund or chargeback for an order
+     
      - parameter refundDto: (body)  
-     - returns: Void
+     - returns: ConversionsControllerTrackRefund201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func conversionsControllerTrackRefund(refundDto: RefundDto) async throws {
+    open class func conversionsControllerTrackRefund(refundDto: RefundDto) async throws -> ConversionsControllerTrackRefund201Response {
         return try await conversionsControllerTrackRefundWithRequestBuilder(refundDto: refundDto).execute().body
     }
 
     /**
+     Report a refund or chargeback for an order
      - POST /v1/track/refund
+     - Claws back a held or settled per-checkout CPA conversion identified by `orderId`/`order_id`, optionally narrowed by `advertiserId`/`advertiser_id`. Emits a compensating conversion event carrying the original payout and publisher earnings so the ledger posts exact reversing entries, then marks the row refunded. A missing order id returns `error`, an unknown order `not_found`, and a repeat call `already_refunded`.  Auth: public, no credentials required.
      - parameter refundDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ConversionsControllerTrackRefund201Response> 
      */
-    open class func conversionsControllerTrackRefundWithRequestBuilder(refundDto: RefundDto) -> RequestBuilder<Void> {
+    open class func conversionsControllerTrackRefundWithRequestBuilder(refundDto: RefundDto) -> RequestBuilder<ConversionsControllerTrackRefund201Response> {
         let localVariablePath = "/v1/track/refund"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: refundDto)
@@ -135,7 +147,7 @@ open class ConversionsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ConversionsControllerTrackRefund201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }

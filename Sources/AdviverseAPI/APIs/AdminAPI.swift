@@ -13,21 +13,30 @@ import AnyCodable
 open class AdminAPI {
 
     /**
-
+     Search accounts
+     
      - parameter q: (query)  
-     - returns: Void
+     - returns: [AdminControllerAccounts200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerAccounts(q: String) async throws {
+    open class func adminControllerAccounts(q: String) async throws -> [AdminControllerAccounts200ResponseInner] {
         return try await adminControllerAccountsWithRequestBuilder(q: q).execute().body
     }
 
     /**
+     Search accounts
      - GET /v1/admin/accounts
+     - Returns up to 200 non-deleted accounts, newest first. `q` filters by case-insensitive substring match on email.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter q: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[AdminControllerAccounts200ResponseInner]> 
      */
-    open class func adminControllerAccountsWithRequestBuilder(q: String) -> RequestBuilder<Void> {
+    open class func adminControllerAccountsWithRequestBuilder(q: String) -> RequestBuilder<[AdminControllerAccounts200ResponseInner]> {
         let localVariablePath = "/v1/admin/accounts"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -43,27 +52,36 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdminControllerAccounts200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Add a fraud blocklist entry
+     
      - parameter addBlockDto: (body)  
-     - returns: Void
+     - returns: AdminControllerSetStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerAddBlock(addBlockDto: AddBlockDto) async throws {
+    open class func adminControllerAddBlock(addBlockDto: AddBlockDto) async throws -> AdminControllerSetStatus201Response {
         return try await adminControllerAddBlockWithRequestBuilder(addBlockDto: addBlockDto).execute().body
     }
 
     /**
+     Add a fraud blocklist entry
      - POST /v1/admin/fraud/blocklist
+     - Adds a `kind` (`ip`, `domain`, `asn`, `device`, `user_agent`, `country`, `subnet`) / `value` pair with an optional `reason`. Duplicates of an existing kind/value are ignored. The addition is audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter addBlockDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
      */
-    open class func adminControllerAddBlockWithRequestBuilder(addBlockDto: AddBlockDto) -> RequestBuilder<Void> {
+    open class func adminControllerAddBlockWithRequestBuilder(addBlockDto: AddBlockDto) -> RequestBuilder<AdminControllerSetStatus201Response> {
         let localVariablePath = "/v1/admin/fraud/blocklist"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: addBlockDto)
@@ -76,13 +94,14 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Read the admin audit log
+     
      - returns: Void
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
@@ -91,7 +110,15 @@ open class AdminAPI {
     }
 
     /**
+     Read the admin audit log
      - GET /v1/admin/audit
+     - Returns the 500 most recent `audit_log` rows (actor, action, target type/id, before/after JSON, timestamp). Includes account status changes, moderation decisions, blocks and config changes.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - returns: RequestBuilder<Void> 
      */
     open class func adminControllerAuditsWithRequestBuilder() -> RequestBuilder<Void> {
@@ -109,11 +136,12 @@ open class AdminAPI {
 
         let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List fraud blocklist entries
+     
      - returns: Void
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
@@ -122,7 +150,15 @@ open class AdminAPI {
     }
 
     /**
+     List fraud blocklist entries
      - GET /v1/admin/fraud/blocklist
+     - Returns the 500 most recent `block_lists` rows (kind, value, reason, creator, timestamps).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - returns: RequestBuilder<Void> 
      */
     open class func adminControllerBlocklistWithRequestBuilder() -> RequestBuilder<Void> {
@@ -140,23 +176,32 @@ open class AdminAPI {
 
         let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List platform config and feature flags
+     
+     - returns: [AdminControllerConfig200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerConfig() async throws {
+    open class func adminControllerConfig() async throws -> [AdminControllerConfig200ResponseInner] {
         return try await adminControllerConfigWithRequestBuilder().execute().body
     }
 
     /**
+     List platform config and feature flags
      - GET /v1/admin/config
-     - returns: RequestBuilder<Void> 
+     - Returns all `platform_config` key/value pairs, ordered by key. Values are arbitrary JSON.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AdminControllerConfig200ResponseInner]> 
      */
-    open class func adminControllerConfigWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func adminControllerConfigWithRequestBuilder() -> RequestBuilder<[AdminControllerConfig200ResponseInner]> {
         let localVariablePath = "/v1/admin/config"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -169,27 +214,36 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdminControllerConfig200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Confirm a manual deposit
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdminControllerSetStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerConfirmDeposit(id: String) async throws {
+    open class func adminControllerConfirmDeposit(id: String) async throws -> AdminControllerSetStatus201Response {
         return try await adminControllerConfirmDepositWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Confirm a manual deposit
      - POST /v1/admin/deposits/{id}/confirm
+     - Marks a manual deposit received and credits the advertiser ledger. `ref` is the bank/provider reference (defaults to `manual:<id>`). Idempotent: `ok` is true only when a new credit was posted. A deposit tied to an agency invoice also marks that invoice paid.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
      */
-    open class func adminControllerConfirmDepositWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func adminControllerConfirmDepositWithRequestBuilder(id: String) -> RequestBuilder<AdminControllerSetStatus201Response> {
         var localVariablePath = "/v1/admin/deposits/{id}/confirm"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -205,27 +259,36 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Confirm a manual payout
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdminControllerSetStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerConfirmPayout(id: String) async throws {
+    open class func adminControllerConfirmPayout(id: String) async throws -> AdminControllerSetStatus201Response {
         return try await adminControllerConfirmPayoutWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Confirm a manual payout
      - POST /v1/admin/payouts/{id}/confirm
+     - For manual (wire) payouts left in `processing`: after ops sends the bank transfer, `paid: true` (default) settles it and releases the held funds, and `paid: false` marks it failed and returns them. Returns 404 for an unknown payout and 400 if it is not awaiting confirmation.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
      */
-    open class func adminControllerConfirmPayoutWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func adminControllerConfirmPayoutWithRequestBuilder(id: String) -> RequestBuilder<AdminControllerSetStatus201Response> {
         var localVariablePath = "/v1/admin/payouts/{id}/confirm"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -241,29 +304,38 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Approve or reject a moderation item
+     
      - parameter id: (path)  
      - parameter moderationDecisionDto: (body)  
-     - returns: Void
+     - returns: AdminControllerSetStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerDecide(id: String, moderationDecisionDto: ModerationDecisionDto) async throws {
+    open class func adminControllerDecide(id: String, moderationDecisionDto: ModerationDecisionDto) async throws -> AdminControllerSetStatus201Response {
         return try await adminControllerDecideWithRequestBuilder(id: id, moderationDecisionDto: moderationDecisionDto).execute().body
     }
 
     /**
+     Approve or reject a moderation item
      - POST /v1/admin/moderation/{id}/decide
+     - Applies `decision` (`approved` or `rejected`) with optional `notes` to a queue item. This updates the target: the creative's moderation status, the campaign or sponsored-product campaign's status (`active` or `rejected`), or the property's status. The decision is audit-logged and the serving index is republished, so approved items can serve within seconds. 404 for an unknown item.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter moderationDecisionDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
      */
-    open class func adminControllerDecideWithRequestBuilder(id: String, moderationDecisionDto: ModerationDecisionDto) -> RequestBuilder<Void> {
+    open class func adminControllerDecideWithRequestBuilder(id: String, moderationDecisionDto: ModerationDecisionDto) -> RequestBuilder<AdminControllerSetStatus201Response> {
         var localVariablePath = "/v1/admin/moderation/{id}/decide"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -279,13 +351,14 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List manual deposits awaiting confirmation
+     
      - returns: Void
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
@@ -294,7 +367,15 @@ open class AdminAPI {
     }
 
     /**
+     List manual deposits awaiting confirmation
      - GET /v1/admin/deposits/pending
+     - Returns up to 500 `pending` deposits on the manual `wire` and `paxum` rails, oldest first (all `deposits` columns).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - returns: RequestBuilder<Void> 
      */
     open class func adminControllerPendingDepositsWithRequestBuilder() -> RequestBuilder<Void> {
@@ -312,11 +393,12 @@ open class AdminAPI {
 
         let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List payouts awaiting processing
+     
      - returns: Void
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
@@ -325,7 +407,15 @@ open class AdminAPI {
     }
 
     /**
+     List payouts awaiting processing
      - GET /v1/admin/payouts
+     - Returns publisher payouts in `requested` or `on_hold` status, oldest request first (all `payouts` columns).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - returns: RequestBuilder<Void> 
      */
     open class func adminControllerPendingPayoutsWithRequestBuilder() -> RequestBuilder<Void> {
@@ -343,25 +433,34 @@ open class AdminAPI {
 
         let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Process a requested payout
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdminControllerProcessPayout201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerProcessPayout(id: String) async throws {
+    open class func adminControllerProcessPayout(id: String) async throws -> AdminControllerProcessPayout201Response {
         return try await adminControllerProcessPayoutWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Process a requested payout
      - POST /v1/admin/payouts/{id}/process
+     - Claims a `requested` payout atomically (so double-triggers call the provider once) and sends it through the payout rail for its method. If paid, the held funds are released from the ledger; if failed, the hold returns to available balance; manual rails such as wire stay `processing` until confirmed. Returns 400 if the payout is not in `requested`.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdminControllerProcessPayout201Response> 
      */
-    open class func adminControllerProcessPayoutWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func adminControllerProcessPayoutWithRequestBuilder(id: String) -> RequestBuilder<AdminControllerProcessPayout201Response> {
         var localVariablePath = "/v1/admin/payouts/{id}/process"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -377,25 +476,34 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdminControllerProcessPayout201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List placement quality scores
+     
+     - returns: [AdminControllerQuality200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerQuality() async throws {
+    open class func adminControllerQuality() async throws -> [AdminControllerQuality200ResponseInner] {
         return try await adminControllerQualityWithRequestBuilder().execute().body
     }
 
     /**
+     List placement quality scores
      - GET /v1/admin/fraud/quality
-     - returns: RequestBuilder<Void> 
+     - Returns the 200 most recent quality-score windows per placement with the property domain, IVT rate, fill rate and composite score.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AdminControllerQuality200ResponseInner]> 
      */
-    open class func adminControllerQualityWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func adminControllerQualityWithRequestBuilder() -> RequestBuilder<[AdminControllerQuality200ResponseInner]> {
         let localVariablePath = "/v1/admin/fraud/quality"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -408,13 +516,14 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdminControllerQuality200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List the pending moderation queue
+     
      - parameter type: (query)  
      - returns: Void
      */
@@ -424,7 +533,15 @@ open class AdminAPI {
     }
 
     /**
+     List the pending moderation queue
      - GET /v1/admin/moderation
+     - Returns pending moderation items, oldest first, optionally filtered by `type` (entity type such as `creative`, `campaign`, `promote_campaign`, `property`). Creative items are joined with what a reviewer needs to see the ad: type, asset and landing URLs, title, screenshot, VAST/VPAID URLs, duration and companions.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter type: (query)  
      - returns: RequestBuilder<Void> 
      */
@@ -446,25 +563,34 @@ open class AdminAPI {
 
         let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Re-scan a creative for cloaking
+     
      - parameter creativeId: (path)  
-     - returns: Void
+     - returns: AdminControllerRescan201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerRescan(creativeId: String) async throws {
+    open class func adminControllerRescan(creativeId: String) async throws -> AdminControllerRescan201Response {
         return try await adminControllerRescanWithRequestBuilder(creativeId: creativeId).execute().body
     }
 
     /**
+     Re-scan a creative for cloaking
      - POST /v1/admin/moderation/{creativeId}/rescan
+     - Recaptures the landing-page screenshot, then fetches the landing URL with a browser and a bot user agent and compares the responses. Repeated divergence adds cloaking strikes and, at the threshold, flags the creative and re-queues it for moderation. A matching fetch clears strikes and a prior cloaking flag. Fetch errors fail open (not flagged). The result is audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter creativeId: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdminControllerRescan201Response> 
      */
-    open class func adminControllerRescanWithRequestBuilder(creativeId: String) -> RequestBuilder<Void> {
+    open class func adminControllerRescanWithRequestBuilder(creativeId: String) -> RequestBuilder<AdminControllerRescan201Response> {
         var localVariablePath = "/v1/admin/moderation/{creativeId}/rescan"
         let creativeIdPreEscape = "\(APIHelper.mapValueToPathItem(creativeId))"
         let creativeIdPostEscape = creativeIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -480,27 +606,36 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdminControllerRescan201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Set a platform config value
+     
      - parameter setConfigDto: (body)  
-     - returns: Void
+     - returns: AdminControllerSetStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerSetConfig(setConfigDto: SetConfigDto) async throws {
+    open class func adminControllerSetConfig(setConfigDto: SetConfigDto) async throws -> AdminControllerSetStatus201Response {
         return try await adminControllerSetConfigWithRequestBuilder(setConfigDto: setConfigDto).execute().body
     }
 
     /**
+     Set a platform config value
      - POST /v1/admin/config
+     - Creates or replaces the config entry `key` (1-200 chars) with `value` (any JSON). The change is recorded with the admin as updater and audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter setConfigDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
      */
-    open class func adminControllerSetConfigWithRequestBuilder(setConfigDto: SetConfigDto) -> RequestBuilder<Void> {
+    open class func adminControllerSetConfigWithRequestBuilder(setConfigDto: SetConfigDto) -> RequestBuilder<AdminControllerSetStatus201Response> {
         let localVariablePath = "/v1/admin/config"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: setConfigDto)
@@ -513,29 +648,38 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Set an account's status
+     
      - parameter id: (path)  
      - parameter setAccountStatusDto: (body)  
-     - returns: Void
+     - returns: AdminControllerSetStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerSetStatus(id: String, setAccountStatusDto: SetAccountStatusDto) async throws {
+    open class func adminControllerSetStatus(id: String, setAccountStatusDto: SetAccountStatusDto) async throws -> AdminControllerSetStatus201Response {
         return try await adminControllerSetStatusWithRequestBuilder(id: id, setAccountStatusDto: setAccountStatusDto).execute().body
     }
 
     /**
+     Set an account's status
      - POST /v1/admin/accounts/{id}/status
+     - Sets an account's `status` to `active`, `pending`, `suspended`, `banned` or `closed`. The previous and new status are written to the audit log. 404 if the account does not exist.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter setAccountStatusDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
      */
-    open class func adminControllerSetStatusWithRequestBuilder(id: String, setAccountStatusDto: SetAccountStatusDto) -> RequestBuilder<Void> {
+    open class func adminControllerSetStatusWithRequestBuilder(id: String, setAccountStatusDto: SetAccountStatusDto) -> RequestBuilder<AdminControllerSetStatus201Response> {
         var localVariablePath = "/v1/admin/accounts/{id}/status"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -551,8 +695,8 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

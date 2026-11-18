@@ -13,19 +13,22 @@ import AnyCodable
 open class ComplianceAPI {
 
     /**
-
-     - returns: Void
+     Get the ads.txt line
+     
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func complianceControllerAdsTxt() async throws {
+    open class func complianceControllerAdsTxt() async throws -> String {
         return try await complianceControllerAdsTxtWithRequestBuilder().execute().body
     }
 
     /**
+     Get the ads.txt line
      - GET /ads.txt
-     - returns: RequestBuilder<Void> 
+     - Public. Returns the single ads.txt line (`<domain>, <seller id>, DIRECT`) publishers add to their own ads.txt to authorize Adviverse to sell their inventory.  Auth: public, no credentials required.
+     - returns: RequestBuilder<String> 
      */
-    open class func complianceControllerAdsTxtWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func complianceControllerAdsTxtWithRequestBuilder() -> RequestBuilder<String> {
         let localVariablePath = "/ads.txt"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,27 +41,36 @@ open class ComplianceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Complete a data-subject request
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdminControllerSetStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func complianceControllerComplete(id: String) async throws {
+    open class func complianceControllerComplete(id: String) async throws -> AdminControllerSetStatus201Response {
         return try await complianceControllerCompleteWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Complete a data-subject request
      - POST /v1/admin/dsar/{id}/complete
+     - Marks a DSAR completed. For delete requests it also deletes consent-log rows matching the subject hash. Returns `{ ok: false }` for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
      */
-    open class func complianceControllerCompleteWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func complianceControllerCompleteWithRequestBuilder(id: String) -> RequestBuilder<AdminControllerSetStatus201Response> {
         var localVariablePath = "/v1/admin/dsar/{id}/complete"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -74,27 +86,30 @@ open class ComplianceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Log a consent signal
+     
      - parameter consentDto: (body)  
-     - returns: Void
+     - returns: ComplianceControllerConsent201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func complianceControllerConsent(consentDto: ConsentDto) async throws {
+    open class func complianceControllerConsent(consentDto: ConsentDto) async throws -> ComplianceControllerConsent201Response {
         return try await complianceControllerConsentWithRequestBuilder(consentDto: consentDto).execute().body
     }
 
     /**
+     Log a consent signal
      - POST /v1/consent
+     - Public, rate-limited; called by the SDK/CMP bridge. Stores a consent record with a SHA-256 hash of `userId`, plus optional `tcf`, `gpp`, `gpc`, `purposes` and `mode`. `publisherId` and `propertyId` attribute the record and are kept only when they are well-formed UUIDs.  Auth: public, no credentials required.
      - parameter consentDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ComplianceControllerConsent201Response> 
      */
-    open class func complianceControllerConsentWithRequestBuilder(consentDto: ConsentDto) -> RequestBuilder<Void> {
+    open class func complianceControllerConsentWithRequestBuilder(consentDto: ConsentDto) -> RequestBuilder<ComplianceControllerConsent201Response> {
         let localVariablePath = "/v1/consent"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: consentDto)
@@ -107,25 +122,34 @@ open class ComplianceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceControllerConsent201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     List recent consent records
+     
+     - returns: [ComplianceControllerConsentLog200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func complianceControllerConsentLog() async throws {
+    open class func complianceControllerConsentLog() async throws -> [ComplianceControllerConsentLog200ResponseInner] {
         return try await complianceControllerConsentLogWithRequestBuilder().execute().body
     }
 
     /**
+     List recent consent records
      - GET /v1/publisher/consent-log
-     - returns: RequestBuilder<Void> 
+     - Returns the 100 most recent consent-log entries forwarded by this publisher's snippet.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ComplianceControllerConsentLog200ResponseInner]> 
      */
-    open class func complianceControllerConsentLogWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func complianceControllerConsentLogWithRequestBuilder() -> RequestBuilder<[ComplianceControllerConsentLog200ResponseInner]> {
         let localVariablePath = "/v1/publisher/consent-log"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -138,13 +162,14 @@ open class ComplianceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ComplianceControllerConsentLog200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get the DomainConnect verification template
+     
      - parameter providerId: (path)  
      - parameter serviceId: (path)  
      - returns: Void
@@ -155,7 +180,9 @@ open class ComplianceAPI {
     }
 
     /**
+     Get the DomainConnect verification template
      - GET /v2/domainTemplates/providers/{providerId}/services/{serviceId}
+     - Public. Serves the DomainConnect template for publisher domain verification at the standard service-provider path. The template applies one TXT record at the verification host carrying the `%txt%` token. Any other provider/service id returns 404.  Auth: public, no credentials required.
      - parameter providerId: (path)  
      - parameter serviceId: (path)  
      - returns: RequestBuilder<Void> 
@@ -185,21 +212,24 @@ open class ComplianceAPI {
     }
 
     /**
-
+     Submit a data-subject request
+     
      - parameter dsarDto: (body)  
-     - returns: Void
+     - returns: ComplianceDsar
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func complianceControllerDsar(dsarDto: DsarDto) async throws {
+    open class func complianceControllerDsar(dsarDto: DsarDto) async throws -> ComplianceDsar {
         return try await complianceControllerDsarWithRequestBuilder(dsarDto: dsarDto).execute().body
     }
 
     /**
+     Submit a data-subject request
      - POST /v1/privacy/dsar
+     - Public, rate-limited. Files an `access` or `delete` request for `email`; only a hash of the subject is stored. A delete request starts erasing the subject from identity maps, CDP traits, segment memberships and event history and suppresses re-collection (fail-soft, in the background). An access request returns the stored request plus an `export` of the data held on the subject.  Auth: public, no credentials required.
      - parameter dsarDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ComplianceDsar> 
      */
-    open class func complianceControllerDsarWithRequestBuilder(dsarDto: DsarDto) -> RequestBuilder<Void> {
+    open class func complianceControllerDsarWithRequestBuilder(dsarDto: DsarDto) -> RequestBuilder<ComplianceDsar> {
         let localVariablePath = "/v1/privacy/dsar"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: dsarDto)
@@ -212,27 +242,36 @@ open class ComplianceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceDsar>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Get consent configuration
+     
      - parameter propertyId: (query)  
-     - returns: Void
+     - returns: ComplianceConsentConfig
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func complianceControllerGetConsentConfig(propertyId: String) async throws {
+    open class func complianceControllerGetConsentConfig(propertyId: String) async throws -> ComplianceConsentConfig {
         return try await complianceControllerGetConsentConfigWithRequestBuilder(propertyId: propertyId).execute().body
     }
 
     /**
+     Get consent configuration
      - GET /v1/publisher/consent-config
+     - Returns the consent config for `propertyId`, falling back to the account-wide default and then to built-in defaults (TCF v2, no default consent, all collection on). Without `propertyId` the account default is returned. The property must belong to the caller (400).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter propertyId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ComplianceConsentConfig> 
      */
-    open class func complianceControllerGetConsentConfigWithRequestBuilder(propertyId: String) -> RequestBuilder<Void> {
+    open class func complianceControllerGetConsentConfigWithRequestBuilder(propertyId: String) -> RequestBuilder<ComplianceConsentConfig> {
         let localVariablePath = "/v1/publisher/consent-config"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -248,25 +287,34 @@ open class ComplianceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceConsentConfig>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get sellers.json listing preference
+     
+     - returns: ComplianceSellerListing
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func complianceControllerGetSellerListing() async throws {
+    open class func complianceControllerGetSellerListing() async throws -> ComplianceSellerListing {
         return try await complianceControllerGetSellerListingWithRequestBuilder().execute().body
     }
 
     /**
+     Get sellers.json listing preference
      - GET /v1/publisher/seller-listing
-     - returns: RequestBuilder<Void> 
+     - Returns whether the publisher is listed publicly in sellers.json and its declared seller domain. Defaults to confidential.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ComplianceSellerListing> 
      */
-    open class func complianceControllerGetSellerListingWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func complianceControllerGetSellerListingWithRequestBuilder() -> RequestBuilder<ComplianceSellerListing> {
         let localVariablePath = "/v1/publisher/seller-listing"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -279,25 +327,34 @@ open class ComplianceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceSellerListing>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List data-subject requests
+     
+     - returns: [ComplianceDsar]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func complianceControllerListDsar() async throws {
+    open class func complianceControllerListDsar() async throws -> [ComplianceDsar] {
         return try await complianceControllerListDsarWithRequestBuilder().execute().body
     }
 
     /**
+     List data-subject requests
      - GET /v1/admin/dsar
-     - returns: RequestBuilder<Void> 
+     - Returns the 200 most recent DSAR requests, newest first.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ComplianceDsar]> 
      */
-    open class func complianceControllerListDsarWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func complianceControllerListDsarWithRequestBuilder() -> RequestBuilder<[ComplianceDsar]> {
         let localVariablePath = "/v1/admin/dsar"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -310,27 +367,36 @@ open class ComplianceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ComplianceDsar]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Save consent configuration
+     
      - parameter consentConfigDto: (body)  
-     - returns: Void
+     - returns: ComplianceConsentConfig
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func complianceControllerSaveConsentConfig(consentConfigDto: ConsentConfigDto) async throws {
+    open class func complianceControllerSaveConsentConfig(consentConfigDto: ConsentConfigDto) async throws -> ComplianceConsentConfig {
         return try await complianceControllerSaveConsentConfigWithRequestBuilder(consentConfigDto: consentConfigDto).execute().body
     }
 
     /**
+     Save consent configuration
      - POST /v1/publisher/consent-config
+     - Upserts the consent config for `propertyId`, or the account default when omitted. Requires `mode` (`tcf_v2`, `gpp`, `custom`) and `defaultConsent`; snippet controls default to true. For a custom CMP, `consentSource` `cookie` or `global` requires `consentKey` (cookie name or JS global path), and `consentGrantValue` defaults to `true`. `tcfPurpose` (1-11, default 1) and `tcfVendorId` are range-checked. Invalid mode, source or key returns 400.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter consentConfigDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ComplianceConsentConfig> 
      */
-    open class func complianceControllerSaveConsentConfigWithRequestBuilder(consentConfigDto: ConsentConfigDto) -> RequestBuilder<Void> {
+    open class func complianceControllerSaveConsentConfigWithRequestBuilder(consentConfigDto: ConsentConfigDto) -> RequestBuilder<ComplianceConsentConfig> {
         let localVariablePath = "/v1/publisher/consent-config"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: consentConfigDto)
@@ -343,27 +409,36 @@ open class ComplianceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceConsentConfig>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Set sellers.json listing preference
+     
      - parameter sellerListingDto: (body)  
-     - returns: Void
+     - returns: ComplianceSellerListing
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func complianceControllerSaveSellerListing(sellerListingDto: SellerListingDto) async throws {
+    open class func complianceControllerSaveSellerListing(sellerListingDto: SellerListingDto) async throws -> ComplianceSellerListing {
         return try await complianceControllerSaveSellerListingWithRequestBuilder(sellerListingDto: sellerListingDto).execute().body
     }
 
     /**
+     Set sellers.json listing preference
      - PUT /v1/publisher/seller-listing
+     - Sets `sellerPublic` and an optional `sellerDomain`. The domain is normalized (scheme, path and `www.` stripped, lowercased) and must be a valid hostname (400 otherwise). A public listing exposes the company name and domain in sellers.json.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter sellerListingDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ComplianceSellerListing> 
      */
-    open class func complianceControllerSaveSellerListingWithRequestBuilder(sellerListingDto: SellerListingDto) -> RequestBuilder<Void> {
+    open class func complianceControllerSaveSellerListingWithRequestBuilder(sellerListingDto: SellerListingDto) -> RequestBuilder<ComplianceSellerListing> {
         let localVariablePath = "/v1/publisher/seller-listing"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: sellerListingDto)
@@ -376,25 +451,28 @@ open class ComplianceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceSellerListing>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PUT", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PUT", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get sellers.json
+     
+     - returns: ComplianceControllerSellers200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func complianceControllerSellers() async throws {
+    open class func complianceControllerSellers() async throws -> ComplianceControllerSellers200Response {
         return try await complianceControllerSellersWithRequestBuilder().execute().body
     }
 
     /**
+     Get sellers.json
      - GET /sellers.json
-     - returns: RequestBuilder<Void> 
+     - Public IAB sellers.json listing active publisher accounts as PUBLISHER sellers. Advertisers are not listed. Sellers are confidential (`is_confidential: 1`, no name/domain) unless the publisher opted into a public listing, which exposes their company name and seller domain.  Auth: public, no credentials required.
+     - returns: RequestBuilder<ComplianceControllerSellers200Response> 
      */
-    open class func complianceControllerSellersWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func complianceControllerSellersWithRequestBuilder() -> RequestBuilder<ComplianceControllerSellers200Response> {
         let localVariablePath = "/sellers.json"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -407,7 +485,7 @@ open class ComplianceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceControllerSellers200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }

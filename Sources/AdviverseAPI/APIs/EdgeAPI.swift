@@ -13,21 +13,24 @@ import AnyCodable
 open class EdgeAPI {
 
     /**
-
+     Check whether the edge may issue TLS for a domain
+     
      - parameter domain: (query)  
-     - returns: Void
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func edgeControllerDomainAllowed(domain: String) async throws {
+    open class func edgeControllerDomainAllowed(domain: String) async throws -> String {
         return try await edgeControllerDomainAllowedWithRequestBuilder(domain: domain).execute().body
     }
 
     /**
+     Check whether the edge may issue TLS for a domain
      - GET /v1/edge/domain-allowed
+     - Public, unauthenticated endpoint called by the TLS edge's on-demand certificate check, not by users. Returns 200 with body `ok` only if `?domain=` is a verified publisher serving domain on a live property; otherwise 403.  Auth: public, no credentials required.
      - parameter domain: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<String> 
      */
-    open class func edgeControllerDomainAllowedWithRequestBuilder(domain: String) -> RequestBuilder<Void> {
+    open class func edgeControllerDomainAllowedWithRequestBuilder(domain: String) -> RequestBuilder<String> {
         let localVariablePath = "/v1/edge/domain-allowed"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -43,7 +46,7 @@ open class EdgeAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }

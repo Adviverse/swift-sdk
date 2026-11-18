@@ -13,19 +13,22 @@ import AnyCodable
 open class HealthAPI {
 
     /**
-
-     - returns: Void
+     Control-plane health check
+     
+     - returns: HealthControllerHealth200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func healthControllerHealth() async throws {
+    open class func healthControllerHealth() async throws -> HealthControllerHealth200Response {
         return try await healthControllerHealthWithRequestBuilder().execute().body
     }
 
     /**
+     Control-plane health check
      - GET /healthz
-     - returns: RequestBuilder<Void> 
+     - Liveness check that also runs `SELECT 1` against Postgres. Returns `status: \"ok\"` when the database answers, otherwise `degraded` with `db: false` (still HTTP 200). No authentication.  Auth: public, no credentials required.
+     - returns: RequestBuilder<HealthControllerHealth200Response> 
      */
-    open class func healthControllerHealthWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func healthControllerHealthWithRequestBuilder() -> RequestBuilder<HealthControllerHealth200Response> {
         let localVariablePath = "/healthz"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,25 +41,28 @@ open class HealthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<HealthControllerHealth200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Prometheus metrics
+     
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func healthControllerMetrics() async throws {
+    open class func healthControllerMetrics() async throws -> String {
         return try await healthControllerMetricsWithRequestBuilder().execute().body
     }
 
     /**
+     Prometheus metrics
      - GET /metrics
-     - returns: RequestBuilder<Void> 
+     - Prometheus text exposition of control-plane process metrics (prefixed `control_plane_`). When the server has a metrics token configured it must be sent as a Bearer token or `?token=`, otherwise 403; without one the endpoint is open.  Auth: public, no credentials required.
+     - returns: RequestBuilder<String> 
      */
-    open class func healthControllerMetricsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func healthControllerMetricsWithRequestBuilder() -> RequestBuilder<String> {
         let localVariablePath = "/metrics"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -69,7 +75,7 @@ open class HealthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }

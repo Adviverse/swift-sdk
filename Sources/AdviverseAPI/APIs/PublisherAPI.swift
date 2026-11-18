@@ -13,21 +13,30 @@ import AnyCodable
 open class PublisherAPI {
 
     /**
-
+     Get the app-ads.txt content for an app
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerAppAdsTxt(id: String) async throws {
+    open class func publisherControllerAppAdsTxt(id: String) async throws -> String {
         return try await publisherControllerAppAdsTxtWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get the app-ads.txt content for an app
      - GET /v1/publisher/apps/{id}/app-ads.txt
+     - Returns plain-text app-ads.txt: a comment, the network's own `adviverse.com, <publisherAccountId>, DIRECT` line, then each configured authorized-seller entry (`domain, sellerId, DIRECT|RESELLER[, certId]`). 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<String> 
      */
-    open class func publisherControllerAppAdsTxtWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func publisherControllerAppAdsTxtWithRequestBuilder(id: String) -> RequestBuilder<String> {
         var localVariablePath = "/v1/publisher/apps/{id}/app-ads.txt"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -43,27 +52,36 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Register a mobile or CTV app
+     
      - parameter createAppDto: (body)  
-     - returns: Void
+     - returns: PubProperty
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerCreateApp(createAppDto: CreateAppDto) async throws {
+    open class func publisherControllerCreateApp(createAppDto: CreateAppDto) async throws -> PubProperty {
         return try await publisherControllerCreateAppWithRequestBuilder(createAppDto: createAppDto).execute().body
     }
 
     /**
+     Register a mobile or CTV app
      - POST /v1/publisher/apps
+     - Creates a `mobile_app` or `ctv` property from `kind`, `name`, `bundleId` and `platform` (ios, android, roku, firetv, appletv, androidtv, web), with optional `storeUrl`, `appStoreId`, `category` and `ctvMeta`. The bundle id is stored in both `bundle_id` and `domain`; the app enters the normal `pending` approval flow with file verification.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createAppDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PubProperty> 
      */
-    open class func publisherControllerCreateAppWithRequestBuilder(createAppDto: CreateAppDto) -> RequestBuilder<Void> {
+    open class func publisherControllerCreateAppWithRequestBuilder(createAppDto: CreateAppDto) -> RequestBuilder<PubProperty> {
         let localVariablePath = "/v1/publisher/apps"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createAppDto)
@@ -76,27 +94,36 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PubProperty>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create a placement
+     
      - parameter createPlacementDto: (body)  
-     - returns: Void
+     - returns: PubPlacement
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerCreatePlacement(createPlacementDto: CreatePlacementDto) async throws {
+    open class func publisherControllerCreatePlacement(createPlacementDto: CreatePlacementDto) async throws -> PubPlacement {
         return try await publisherControllerCreatePlacementWithRequestBuilder(createPlacementDto: createPlacementDto).execute().body
     }
 
     /**
+     Create a placement
      - POST /v1/publisher/placements
+     - Creates an ad unit on one of your properties (`propertyId`, `name`, `format` required) with a generated `tag_key`. Optional fields cover size (`width`/`height` or `responsive`), `floorCpm`, `revShare` (defaults to the network rev-share), `auctionType` (default `first_price`), `passbackUrl`, `frequencyCap`, format `settings`, and yield fill (`houseOnly`, `houseShare` clamped to 0-1, `houseBackfill`, `floorFallback`). Popunders default to a 1-per-visitor-per-24h frequency cap unless `frequencyCap` is given (`{}` opts out). The serving index is republished. 404 if the property is missing, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createPlacementDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PubPlacement> 
      */
-    open class func publisherControllerCreatePlacementWithRequestBuilder(createPlacementDto: CreatePlacementDto) -> RequestBuilder<Void> {
+    open class func publisherControllerCreatePlacementWithRequestBuilder(createPlacementDto: CreatePlacementDto) -> RequestBuilder<PubPlacement> {
         let localVariablePath = "/v1/publisher/placements"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createPlacementDto)
@@ -109,27 +136,36 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PubPlacement>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Register a property
+     
      - parameter createPropertyDto: (body)  
-     - returns: Void
+     - returns: PubProperty
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerCreateProperty(createPropertyDto: CreatePropertyDto) async throws {
+    open class func publisherControllerCreateProperty(createPropertyDto: CreatePropertyDto) async throws -> PubProperty {
         return try await publisherControllerCreatePropertyWithRequestBuilder(createPropertyDto: createPropertyDto).execute().body
     }
 
     /**
+     Register a property
      - POST /v1/publisher/properties
+     - Creates a property with a fresh `adviverse-verify-…` verification token. `domain` is required; `kind` defaults to `website` and `verificationMethod` to `dns`. Website properties start `unverified`/`pending` and must be verified before they serve. With `kind: \"cli\"` the property is a terminal/AI-agent tool: `domain` is treated as a tool name and turned into a unique slug, and the row is created already `verified` and `approved` (no domain to prove).  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createPropertyDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PubProperty> 
      */
-    open class func publisherControllerCreatePropertyWithRequestBuilder(createPropertyDto: CreatePropertyDto) -> RequestBuilder<Void> {
+    open class func publisherControllerCreatePropertyWithRequestBuilder(createPropertyDto: CreatePropertyDto) -> RequestBuilder<PubProperty> {
         let localVariablePath = "/v1/publisher/properties"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createPropertyDto)
@@ -142,27 +178,36 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PubProperty>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Disable signed-tag enforcement
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: PublisherControllerDisableSigning200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerDisableSigning(id: String) async throws {
+    open class func publisherControllerDisableSigning(id: String) async throws -> PublisherControllerDisableSigning200Response {
         return try await publisherControllerDisableSigningWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Disable signed-tag enforcement
      - DELETE /v1/publisher/placements/{id}/signing-secret
+     - Removes the placement's signing secret so it goes back to unsigned serving, and republishes the index. 404 if not your placement.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PublisherControllerDisableSigning200Response> 
      */
-    open class func publisherControllerDisableSigningWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func publisherControllerDisableSigningWithRequestBuilder(id: String) -> RequestBuilder<PublisherControllerDisableSigning200Response> {
         var localVariablePath = "/v1/publisher/placements/{id}/signing-secret"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -178,27 +223,36 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PublisherControllerDisableSigning200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get a DomainConnect one-click DNS setup URL
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: PublisherControllerDomainConnect201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerDomainConnect(id: String) async throws {
+    open class func publisherControllerDomainConnect(id: String) async throws -> PublisherControllerDomainConnect201Response {
         return try await publisherControllerDomainConnectWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get a DomainConnect one-click DNS setup URL
      - POST /v1/publisher/properties/{id}/domainconnect
+     - Discovers whether the property domain's DNS provider supports DomainConnect (TXT at `_domainconnect.<domain>`, then the provider settings `urlSyncUX`). If it does, returns `supported: true` with an `applyUrl` the user opens to approve writing the verification TXT record; afterwards call verify. On any discovery failure it returns `supported: false, method: \"manual\"` with the token so the publisher can add the TXT record by hand.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PublisherControllerDomainConnect201Response> 
      */
-    open class func publisherControllerDomainConnectWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func publisherControllerDomainConnectWithRequestBuilder(id: String) -> RequestBuilder<PublisherControllerDomainConnect201Response> {
         var localVariablePath = "/v1/publisher/properties/{id}/domainconnect"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -214,27 +268,36 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PublisherControllerDomainConnect201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get a mobile or CTV app
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: PubProperty
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerGetApp(id: String) async throws {
+    open class func publisherControllerGetApp(id: String) async throws -> PubProperty {
         return try await publisherControllerGetAppWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get a mobile or CTV app
      - GET /v1/publisher/apps/{id}
+     - Returns one app/CTV property. 404 if it does not exist (or is a web property), 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PubProperty> 
      */
-    open class func publisherControllerGetAppWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func publisherControllerGetAppWithRequestBuilder(id: String) -> RequestBuilder<PubProperty> {
         var localVariablePath = "/v1/publisher/apps/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -250,25 +313,34 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PubProperty>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List your mobile and CTV apps
+     
+     - returns: [PubProperty]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerListApps() async throws {
+    open class func publisherControllerListApps() async throws -> [PubProperty] {
         return try await publisherControllerListAppsWithRequestBuilder().execute().body
     }
 
     /**
+     List your mobile and CTV apps
      - GET /v1/publisher/apps
-     - returns: RequestBuilder<Void> 
+     - Returns the publisher's properties of kind `mobile_app` or `ctv`, newest first. Web properties are excluded.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[PubProperty]> 
      */
-    open class func publisherControllerListAppsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func publisherControllerListAppsWithRequestBuilder() -> RequestBuilder<[PubProperty]> {
         let localVariablePath = "/v1/publisher/apps"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -281,25 +353,34 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[PubProperty]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List your placements
+     
+     - returns: [PubPlacement]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerListPlacements() async throws {
+    open class func publisherControllerListPlacements() async throws -> [PubPlacement] {
         return try await publisherControllerListPlacementsWithRequestBuilder().execute().body
     }
 
     /**
+     List your placements
      - GET /v1/publisher/placements
-     - returns: RequestBuilder<Void> 
+     - Returns every non-deleted placement across all of the publisher's properties, newest first. Optional `limit`/`offset` paginate.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[PubPlacement]> 
      */
-    open class func publisherControllerListPlacementsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func publisherControllerListPlacementsWithRequestBuilder() -> RequestBuilder<[PubPlacement]> {
         let localVariablePath = "/v1/publisher/placements"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -312,25 +393,34 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[PubPlacement]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List your properties
+     
+     - returns: [PubProperty]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerListProperties() async throws {
+    open class func publisherControllerListProperties() async throws -> [PubProperty] {
         return try await publisherControllerListPropertiesWithRequestBuilder().execute().body
     }
 
     /**
+     List your properties
      - GET /v1/publisher/properties
-     - returns: RequestBuilder<Void> 
+     - Returns every non-deleted property (websites, CLI tools, mobile apps, CTV apps) owned by the publisher, newest first. Optional `limit` (1-500) and `offset` query params paginate; without `limit` the full set is returned.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[PubProperty]> 
      */
-    open class func publisherControllerListPropertiesWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func publisherControllerListPropertiesWithRequestBuilder() -> RequestBuilder<[PubProperty]> {
         let localVariablePath = "/v1/publisher/properties"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -343,27 +433,81 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[PubProperty]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get the ads.txt lines for a property
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerRemoveProperty(id: String) async throws {
+    open class func publisherControllerPropertyAdsTxt(id: String) async throws -> String {
+        return try await publisherControllerPropertyAdsTxtWithRequestBuilder(id: id).execute().body
+    }
+
+    /**
+     Get the ads.txt lines for a property
+     - GET /v1/publisher/properties/{id}/ads.txt
+     - Returns the plain-text ads.txt content to publish at `https://<domain>/ads.txt`: a comment line plus `adviverse.com, <publisherAccountId>, DIRECT` (the seller id matches sellers.json). 404 if not found, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - parameter id: (path)  
+     - returns: RequestBuilder<String> 
+     */
+    open class func publisherControllerPropertyAdsTxtWithRequestBuilder(id: String) -> RequestBuilder<String> {
+        var localVariablePath = "/v1/publisher/properties/{id}/ads.txt"
+        let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
+        let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        localVariablePath = localVariablePath.replacingOccurrences(of: "{id}", with: idPostEscape, options: .literal, range: nil)
+        let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
+        let localVariableParameters: [String: Any]? = nil
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            :
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
+    }
+
+    /**
+     Delete a property
+     
+     - parameter id: (path)  
+     - returns: AuthControllerResendVerification201Response
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    open class func publisherControllerRemoveProperty(id: String) async throws -> AuthControllerResendVerification201Response {
         return try await publisherControllerRemovePropertyWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete a property
      - DELETE /v1/publisher/properties/{id}
+     - Soft-deletes the property and all of its placements, then republishes the serving index so ads stop promptly. 404 if not found, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerResendVerification201Response> 
      */
-    open class func publisherControllerRemovePropertyWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func publisherControllerRemovePropertyWithRequestBuilder(id: String) -> RequestBuilder<AuthControllerResendVerification201Response> {
         var localVariablePath = "/v1/publisher/properties/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -379,27 +523,36 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerResendVerification201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Remove the first-party serving domain
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: PubServingDomain
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerRemoveServingDomain(id: String) async throws {
+    open class func publisherControllerRemoveServingDomain(id: String) async throws -> PubServingDomain {
         return try await publisherControllerRemoveServingDomainWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Remove the first-party serving domain
      - DELETE /v1/publisher/properties/{id}/serving-domain
+     - Clears the property's custom serving domain; tags fall back to the default serving edge and the edge stops issuing certificates for the old host. 404/403 if the property is not found or not yours.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PubServingDomain> 
      */
-    open class func publisherControllerRemoveServingDomainWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func publisherControllerRemoveServingDomainWithRequestBuilder(id: String) -> RequestBuilder<PubServingDomain> {
         var localVariablePath = "/v1/publisher/properties/{id}/serving-domain"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -415,27 +568,36 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PubServingDomain>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Generate or rotate a placement signing secret
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: PublisherControllerRotateSigningSecret201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerRotateSigningSecret(id: String) async throws {
+    open class func publisherControllerRotateSigningSecret(id: String) async throws -> PublisherControllerRotateSigningSecret201Response {
         return try await publisherControllerRotateSigningSecretWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Generate or rotate a placement signing secret
      - POST /v1/publisher/placements/{id}/signing-secret
+     - Creates a new `tsk_…` HMAC secret for the placement, replacing any previous one, and republishes the index. With a secret set, the engine only serves terminal requests (and accepts integrity pings) that carry a valid signature, so embed it in your signing client. The secret is returned only once. 404 if not your placement.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PublisherControllerRotateSigningSecret201Response> 
      */
-    open class func publisherControllerRotateSigningSecretWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func publisherControllerRotateSigningSecretWithRequestBuilder(id: String) -> RequestBuilder<PublisherControllerRotateSigningSecret201Response> {
         var localVariablePath = "/v1/publisher/placements/{id}/signing-secret"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -451,29 +613,38 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PublisherControllerRotateSigningSecret201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Set a first-party serving domain
+     
      - parameter id: (path)  
      - parameter servingDomainDto: (body)  
-     - returns: Void
+     - returns: PubServingDomain
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerSetServingDomain(id: String, servingDomainDto: ServingDomainDto) async throws {
+    open class func publisherControllerSetServingDomain(id: String, servingDomainDto: ServingDomainDto) async throws -> PubServingDomain {
         return try await publisherControllerSetServingDomainWithRequestBuilder(id: id, servingDomainDto: servingDomainDto).execute().body
     }
 
     /**
+     Set a first-party serving domain
      - POST /v1/publisher/properties/{id}/serving-domain
+     - Sets the property's custom ad-serving hostname (anti-adblock). Body `{ domain }` is normalized to a bare hostname; an empty/missing domain clears it. The domain starts unverified: the publisher must CNAME it to `cname_target` and call the verify endpoint before tags use it. 400 for an invalid hostname or one already held by another property.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter servingDomainDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PubServingDomain> 
      */
-    open class func publisherControllerSetServingDomainWithRequestBuilder(id: String, servingDomainDto: ServingDomainDto) -> RequestBuilder<Void> {
+    open class func publisherControllerSetServingDomainWithRequestBuilder(id: String, servingDomainDto: ServingDomainDto) -> RequestBuilder<PubServingDomain> {
         var localVariablePath = "/v1/publisher/properties/{id}/serving-domain"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -489,27 +660,36 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PubServingDomain>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get the embed code for a placement
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: PublisherControllerTag200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerTag(id: String) async throws {
+    open class func publisherControllerTag(id: String) async throws -> PublisherControllerTag200Response {
         return try await publisherControllerTagWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get the embed code for a placement
      - GET /v1/publisher/placements/{id}/tag
+     - Returns the integration snippet for the placement, shaped by format: `script` (SDK `<script>` loader) for web formats, `directUrl` for `direct_link`, `emailSnippet` (tracked image + link with a `{{RECIPIENT}}` merge field) for `email`, and an HTTP `endpoint` for `terminal`. If the property has a verified first-party serving domain the snippet points at it and `firstParty` is true. 404 if not your placement.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PublisherControllerTag200Response> 
      */
-    open class func publisherControllerTagWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func publisherControllerTagWithRequestBuilder(id: String) -> RequestBuilder<PublisherControllerTag200Response> {
         var localVariablePath = "/v1/publisher/placements/{id}/tag"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -525,29 +705,38 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PublisherControllerTag200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update app-ads.txt, SKAdNetwork and CTV metadata
+     
      - parameter id: (path)  
      - parameter updateAppDto: (body)  
-     - returns: Void
+     - returns: PubProperty
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerUpdateApp(id: String, updateAppDto: UpdateAppDto) async throws {
+    open class func publisherControllerUpdateApp(id: String, updateAppDto: UpdateAppDto) async throws -> PubProperty {
         return try await publisherControllerUpdateAppWithRequestBuilder(id: id, updateAppDto: updateAppDto).execute().body
     }
 
     /**
+     Update app-ads.txt, SKAdNetwork and CTV metadata
      - PATCH /v1/publisher/apps/{id}
+     - Patches only the fields sent: `appAdsTxt` (authorized-seller entries `{domain, sellerId, relationship?, certId?}`, normalized and invalid ones dropped), `skadnetworkIds`, `ctvMeta`, `storeUrl`, `platform`. Republishes the serving index. 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter updateAppDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PubProperty> 
      */
-    open class func publisherControllerUpdateAppWithRequestBuilder(id: String, updateAppDto: UpdateAppDto) -> RequestBuilder<Void> {
+    open class func publisherControllerUpdateAppWithRequestBuilder(id: String, updateAppDto: UpdateAppDto) -> RequestBuilder<PubProperty> {
         var localVariablePath = "/v1/publisher/apps/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -563,29 +752,38 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PubProperty>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update a placement
+     
      - parameter id: (path)  
      - parameter updatePlacementDto: (body)  
-     - returns: Void
+     - returns: PubPlacement
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerUpdatePlacement(id: String, updatePlacementDto: UpdatePlacementDto) async throws {
+    open class func publisherControllerUpdatePlacement(id: String, updatePlacementDto: UpdatePlacementDto) async throws -> PubPlacement {
         return try await publisherControllerUpdatePlacementWithRequestBuilder(id: id, updatePlacementDto: updatePlacementDto).execute().body
     }
 
     /**
+     Update a placement
      - PATCH /v1/publisher/placements/{id}
+     - Patches `name`, `floorCpm`, `revShare`, `auctionType`, `passbackUrl`, `status` (`active`/`paused`), house/yield flags, and the dynamic-floor settings `floorAuto` (let the yield optimizer manage the floor) and `floorSoft` (soft reserve). Returns the updated row and republishes the serving index. 404 if the placement is not found among your properties.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter updatePlacementDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PubPlacement> 
      */
-    open class func publisherControllerUpdatePlacementWithRequestBuilder(id: String, updatePlacementDto: UpdatePlacementDto) -> RequestBuilder<Void> {
+    open class func publisherControllerUpdatePlacementWithRequestBuilder(id: String, updatePlacementDto: UpdatePlacementDto) -> RequestBuilder<PubPlacement> {
         var localVariablePath = "/v1/publisher/placements/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -601,29 +799,38 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PubPlacement>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update a property
+     
      - parameter id: (path)  
      - parameter updatePropertyDto: (body)  
-     - returns: Void
+     - returns: PubProperty
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerUpdateProperty(id: String, updatePropertyDto: UpdatePropertyDto) async throws {
+    open class func publisherControllerUpdateProperty(id: String, updatePropertyDto: UpdatePropertyDto) async throws -> PubProperty {
         return try await publisherControllerUpdatePropertyWithRequestBuilder(id: id, updatePropertyDto: updatePropertyDto).execute().body
     }
 
     /**
+     Update a property
      - PATCH /v1/publisher/properties/{id}
+     - Patches `name`, `domain`, `category`, `verificationMethod` and `crossFill` (opt in to filling this property with other-network demand). Changing `domain` resets `verification_status` to `unverified`, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter updatePropertyDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PubProperty> 
      */
-    open class func publisherControllerUpdatePropertyWithRequestBuilder(id: String, updatePropertyDto: UpdatePropertyDto) -> RequestBuilder<Void> {
+    open class func publisherControllerUpdatePropertyWithRequestBuilder(id: String, updatePropertyDto: UpdatePropertyDto) -> RequestBuilder<PubProperty> {
         var localVariablePath = "/v1/publisher/properties/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -639,27 +846,36 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PubProperty>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Verify property ownership
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: PublisherControllerVerify201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerVerify(id: String) async throws {
+    open class func publisherControllerVerify(id: String) async throws -> PublisherControllerVerify201Response {
         return try await publisherControllerVerifyWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Verify property ownership
      - POST /v1/publisher/properties/{id}/verify
+     - Checks the property for its verification token using its method: `dns` looks up a TXT record at `adviverse-verify.<domain>`, `file` fetches `http://<domain>/.well-known/adviverse-verify.txt`, `meta` fetches the homepage and looks for the token. On success the property becomes `verified`, a `pending` property is auto-approved, and the serving index is republished so its placements start serving. A failed check is not an error: it returns `verified: false` with the token and method to show the publisher.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PublisherControllerVerify201Response> 
      */
-    open class func publisherControllerVerifyWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func publisherControllerVerifyWithRequestBuilder(id: String) -> RequestBuilder<PublisherControllerVerify201Response> {
         var localVariablePath = "/v1/publisher/properties/{id}/verify"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -675,27 +891,36 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PublisherControllerVerify201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Verify the first-party serving domain
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: PublisherControllerVerifyServingDomain201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherControllerVerifyServingDomain(id: String) async throws {
+    open class func publisherControllerVerifyServingDomain(id: String) async throws -> PublisherControllerVerifyServingDomain201Response {
         return try await publisherControllerVerifyServingDomainWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Verify the first-party serving domain
      - POST /v1/publisher/properties/{id}/serving-domain/verify
+     - Checks that the serving domain CNAMEs to the serving edge (or, for flattened CNAME/ALIAS records, resolves to the same A records). Stores the result and refreshes the edge router config; once verified, generated tags load from `https://<serving_domain>` and the edge will issue TLS for it. 400 if no serving domain is set.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PublisherControllerVerifyServingDomain201Response> 
      */
-    open class func publisherControllerVerifyServingDomainWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func publisherControllerVerifyServingDomainWithRequestBuilder(id: String) -> RequestBuilder<PublisherControllerVerifyServingDomain201Response> {
         var localVariablePath = "/v1/publisher/properties/{id}/serving-domain/verify"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -711,8 +936,8 @@ open class PublisherAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PublisherControllerVerifyServingDomain201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

@@ -13,19 +13,108 @@ import AnyCodable
 open class ReferralsAPI {
 
     /**
-
-     - returns: Void
+     Get Refer & earn (affiliate) overview
+     
+     - returns: ReferralsControllerAffiliateOverview200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func referralsControllerOverview() async throws {
+    open class func referralsControllerAffiliateOverview() async throws -> ReferralsControllerAffiliateOverview200Response {
+        return try await referralsControllerAffiliateOverviewWithRequestBuilder().execute().body
+    }
+
+    /**
+     Get Refer & earn (affiliate) overview
+     - GET /v1/referrals/affiliate
+     - Returns the account's Refer & earn partner status from Referalli. Before joining it returns `joined: false` with the program terms and summary. After joining it adds the partner code, `?via=` signup link, clicks, signups, pending reviews and converted customers. `commissions` (pending and settled, in USD, net of reversals) come from local records.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReferralsControllerAffiliateOverview200Response> 
+     */
+    open class func referralsControllerAffiliateOverviewWithRequestBuilder() -> RequestBuilder<ReferralsControllerAffiliateOverview200Response> {
+        let localVariablePath = "/v1/referrals/affiliate"
+        let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
+        let localVariableParameters: [String: Any]? = nil
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            :
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<ReferralsControllerAffiliateOverview200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
+    }
+
+    /**
+     Join Refer & earn
+     
+     - returns: ReferralsControllerJoinAffiliate200Response
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    open class func referralsControllerJoinAffiliate() async throws -> ReferralsControllerJoinAffiliate200Response {
+        return try await referralsControllerJoinAffiliateWithRequestBuilder().execute().body
+    }
+
+    /**
+     Join Refer & earn
+     - POST /v1/referrals/affiliate/join
+     - Enrolls the account as a Referalli partner keyed on its account id and email, then returns the same body as the affiliate overview. Idempotent (calls are deduplicated per account). Returns 400 `email_taken` if the email is already a partner elsewhere, or `join_failed`.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReferralsControllerJoinAffiliate200Response> 
+     */
+    open class func referralsControllerJoinAffiliateWithRequestBuilder() -> RequestBuilder<ReferralsControllerJoinAffiliate200Response> {
+        let localVariablePath = "/v1/referrals/affiliate/join"
+        let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
+        let localVariableParameters: [String: Any]? = nil
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            :
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<ReferralsControllerJoinAffiliate200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
+    }
+
+    /**
+     Get referral program overview
+     
+     - returns: ReferralsControllerOverview200Response
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    open class func referralsControllerOverview() async throws -> ReferralsControllerOverview200Response {
         return try await referralsControllerOverviewWithRequestBuilder().execute().body
     }
 
     /**
+     Get referral program overview
      - GET /v1/referrals
-     - returns: RequestBuilder<Void> 
+     - Returns the account's referral code and signup link (`/signup?ref=<code>`), and every account it referred with that account's status, join date and the referral earnings credited to the caller from it (summed from `referral` ledger entries).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReferralsControllerOverview200Response> 
      */
-    open class func referralsControllerOverviewWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func referralsControllerOverviewWithRequestBuilder() -> RequestBuilder<ReferralsControllerOverview200Response> {
         let localVariablePath = "/v1/referrals"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,8 +127,8 @@ open class ReferralsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReferralsControllerOverview200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

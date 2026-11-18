@@ -13,19 +13,22 @@ import AnyCodable
 open class SkadnetworkAPI {
 
     /**
-
-     - returns: Void
+     Check the SKAdNetwork postback endpoint
+     
+     - returns: SkadnetworkControllerHealth200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func skadnetworkControllerHealth() async throws {
+    open class func skadnetworkControllerHealth() async throws -> SkadnetworkControllerHealth200Response {
         return try await skadnetworkControllerHealthWithRequestBuilder().execute().body
     }
 
     /**
+     Check the SKAdNetwork postback endpoint
      - GET /v1/skadnetwork/postback
-     - returns: RequestBuilder<Void> 
+     - Public liveness check for the registered postback URL.  Auth: public, no credentials required.
+     - returns: RequestBuilder<SkadnetworkControllerHealth200Response> 
      */
-    open class func skadnetworkControllerHealthWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func skadnetworkControllerHealthWithRequestBuilder() -> RequestBuilder<SkadnetworkControllerHealth200Response> {
         let localVariablePath = "/v1/skadnetwork/postback"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,25 +41,28 @@ open class SkadnetworkAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SkadnetworkControllerHealth200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Receive an Apple SKAdNetwork install postback
+     
+     - returns: SkadnetworkControllerPostback200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func skadnetworkControllerPostback() async throws {
+    open class func skadnetworkControllerPostback() async throws -> SkadnetworkControllerPostback200Response {
         return try await skadnetworkControllerPostbackWithRequestBuilder().execute().body
     }
 
     /**
+     Receive an Apple SKAdNetwork install postback
      - POST /v1/skadnetwork/postback
-     - returns: RequestBuilder<Void> 
+     - Public, rate-limited endpoint Apple POSTs signed install postbacks to. Every postback is stored once per `transaction-id`; the signature is verified, the campaign resolved from `source-identifier`/`campaign-id` (and `app-id`), and won, verified postbacks are emitted as conversions. Always answers 200 so Apple does not retry; the outcome is in `status`: attributed, duplicate, invalid_signature, verified_unmatched, verified_lost, wrong_network, unsupported, bad_request or error.  Auth: public, no credentials required.
+     - returns: RequestBuilder<SkadnetworkControllerPostback200Response> 
      */
-    open class func skadnetworkControllerPostbackWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func skadnetworkControllerPostbackWithRequestBuilder() -> RequestBuilder<SkadnetworkControllerPostback200Response> {
         let localVariablePath = "/v1/skadnetwork/postback"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -69,7 +75,7 @@ open class SkadnetworkAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SkadnetworkControllerPostback200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }

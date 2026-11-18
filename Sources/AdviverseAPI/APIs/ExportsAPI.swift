@@ -13,19 +13,28 @@ import AnyCodable
 open class ExportsAPI {
 
     /**
-
-     - returns: Void
+     List export jobs
+     
+     - returns: [ExportJob]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func exportsControllerList() async throws {
+    open class func exportsControllerList() async throws -> [ExportJob] {
         return try await exportsControllerListWithRequestBuilder().execute().body
     }
 
     /**
+     List export jobs
      - GET /v1/exports
-     - returns: RequestBuilder<Void> 
+     - Returns the 200 most recent export jobs, newest first: the caller's own for advertisers, all jobs for admins.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ExportJob]> 
      */
-    open class func exportsControllerListWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func exportsControllerListWithRequestBuilder() -> RequestBuilder<[ExportJob]> {
         let localVariablePath = "/v1/exports"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,27 +47,36 @@ open class ExportsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ExportJob]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Export an analytics dataset to object storage
+     
      - parameter runExportDto: (body)  
-     - returns: Void
+     - returns: ExportsControllerRun201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func exportsControllerRun(runExportDto: RunExportDto) async throws {
+    open class func exportsControllerRun(runExportDto: RunExportDto) async throws -> ExportsControllerRun201Response {
         return try await exportsControllerRunWithRequestBuilder(runExportDto: runExportDto).execute().body
     }
 
     /**
+     Export an analytics dataset to object storage
      - POST /v1/exports/run
+     - Pages a ClickHouse dataset into one NDJSON or CSV object plus a manifest JSON in object storage and returns a presigned download URL. Body: `dataset` (events = raw impressions, conversions, or spend = hourly rollup), `from` (inclusive) and `to` (exclusive) as ISO dates, optional `format` (ndjson default, csv). Advertisers export only their own rows; admins export network-wide. The job is recorded and marked failed if the export errors.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter runExportDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ExportsControllerRun201Response> 
      */
-    open class func exportsControllerRunWithRequestBuilder(runExportDto: RunExportDto) -> RequestBuilder<Void> {
+    open class func exportsControllerRunWithRequestBuilder(runExportDto: RunExportDto) -> RequestBuilder<ExportsControllerRun201Response> {
         let localVariablePath = "/v1/exports/run"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: runExportDto)
@@ -71,8 +89,8 @@ open class ExportsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ExportsControllerRun201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

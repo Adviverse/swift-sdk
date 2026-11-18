@@ -13,21 +13,30 @@ import AnyCodable
 open class RewardsAPI {
 
     /**
-
+     List recent reward payouts
+     
      - parameter limit: (query)  
-     - returns: Void
+     - returns: [RewardsControllerAdminPayouts200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func rewardsControllerAdminPayouts(limit: String) async throws {
+    open class func rewardsControllerAdminPayouts(limit: String) async throws -> [RewardsControllerAdminPayouts200ResponseInner] {
         return try await rewardsControllerAdminPayoutsWithRequestBuilder(limit: limit).execute().body
     }
 
     /**
+     List recent reward payouts
      - GET /v1/admin/rewards/payouts
+     - Admin view of the most recent reward payouts across all pools, including delivery attempts and last error. `?limit=` defaults to 200 (max 1000).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter limit: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[RewardsControllerAdminPayouts200ResponseInner]> 
      */
-    open class func rewardsControllerAdminPayoutsWithRequestBuilder(limit: String) -> RequestBuilder<Void> {
+    open class func rewardsControllerAdminPayoutsWithRequestBuilder(limit: String) -> RequestBuilder<[RewardsControllerAdminPayouts200ResponseInner]> {
         let localVariablePath = "/v1/admin/rewards/payouts"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -43,27 +52,36 @@ open class RewardsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[RewardsControllerAdminPayouts200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create an on-chain (advertiser-custodied) reward pool
+     
      - parameter createOnchainPoolDto: (body)  
-     - returns: Void
+     - returns: RewPool
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func rewardsControllerCreateOnchainPool(createOnchainPoolDto: CreateOnchainPoolDto) async throws {
+    open class func rewardsControllerCreateOnchainPool(createOnchainPoolDto: CreateOnchainPoolDto) async throws -> RewPool {
         return try await rewardsControllerCreateOnchainPoolWithRequestBuilder(createOnchainPoolDto: createOnchainPoolDto).execute().body
     }
 
     /**
+     Create an on-chain (advertiser-custodied) reward pool
      - POST /v1/rewards/pools/onchain
+     - Creates or converts a campaign's pool to `onchain_creative` mode: no escrow and no ledger movement, because your own contract pays users on-chain. Adviverse verifies each completion and issues the creative a signed single-use eligibility voucher. `perCompletion`, `token` and optional `chain` are display/report values. The response includes `voucher_secret`, used to verify vouchers before disbursing (empty if the platform voucher key is not configured). 404 if the campaign is not yours.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createOnchainPoolDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<RewPool> 
      */
-    open class func rewardsControllerCreateOnchainPoolWithRequestBuilder(createOnchainPoolDto: CreateOnchainPoolDto) -> RequestBuilder<Void> {
+    open class func rewardsControllerCreateOnchainPoolWithRequestBuilder(createOnchainPoolDto: CreateOnchainPoolDto) -> RequestBuilder<RewPool> {
         let localVariablePath = "/v1/rewards/pools/onchain"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createOnchainPoolDto)
@@ -76,27 +94,36 @@ open class RewardsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<RewPool>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Fund or top up a campaign reward pool
+     
      - parameter fundPoolDto: (body)  
-     - returns: Void
+     - returns: RewPool
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func rewardsControllerFundPool(fundPoolDto: FundPoolDto) async throws {
+    open class func rewardsControllerFundPool(fundPoolDto: FundPoolDto) async throws -> RewPool {
         return try await rewardsControllerFundPoolWithRequestBuilder(fundPoolDto: fundPoolDto).execute().body
     }
 
     /**
+     Fund or top up a campaign reward pool
      - POST /v1/rewards/pools
+     - Creates the reward pool for one of your campaigns, or adds to it, and escrows `amount` from your available balance in the same transaction (a `reward_fund` ledger entry). `perCompletion` is the fixed reward per verified completion; `token` defaults to your account currency; `perUserDailyCap`/`perWalletDailyCap` default to 5. 404 if the campaign is not yours; fails with insufficient funds if your balance cannot cover `amount`.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter fundPoolDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<RewPool> 
      */
-    open class func rewardsControllerFundPoolWithRequestBuilder(fundPoolDto: FundPoolDto) -> RequestBuilder<Void> {
+    open class func rewardsControllerFundPoolWithRequestBuilder(fundPoolDto: FundPoolDto) -> RequestBuilder<RewPool> {
         let localVariablePath = "/v1/rewards/pools"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: fundPoolDto)
@@ -109,27 +136,36 @@ open class RewardsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<RewPool>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get a campaign reward pool
+     
      - parameter campaignId: (path)  
-     - returns: Void
+     - returns: RewPool
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func rewardsControllerGetPool(campaignId: String) async throws {
+    open class func rewardsControllerGetPool(campaignId: String) async throws -> RewPool {
         return try await rewardsControllerGetPoolWithRequestBuilder(campaignId: campaignId).execute().body
     }
 
     /**
+     Get a campaign reward pool
      - GET /v1/rewards/pools/{campaignId}
+     - Returns the reward pool for `campaignId`; on-chain pools also include `voucher_secret`. 404 if you have no pool for that campaign.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter campaignId: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<RewPool> 
      */
-    open class func rewardsControllerGetPoolWithRequestBuilder(campaignId: String) -> RequestBuilder<Void> {
+    open class func rewardsControllerGetPoolWithRequestBuilder(campaignId: String) -> RequestBuilder<RewPool> {
         var localVariablePath = "/v1/rewards/pools/{campaignId}"
         let campaignIdPreEscape = "\(APIHelper.mapValueToPathItem(campaignId))"
         let campaignIdPostEscape = campaignIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -145,25 +181,34 @@ open class RewardsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<RewPool>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List your reward pools
+     
+     - returns: [RewPool]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func rewardsControllerListPools() async throws {
+    open class func rewardsControllerListPools() async throws -> [RewPool] {
         return try await rewardsControllerListPoolsWithRequestBuilder().execute().body
     }
 
     /**
+     List your reward pools
      - GET /v1/rewards/pools
-     - returns: RequestBuilder<Void> 
+     - Returns all of your campaign reward pools, newest first. Voucher secrets are not included here.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[RewPool]> 
      */
-    open class func rewardsControllerListPoolsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func rewardsControllerListPoolsWithRequestBuilder() -> RequestBuilder<[RewPool]> {
         let localVariablePath = "/v1/rewards/pools"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -176,29 +221,38 @@ open class RewardsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[RewPool]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get your reward payout report
+     
      - parameter from: (query)  
      - parameter to: (query)  
-     - returns: Void
+     - returns: RewardsControllerReport200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func rewardsControllerReport(from: String, to: String) async throws {
+    open class func rewardsControllerReport(from: String, to: String) async throws -> RewardsControllerReport200Response {
         return try await rewardsControllerReportWithRequestBuilder(from: from, to: to).execute().body
     }
 
     /**
+     Get your reward payout report
      - GET /v1/rewards/report
+     - Reports reward payouts on your pools between `from` and `to` (default last 30 days): totals by status (sent, pending, failed, on-chain, on-chain with a tx hash), amount paid and distinct recipient wallets, a per-campaign breakdown, current pool balances, and up to 2000 payout rows.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter from: (query)  
      - parameter to: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<RewardsControllerReport200Response> 
      */
-    open class func rewardsControllerReportWithRequestBuilder(from: String, to: String) -> RequestBuilder<Void> {
+    open class func rewardsControllerReportWithRequestBuilder(from: String, to: String) -> RequestBuilder<RewardsControllerReport200Response> {
         let localVariablePath = "/v1/rewards/report"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -215,29 +269,38 @@ open class RewardsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<RewardsControllerReport200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Pause or resume a reward pool
+     
      - parameter campaignId: (path)  
      - parameter setPoolStatusDto: (body)  
-     - returns: Void
+     - returns: RewardsControllerSetPoolStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func rewardsControllerSetPoolStatus(campaignId: String, setPoolStatusDto: SetPoolStatusDto) async throws {
+    open class func rewardsControllerSetPoolStatus(campaignId: String, setPoolStatusDto: SetPoolStatusDto) async throws -> RewardsControllerSetPoolStatus201Response {
         return try await rewardsControllerSetPoolStatusWithRequestBuilder(campaignId: campaignId, setPoolStatusDto: setPoolStatusDto).execute().body
     }
 
     /**
+     Pause or resume a reward pool
      - POST /v1/rewards/pools/{campaignId}/status
+     - Sets the pool `status` to `paused` (stops accruing completions) or `active`. 404 if you have no pool for that campaign.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter campaignId: (path)  
      - parameter setPoolStatusDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<RewardsControllerSetPoolStatus201Response> 
      */
-    open class func rewardsControllerSetPoolStatusWithRequestBuilder(campaignId: String, setPoolStatusDto: SetPoolStatusDto) -> RequestBuilder<Void> {
+    open class func rewardsControllerSetPoolStatusWithRequestBuilder(campaignId: String, setPoolStatusDto: SetPoolStatusDto) -> RequestBuilder<RewardsControllerSetPoolStatus201Response> {
         var localVariablePath = "/v1/rewards/pools/{campaignId}/status"
         let campaignIdPreEscape = "\(APIHelper.mapValueToPathItem(campaignId))"
         let campaignIdPostEscape = campaignIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -253,27 +316,36 @@ open class RewardsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<RewardsControllerSetPoolStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Set a world's reward-payout webhook
+     
      - parameter setWorldWebhookDto: (body)  
-     - returns: Void
+     - returns: RewardsControllerSetWorldWebhook201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func rewardsControllerSetWorldWebhook(setWorldWebhookDto: SetWorldWebhookDto) async throws {
+    open class func rewardsControllerSetWorldWebhook(setWorldWebhookDto: SetWorldWebhookDto) async throws -> RewardsControllerSetWorldWebhook201Response {
         return try await rewardsControllerSetWorldWebhookWithRequestBuilder(setWorldWebhookDto: setWorldWebhookDto).execute().body
     }
 
     /**
+     Set a world's reward-payout webhook
      - POST /v1/rewards/world-webhook
+     - Points one of your world integrations at `url`. Pending reward payouts for that operator are POSTed there as signed `reward.payout` webhooks (HMAC with the world's signing secret) so the operator can pay the user; delivery is retried up to 8 times. 404 if the world is not yours.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter setWorldWebhookDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<RewardsControllerSetWorldWebhook201Response> 
      */
-    open class func rewardsControllerSetWorldWebhookWithRequestBuilder(setWorldWebhookDto: SetWorldWebhookDto) -> RequestBuilder<Void> {
+    open class func rewardsControllerSetWorldWebhookWithRequestBuilder(setWorldWebhookDto: SetWorldWebhookDto) -> RequestBuilder<RewardsControllerSetWorldWebhook201Response> {
         let localVariablePath = "/v1/rewards/world-webhook"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: setWorldWebhookDto)
@@ -286,27 +358,36 @@ open class RewardsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<RewardsControllerSetWorldWebhook201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get the voucher secret for an on-chain pool
+     
      - parameter campaignId: (path)  
-     - returns: Void
+     - returns: RewardsControllerVoucherSecret200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func rewardsControllerVoucherSecret(campaignId: String) async throws {
+    open class func rewardsControllerVoucherSecret(campaignId: String) async throws -> RewardsControllerVoucherSecret200Response {
         return try await rewardsControllerVoucherSecretWithRequestBuilder(campaignId: campaignId).execute().body
     }
 
     /**
+     Get the voucher secret for an on-chain pool
      - GET /v1/rewards/pools/{campaignId}/voucher-secret
+     - Returns the HMAC voucher secret for the campaign's on-chain reward pool. 404 if you have no pool for the campaign, 400 if the pool is not in on-chain mode.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter campaignId: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<RewardsControllerVoucherSecret200Response> 
      */
-    open class func rewardsControllerVoucherSecretWithRequestBuilder(campaignId: String) -> RequestBuilder<Void> {
+    open class func rewardsControllerVoucherSecretWithRequestBuilder(campaignId: String) -> RequestBuilder<RewardsControllerVoucherSecret200Response> {
         var localVariablePath = "/v1/rewards/pools/{campaignId}/voucher-secret"
         let campaignIdPreEscape = "\(APIHelper.mapValueToPathItem(campaignId))"
         let campaignIdPostEscape = campaignIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -322,8 +403,8 @@ open class RewardsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<RewardsControllerVoucherSecret200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

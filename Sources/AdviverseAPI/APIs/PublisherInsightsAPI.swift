@@ -13,21 +13,30 @@ import AnyCodable
 open class PublisherInsightsAPI {
 
     /**
-
+     Get the clearing-price distribution for a placement
+     
      - parameter placementId: (query)  
-     - returns: Void
+     - returns: PublisherInsightsControllerClearing200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherInsightsControllerClearing(placementId: String) async throws {
+    open class func publisherInsightsControllerClearing(placementId: String) async throws -> PublisherInsightsControllerClearing200Response {
         return try await publisherInsightsControllerClearingWithRequestBuilder(placementId: placementId).execute().body
     }
 
     /**
+     Get the clearing-price distribution for a placement
      - GET /v1/publisher/insights/clearing
+     - For about 10 candidate floors across the placement's observed clearing range, returns `fillRate` (share of bids clearing at or above the floor) and `expectedRevenue` (floor x fillRate), plus clearing p50/p90 and sample size. Requires `?placementId=`; only your own revenue data is exposed. 404 if the placement is not yours.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter placementId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PublisherInsightsControllerClearing200Response> 
      */
-    open class func publisherInsightsControllerClearingWithRequestBuilder(placementId: String) -> RequestBuilder<Void> {
+    open class func publisherInsightsControllerClearingWithRequestBuilder(placementId: String) -> RequestBuilder<PublisherInsightsControllerClearing200Response> {
         let localVariablePath = "/v1/publisher/insights/clearing"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -43,25 +52,34 @@ open class PublisherInsightsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PublisherInsightsControllerClearing200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get performance of your deals
+     
+     - returns: PublisherInsightsControllerDeals200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherInsightsControllerDeals() async throws {
+    open class func publisherInsightsControllerDeals() async throws -> PublisherInsightsControllerDeals200Response {
         return try await publisherInsightsControllerDealsWithRequestBuilder().execute().body
     }
 
     /**
+     Get performance of your deals
      - GET /v1/publisher/insights/deals
-     - returns: RequestBuilder<Void> 
+     - Returns every deal you own with attributed impressions, clicks, revenue and eCPM, sorted by revenue. Deals with no delivery show zeros; if analytics is unavailable metrics fall back to zero rather than failing.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<PublisherInsightsControllerDeals200Response> 
      */
-    open class func publisherInsightsControllerDealsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func publisherInsightsControllerDealsWithRequestBuilder() -> RequestBuilder<PublisherInsightsControllerDeals200Response> {
         let localVariablePath = "/v1/publisher/insights/deals"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -74,27 +92,36 @@ open class PublisherInsightsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PublisherInsightsControllerDeals200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get a revenue-maximizing floor recommendation
+     
      - parameter placementId: (query)  
-     - returns: Void
+     - returns: PublisherInsightsControllerFloorRecommendation200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherInsightsControllerFloorRecommendation(placementId: String) async throws {
+    open class func publisherInsightsControllerFloorRecommendation(placementId: String) async throws -> PublisherInsightsControllerFloorRecommendation200Response {
         return try await publisherInsightsControllerFloorRecommendationWithRequestBuilder(placementId: placementId).execute().body
     }
 
     /**
+     Get a revenue-maximizing floor recommendation
      - GET /v1/publisher/insights/floor-recommendation
+     - Picks the floor that maximizes expected revenue on the placement's empirical fill curve and a matching soft reserve, with the expected revenue lift versus the current floor. With fewer than 500 recent cleared impressions it keeps the current floor and explains why in `note`. Requires `?placementId=`; 404 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter placementId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PublisherInsightsControllerFloorRecommendation200Response> 
      */
-    open class func publisherInsightsControllerFloorRecommendationWithRequestBuilder(placementId: String) -> RequestBuilder<Void> {
+    open class func publisherInsightsControllerFloorRecommendationWithRequestBuilder(placementId: String) -> RequestBuilder<PublisherInsightsControllerFloorRecommendation200Response> {
         let localVariablePath = "/v1/publisher/insights/floor-recommendation"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -110,27 +137,36 @@ open class PublisherInsightsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PublisherInsightsControllerFloorRecommendation200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get no-fill reasons for a placement
+     
      - parameter placementId: (query)  
-     - returns: Void
+     - returns: PublisherInsightsControllerNoFill200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func publisherInsightsControllerNoFill(placementId: String) async throws {
+    open class func publisherInsightsControllerNoFill(placementId: String) async throws -> PublisherInsightsControllerNoFill200Response {
         return try await publisherInsightsControllerNoFillWithRequestBuilder(placementId: placementId).execute().body
     }
 
     /**
+     Get no-fill reasons for a placement
      - GET /v1/publisher/insights/no-fill
+     - Breaks down the placement's last 30 days of requests into filled vs. no-fill, with each no-fill reason's count and percentage share. `fillRate` and `pct` are percentages (0-100). Requires `?placementId=`; 404 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter placementId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PublisherInsightsControllerNoFill200Response> 
      */
-    open class func publisherInsightsControllerNoFillWithRequestBuilder(placementId: String) -> RequestBuilder<Void> {
+    open class func publisherInsightsControllerNoFillWithRequestBuilder(placementId: String) -> RequestBuilder<PublisherInsightsControllerNoFill200Response> {
         let localVariablePath = "/v1/publisher/insights/no-fill"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -146,8 +182,8 @@ open class PublisherInsightsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PublisherInsightsControllerNoFill200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

@@ -13,23 +13,32 @@ import AnyCodable
 open class WebhooksAPI {
 
     /**
-
+     List recent deliveries
+     
      - parameter id: (path)  
      - parameter limit: (query)  (optional)
-     - returns: Void
+     - returns: [WebhookDelivery]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func webhooksControllerDeliveries(id: String, limit: Double? = nil) async throws {
+    open class func webhooksControllerDeliveries(id: String, limit: Double? = nil) async throws -> [WebhookDelivery] {
         return try await webhooksControllerDeliveriesWithRequestBuilder(id: id, limit: limit).execute().body
     }
 
     /**
+     List recent deliveries
      - GET /v1/webhooks/{id}/deliveries
+     - Lists delivery attempts for one endpoint, newest first. `limit` defaults to 50 (max 200). Returns 400 if the endpoint is not found.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter limit: (query)  (optional)
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[WebhookDelivery]> 
      */
-    open class func webhooksControllerDeliveriesWithRequestBuilder(id: String, limit: Double? = nil) -> RequestBuilder<Void> {
+    open class func webhooksControllerDeliveriesWithRequestBuilder(id: String, limit: Double? = nil) -> RequestBuilder<[WebhookDelivery]> {
         var localVariablePath = "/v1/webhooks/{id}/deliveries"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -48,25 +57,34 @@ open class WebhooksAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[WebhookDelivery]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List webhook event types
+     
+     - returns: WebhooksControllerEvents200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func webhooksControllerEvents() async throws {
+    open class func webhooksControllerEvents() async throws -> WebhooksControllerEvents200Response {
         return try await webhooksControllerEventsWithRequestBuilder().execute().body
     }
 
     /**
+     List webhook event types
      - GET /v1/webhooks/events
-     - returns: RequestBuilder<Void> 
+     - Returns the event type names a webhook endpoint can subscribe to.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<WebhooksControllerEvents200Response> 
      */
-    open class func webhooksControllerEventsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func webhooksControllerEventsWithRequestBuilder() -> RequestBuilder<WebhooksControllerEvents200Response> {
         let localVariablePath = "/v1/webhooks/events"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -79,25 +97,34 @@ open class WebhooksAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<WebhooksControllerEvents200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List webhook endpoints
+     
+     - returns: [WebhookEndpoint]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func webhooksControllerList() async throws {
+    open class func webhooksControllerList() async throws -> [WebhookEndpoint] {
         return try await webhooksControllerListWithRequestBuilder().execute().body
     }
 
     /**
+     List webhook endpoints
      - GET /v1/webhooks
-     - returns: RequestBuilder<Void> 
+     - Lists the account's webhook subscriptions, newest first. Includes each endpoint's HMAC signing `secret` so the dashboard can show it for verifying the `X-Adviverse-Signature` header.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[WebhookEndpoint]> 
      */
-    open class func webhooksControllerListWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func webhooksControllerListWithRequestBuilder() -> RequestBuilder<[WebhookEndpoint]> {
         let localVariablePath = "/v1/webhooks"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -110,27 +137,36 @@ open class WebhooksAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[WebhookEndpoint]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Send a test ping
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: WebhookDeliveryResult
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func webhooksControllerPing(id: String) async throws {
+    open class func webhooksControllerPing(id: String) async throws -> WebhookDeliveryResult {
         return try await webhooksControllerPingWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Send a test ping
      - POST /v1/webhooks/{id}/ping
+     - Synchronously delivers a signed `ping` event to the endpoint and reports the result. The attempt is logged as a delivery and retried later if it failed. Returns 400 if the endpoint is not found.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<WebhookDeliveryResult> 
      */
-    open class func webhooksControllerPingWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func webhooksControllerPingWithRequestBuilder(id: String) -> RequestBuilder<WebhookDeliveryResult> {
         var localVariablePath = "/v1/webhooks/{id}/ping"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -146,27 +182,36 @@ open class WebhooksAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<WebhookDeliveryResult>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Redeliver a past webhook
+     
      - parameter deliveryId: (path)  
-     - returns: Void
+     - returns: WebhookDeliveryResult
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func webhooksControllerRedeliver(deliveryId: String) async throws {
+    open class func webhooksControllerRedeliver(deliveryId: String) async throws -> WebhookDeliveryResult {
         return try await webhooksControllerRedeliverWithRequestBuilder(deliveryId: deliveryId).execute().body
     }
 
     /**
+     Redeliver a past webhook
      - POST /v1/webhooks/deliveries/{deliveryId}/redeliver
+     - Re-sends the exact stored payload of a past delivery as a new attempt, with a signature computed from the endpoint's current secret. Returns 400 if the delivery does not belong to this account.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter deliveryId: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<WebhookDeliveryResult> 
      */
-    open class func webhooksControllerRedeliverWithRequestBuilder(deliveryId: String) -> RequestBuilder<Void> {
+    open class func webhooksControllerRedeliverWithRequestBuilder(deliveryId: String) -> RequestBuilder<WebhookDeliveryResult> {
         var localVariablePath = "/v1/webhooks/deliveries/{deliveryId}/redeliver"
         let deliveryIdPreEscape = "\(APIHelper.mapValueToPathItem(deliveryId))"
         let deliveryIdPostEscape = deliveryIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -182,27 +227,36 @@ open class WebhooksAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<WebhookDeliveryResult>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Rotate a webhook signing secret
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: WebhookEndpoint
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func webhooksControllerRotateSecret(id: String) async throws {
+    open class func webhooksControllerRotateSecret(id: String) async throws -> WebhookEndpoint {
         return try await webhooksControllerRotateSecretWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Rotate a webhook signing secret
      - POST /v1/webhooks/{id}/rotate-secret
+     - Generates a new `whsec_` signing secret. The old secret stops verifying immediately, so update the receiver right away. Returns 400 if the endpoint is not found.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<WebhookEndpoint> 
      */
-    open class func webhooksControllerRotateSecretWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func webhooksControllerRotateSecretWithRequestBuilder(id: String) -> RequestBuilder<WebhookEndpoint> {
         var localVariablePath = "/v1/webhooks/{id}/rotate-secret"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -218,27 +272,36 @@ open class WebhooksAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<WebhookEndpoint>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create a webhook endpoint
+     
      - parameter subscribeWebhookDto: (body)  
-     - returns: Void
+     - returns: WebhookEndpoint
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func webhooksControllerSubscribe(subscribeWebhookDto: SubscribeWebhookDto) async throws {
+    open class func webhooksControllerSubscribe(subscribeWebhookDto: SubscribeWebhookDto) async throws -> WebhookEndpoint {
         return try await webhooksControllerSubscribeWithRequestBuilder(subscribeWebhookDto: subscribeWebhookDto).execute().body
     }
 
     /**
+     Create a webhook endpoint
      - POST /v1/webhooks
+     - Registers `url` to receive the listed `events` (non-empty array). The URL is checked by the SSRF guard (localhost, private and metadata addresses are rejected with 400). A `whsec_` signing secret is generated and returned. Deliveries are JSON `{ event, data, ts }` POSTs signed with HMAC-SHA256 of the body in `X-Adviverse-Signature`; failures are retried with backoff.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter subscribeWebhookDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<WebhookEndpoint> 
      */
-    open class func webhooksControllerSubscribeWithRequestBuilder(subscribeWebhookDto: SubscribeWebhookDto) -> RequestBuilder<Void> {
+    open class func webhooksControllerSubscribeWithRequestBuilder(subscribeWebhookDto: SubscribeWebhookDto) -> RequestBuilder<WebhookEndpoint> {
         let localVariablePath = "/v1/webhooks"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: subscribeWebhookDto)
@@ -251,27 +314,36 @@ open class WebhooksAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<WebhookEndpoint>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Delete a webhook endpoint
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: WebhooksControllerUnsubscribe200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func webhooksControllerUnsubscribe(id: String) async throws {
+    open class func webhooksControllerUnsubscribe(id: String) async throws -> WebhooksControllerUnsubscribe200Response {
         return try await webhooksControllerUnsubscribeWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete a webhook endpoint
      - DELETE /v1/webhooks/{id}
+     - Deletes the subscription. Unknown or foreign ids are a silent no-op.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<WebhooksControllerUnsubscribe200Response> 
      */
-    open class func webhooksControllerUnsubscribeWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func webhooksControllerUnsubscribeWithRequestBuilder(id: String) -> RequestBuilder<WebhooksControllerUnsubscribe200Response> {
         var localVariablePath = "/v1/webhooks/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -287,29 +359,38 @@ open class WebhooksAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<WebhooksControllerUnsubscribe200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update a webhook endpoint
+     
      - parameter id: (path)  
      - parameter updateWebhookDto: (body)  
-     - returns: Void
+     - returns: WebhookEndpoint
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func webhooksControllerUpdate(id: String, updateWebhookDto: UpdateWebhookDto) async throws {
+    open class func webhooksControllerUpdate(id: String, updateWebhookDto: UpdateWebhookDto) async throws -> WebhookEndpoint {
         return try await webhooksControllerUpdateWithRequestBuilder(id: id, updateWebhookDto: updateWebhookDto).execute().body
     }
 
     /**
+     Update a webhook endpoint
      - PATCH /v1/webhooks/{id}
+     - Changes an endpoint's `url`, `events` and/or `active` flag (set false to pause deliveries); omitted fields are kept. A new URL goes through the SSRF guard and unknown event names are rejected with 400. Returns 400 if the endpoint is not found for this account.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter updateWebhookDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<WebhookEndpoint> 
      */
-    open class func webhooksControllerUpdateWithRequestBuilder(id: String, updateWebhookDto: UpdateWebhookDto) -> RequestBuilder<Void> {
+    open class func webhooksControllerUpdateWithRequestBuilder(id: String, updateWebhookDto: UpdateWebhookDto) -> RequestBuilder<WebhookEndpoint> {
         var localVariablePath = "/v1/webhooks/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -325,8 +406,8 @@ open class WebhooksAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<WebhookEndpoint>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

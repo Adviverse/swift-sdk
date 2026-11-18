@@ -13,19 +13,28 @@ import AnyCodable
 open class VerificationAPI {
 
     /**
-
-     - returns: Void
+     List brand-safety categories
+     
+     - returns: [VerificationControllerCategories200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func verificationControllerCategories() async throws {
+    open class func verificationControllerCategories() async throws -> [VerificationControllerCategories200ResponseInner] {
         return try await verificationControllerCategoriesWithRequestBuilder().execute().body
     }
 
     /**
+     List brand-safety categories
      - GET /v1/verification/categories
-     - returns: RequestBuilder<Void> 
+     - Returns the static brand-safety category catalog (ids such as `adult`, `violence`, `hate`) accepted in verification settings.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[VerificationControllerCategories200ResponseInner]> 
      */
-    open class func verificationControllerCategoriesWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func verificationControllerCategoriesWithRequestBuilder() -> RequestBuilder<[VerificationControllerCategories200ResponseInner]> {
         let localVariablePath = "/v1/verification/categories"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,25 +47,34 @@ open class VerificationAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[VerificationControllerCategories200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get your verification and brand-safety settings
+     
+     - returns: RewVerificationSettings
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func verificationControllerGetSettings() async throws {
+    open class func verificationControllerGetSettings() async throws -> RewVerificationSettings {
         return try await verificationControllerGetSettingsWithRequestBuilder().execute().body
     }
 
     /**
+     Get your verification and brand-safety settings
      - GET /v1/verification/settings
-     - returns: RequestBuilder<Void> 
+     - Returns your measurement vendor, viewability target, blocked brand-safety categories, blocked domains and keywords, falling back to the global defaults when you have not saved settings. The vendor API key is never returned, only `apiKeySet`.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<RewVerificationSettings> 
      */
-    open class func verificationControllerGetSettingsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func verificationControllerGetSettingsWithRequestBuilder() -> RequestBuilder<RewVerificationSettings> {
         let localVariablePath = "/v1/verification/settings"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -69,27 +87,36 @@ open class VerificationAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<RewVerificationSettings>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Save your verification and brand-safety settings
+     
      - parameter putSettingsDto: (body)  
-     - returns: Void
+     - returns: RewVerificationSettings
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func verificationControllerPutSettings(putSettingsDto: PutSettingsDto) async throws {
+    open class func verificationControllerPutSettings(putSettingsDto: PutSettingsDto) async throws -> RewVerificationSettings {
         return try await verificationControllerPutSettingsWithRequestBuilder(putSettingsDto: putSettingsDto).execute().body
     }
 
     /**
+     Save your verification and brand-safety settings
      - PUT /v1/verification/settings
+     - Replaces your settings: `vendor` (none, ias, doubleverify, moat; default none), `measurementEnabled`, `viewabilityTarget` (0-1, default 0.7), `brandSafetyCategories` (unknown ids dropped), `blockedDomains` (normalized to bare hosts) and `blockedKeywords` (lowercased tokens), all enforced at serve time. `apiKey` is encrypted at rest; omit it to keep the stored key, send an empty string to clear it.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter putSettingsDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<RewVerificationSettings> 
      */
-    open class func verificationControllerPutSettingsWithRequestBuilder(putSettingsDto: PutSettingsDto) -> RequestBuilder<Void> {
+    open class func verificationControllerPutSettingsWithRequestBuilder(putSettingsDto: PutSettingsDto) -> RequestBuilder<RewVerificationSettings> {
         let localVariablePath = "/v1/verification/settings"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: putSettingsDto)
@@ -102,8 +129,8 @@ open class VerificationAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<RewVerificationSettings>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PUT", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PUT", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

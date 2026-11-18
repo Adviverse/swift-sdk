@@ -13,23 +13,32 @@ import AnyCodable
 open class PixelAPI {
 
     /**
-
+     Closed-loop attribution by traffic source
+     
      - parameter days: (query)  
      - parameter pixelId: (query)  
-     - returns: Void
+     - returns: PixelControllerAttribution200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerAttribution(days: String, pixelId: String) async throws {
+    open class func pixelControllerAttribution(days: String, pixelId: String) async throws -> PixelControllerAttribution200Response {
         return try await pixelControllerAttributionWithRequestBuilder(days: days, pixelId: pixelId).execute().body
     }
 
     /**
+     Closed-loop attribution by traffic source
      - GET /v1/advertiser/pixel/attribution
+     - Breaks the funnel down by last-touch source (UTM source, else the referring host, else \"direct\"), medium and campaign over the last `days` (default 30, max 180): visitors, checkouts, purchases, abandoned checkouts, lost deals, revenue and lost value. Also returns account totals, lost-deal reasons and a first-touch source breakdown. Self-referrals are folded into \"direct\".  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter days: (query)  
      - parameter pixelId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PixelControllerAttribution200Response> 
      */
-    open class func pixelControllerAttributionWithRequestBuilder(days: String, pixelId: String) -> RequestBuilder<Void> {
+    open class func pixelControllerAttributionWithRequestBuilder(days: String, pixelId: String) -> RequestBuilder<PixelControllerAttribution200Response> {
         let localVariablePath = "/v1/advertiser/pixel/attribution"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -46,25 +55,34 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PixelControllerAttribution200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Generate a one-time CLI link code
+     
+     - returns: PixelControllerCliLinkCode201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerCliLinkCode() async throws {
+    open class func pixelControllerCliLinkCode() async throws -> PixelControllerCliLinkCode201Response {
         return try await pixelControllerCliLinkCodeWithRequestBuilder().execute().body
     }
 
     /**
+     Generate a one-time CLI link code
      - POST /v1/advertiser/cli-link-code
-     - returns: RequestBuilder<Void> 
+     - Creates a single-use code, valid for 10 minutes, that a terminal client exchanges at /v1/track/link for the SHA-256 hash of the account email. This links CLI ad requests to the account identity without the raw email ever leaving the server. Returns 404 if the account has no email.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<PixelControllerCliLinkCode201Response> 
      */
-    open class func pixelControllerCliLinkCodeWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func pixelControllerCliLinkCodeWithRequestBuilder() -> RequestBuilder<PixelControllerCliLinkCode201Response> {
         let localVariablePath = "/v1/advertiser/cli-link-code"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -77,25 +95,28 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PixelControllerCliLinkCode201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Exchange a CLI link code for an email hash
+     
+     - returns: PixelControllerCliLinkExchange201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerCliLinkExchange() async throws {
+    open class func pixelControllerCliLinkExchange() async throws -> PixelControllerCliLinkExchange201Response {
         return try await pixelControllerCliLinkExchangeWithRequestBuilder().execute().body
     }
 
     /**
+     Exchange a CLI link code for an email hash
      - POST /v1/track/link
-     - returns: RequestBuilder<Void> 
+     - Public. Trades the `code` issued by /v1/advertiser/cli-link-code for the account's email hash (`em`), which the CLI then sends on ad requests. Codes are single-use and deleted on exchange; unknown or expired codes return `{ok:false}`.  Auth: public, no credentials required.
+     - returns: RequestBuilder<PixelControllerCliLinkExchange201Response> 
      */
-    open class func pixelControllerCliLinkExchangeWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func pixelControllerCliLinkExchangeWithRequestBuilder() -> RequestBuilder<PixelControllerCliLinkExchange201Response> {
         let localVariablePath = "/v1/track/link"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -108,25 +129,34 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PixelControllerCliLinkExchange201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Create a pixel
+     
+     - returns: AudiencePixel
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerCreatePixel() async throws {
+    open class func pixelControllerCreatePixel() async throws -> AudiencePixel {
         return try await pixelControllerCreatePixelWithRequestBuilder().execute().body
     }
 
     /**
+     Create a pixel
      - POST /v1/advertiser/pixels
-     - returns: RequestBuilder<Void> 
+     - Creates an additional pixel under the account (agencies typically run one per client). Optional body field `name` (trimmed, max 80 chars, defaults to \"Default pixel\"). Returns the new pixel with its install snippet.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AudiencePixel> 
      */
-    open class func pixelControllerCreatePixelWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func pixelControllerCreatePixelWithRequestBuilder() -> RequestBuilder<AudiencePixel> {
         let localVariablePath = "/v1/advertiser/pixels"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -139,27 +169,36 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AudiencePixel>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Delete a pixel
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: PixelControllerDeletePixel200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerDeletePixel(id: String) async throws {
+    open class func pixelControllerDeletePixel(id: String) async throws -> PixelControllerDeletePixel200Response {
         return try await pixelControllerDeletePixelWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete a pixel
      - DELETE /v1/advertiser/pixels/{id}
+     - Deletes the pixel `id` if it belongs to the account. An account always keeps at least one pixel, so deleting the last one fails with 400. Deleting an id the account does not own is a silent no-op.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PixelControllerDeletePixel200Response> 
      */
-    open class func pixelControllerDeletePixelWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func pixelControllerDeletePixelWithRequestBuilder(id: String) -> RequestBuilder<PixelControllerDeletePixel200Response> {
         var localVariablePath = "/v1/advertiser/pixels/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -175,29 +214,38 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PixelControllerDeletePixel200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Per-event activity totals
+     
      - parameter days: (query)  
      - parameter pixelId: (query)  
-     - returns: Void
+     - returns: [PixelControllerEvents200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerEvents(days: String, pixelId: String) async throws {
+    open class func pixelControllerEvents(days: String, pixelId: String) async throws -> [PixelControllerEvents200ResponseInner] {
         return try await pixelControllerEventsWithRequestBuilder(days: days, pixelId: pixelId).execute().body
     }
 
     /**
+     Per-event activity totals
      - GET /v1/advertiser/pixel/events
+     - Aggregates pixel events from ClickHouse over the last `days` (default 30, clamped to 1-180), optionally filtered to `pixelId`. Returns one row per event name with event count, unique users and summed value, ordered by count.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter days: (query)  
      - parameter pixelId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[PixelControllerEvents200ResponseInner]> 
      */
-    open class func pixelControllerEventsWithRequestBuilder(days: String, pixelId: String) -> RequestBuilder<Void> {
+    open class func pixelControllerEventsWithRequestBuilder(days: String, pixelId: String) -> RequestBuilder<[PixelControllerEvents200ResponseInner]> {
         let localVariablePath = "/v1/advertiser/pixel/events"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -214,27 +262,36 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[PixelControllerEvents200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get one pixel and its install snippet
+     
      - parameter pixelId: (query)  
-     - returns: Void
+     - returns: AudiencePixel
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerGetPixel(pixelId: String) async throws {
+    open class func pixelControllerGetPixel(pixelId: String) async throws -> AudiencePixel {
         return try await pixelControllerGetPixelWithRequestBuilder(pixelId: pixelId).execute().body
     }
 
     /**
+     Get one pixel and its install snippet
      - GET /v1/advertiser/pixel
+     - Returns the pixel named by the `pixelId` query param, or the account's primary pixel when omitted (created if the account has none). The response includes the pixel.js library URL, the base snippet to paste sitewide and the list of standard event names. Returns 404 when `pixelId` is not owned by the account.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter pixelId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AudiencePixel> 
      */
-    open class func pixelControllerGetPixelWithRequestBuilder(pixelId: String) -> RequestBuilder<Void> {
+    open class func pixelControllerGetPixelWithRequestBuilder(pixelId: String) -> RequestBuilder<AudiencePixel> {
         let localVariablePath = "/v1/advertiser/pixel"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -250,29 +307,38 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AudiencePixel>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Pixel funnel, ROAS summary and daily trend
+     
      - parameter days: (query)  
      - parameter pixelId: (query)  
-     - returns: Void
+     - returns: PixelControllerInsights200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerInsights(days: String, pixelId: String) async throws {
+    open class func pixelControllerInsights(days: String, pixelId: String) async throws -> PixelControllerInsights200Response {
         return try await pixelControllerInsightsWithRequestBuilder(days: days, pixelId: pixelId).execute().body
     }
 
     /**
+     Pixel funnel, ROAS summary and daily trend
      - GET /v1/advertiser/pixel/insights
+     - Builds the Pixel dashboard view over the last `days` (default 30, max 180), optionally scoped to `pixelId`: unique users per funnel stage, a summary of events, attributed conversions, revenue, ad spend and ROAS, and a daily events/conversions/revenue series. ROAS is 0 when there is no spend.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter days: (query)  
      - parameter pixelId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PixelControllerInsights200Response> 
      */
-    open class func pixelControllerInsightsWithRequestBuilder(days: String, pixelId: String) -> RequestBuilder<Void> {
+    open class func pixelControllerInsightsWithRequestBuilder(days: String, pixelId: String) -> RequestBuilder<PixelControllerInsights200Response> {
         let localVariablePath = "/v1/advertiser/pixel/insights"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -289,13 +355,14 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PixelControllerInsights200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Serve the pixel JavaScript library
+     
      - returns: Void
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
@@ -304,7 +371,9 @@ open class PixelAPI {
     }
 
     /**
+     Serve the pixel JavaScript library
      - GET /pixel.js
+     - Returns the pixel.js library that the base snippet loads asynchronously; it drains the `adq(...)` command queue and posts events to /v1/track/event. Served as JavaScript with a one-hour public cache.  Auth: public, no credentials required.
      - returns: RequestBuilder<Void> 
      */
     open class func pixelControllerLibraryWithRequestBuilder() -> RequestBuilder<Void> {
@@ -326,19 +395,28 @@ open class PixelAPI {
     }
 
     /**
-
-     - returns: Void
+     List the account's pixels
+     
+     - returns: [AudiencePixel]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerListPixels() async throws {
+    open class func pixelControllerListPixels() async throws -> [AudiencePixel] {
         return try await pixelControllerListPixelsWithRequestBuilder().execute().body
     }
 
     /**
+     List the account's pixels
      - GET /v1/advertiser/pixels
-     - returns: RequestBuilder<Void> 
+     - Returns every pixel owned by the account, oldest first so the primary pixel stays on top. If the account has no pixel yet, a default one is created and returned. Team members scoped to specific pixels only see the pixels assigned to them.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AudiencePixel]> 
      */
-    open class func pixelControllerListPixelsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func pixelControllerListPixelsWithRequestBuilder() -> RequestBuilder<[AudiencePixel]> {
         let localVariablePath = "/v1/advertiser/pixels"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -351,29 +429,38 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AudiencePixel]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Product-level analytics
+     
      - parameter days: (query)  
      - parameter pixelId: (query)  
-     - returns: Void
+     - returns: [PixelControllerProducts200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerProducts(days: String, pixelId: String) async throws {
+    open class func pixelControllerProducts(days: String, pixelId: String) async throws -> [PixelControllerProducts200ResponseInner] {
         return try await pixelControllerProductsWithRequestBuilder(days: days, pixelId: pixelId).execute().body
     }
 
     /**
+     Product-level analytics
      - GET /v1/advertiser/pixel/products
+     - Explodes the `content_ids` carried on pixel events and returns, per product id, unique users who viewed, added to cart, purchased or were lost, plus purchase revenue and lost value. Window is the last `days` (default 30, max 180), optional `pixelId` filter, limited to 200 products.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter days: (query)  
      - parameter pixelId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[PixelControllerProducts200ResponseInner]> 
      */
-    open class func pixelControllerProductsWithRequestBuilder(days: String, pixelId: String) -> RequestBuilder<Void> {
+    open class func pixelControllerProductsWithRequestBuilder(days: String, pixelId: String) -> RequestBuilder<[PixelControllerProducts200ResponseInner]> {
         let localVariablePath = "/v1/advertiser/pixel/products"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -390,25 +477,34 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[PixelControllerProducts200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Toggle real-time audiences for a pixel
+     
+     - returns: PixelControllerSetRealtime201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerSetRealtime() async throws {
+    open class func pixelControllerSetRealtime() async throws -> PixelControllerSetRealtime201Response {
         return try await pixelControllerSetRealtimeWithRequestBuilder().execute().body
     }
 
     /**
+     Toggle real-time audiences for a pixel
      - POST /v1/advertiser/pixel/realtime
-     - returns: RequestBuilder<Void> 
+     - Turns real-time, action-based audience membership on or off (`enabled`) for `pixelId` (or the primary pixel). When on, each consented event and trait update is evaluated against the account's rule audiences by a background worker right after ingestion. Returns 404 for a pixel the account does not own.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<PixelControllerSetRealtime201Response> 
      */
-    open class func pixelControllerSetRealtimeWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func pixelControllerSetRealtimeWithRequestBuilder() -> RequestBuilder<PixelControllerSetRealtime201Response> {
         let localVariablePath = "/v1/advertiser/pixel/realtime"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -421,25 +517,28 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PixelControllerSetRealtime201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Ingest a pixel event
+     
+     - returns: PixelControllerTrack201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerTrack() async throws {
+    open class func pixelControllerTrack() async throws -> PixelControllerTrack201Response {
         return try await pixelControllerTrackWithRequestBuilder().execute().body
     }
 
     /**
+     Ingest a pixel event
      - POST /v1/track/event
-     - returns: RequestBuilder<Void> 
+     - Called by pixel.js. Body carries `pixelId`, `event` (default PageView), optional `eventId` (deduplicated per account for 7 days), `url`, `referrer`, `params` (value, currency, content_ids, order_id...), UTM touch data, hashed `am` identifiers and consent flags. Events from hosts outside the pixel's allowed domains are rejected; without consent (GPC or consent:false) the event is stored for aggregate analytics only, with no identity linkage. Conversion events carrying an `adclid` are attributed to the clicked ad. Never throws: failures return `{status:\"error\"}` and the request sets the first-party uid cookie.  Auth: public, no credentials required.
+     - returns: RequestBuilder<PixelControllerTrack201Response> 
      */
-    open class func pixelControllerTrackWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func pixelControllerTrackWithRequestBuilder() -> RequestBuilder<PixelControllerTrack201Response> {
         let localVariablePath = "/v1/track/event"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -452,25 +551,28 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PixelControllerTrack201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Record terminal coding-context keywords
+     
+     - returns: PixelControllerTrackCoding201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerTrackCoding() async throws {
+    open class func pixelControllerTrackCoding() async throws -> PixelControllerTrackCoding201Response {
         return try await pixelControllerTrackCodingWithRequestBuilder().execute().body
     }
 
     /**
+     Record terminal coding-context keywords
      - POST /v1/track/coding
-     - returns: RequestBuilder<Void> 
+     - Public beacon for CLI/IDE clients. Body: `kw` (up to 20 keywords), `client`, and `em` (a SHA-256 email hash) or `uid`. Keywords are logged under a reserved network account keyed to the same email-derived canonical id the ad engine targets, so they feed developer interest segments. A valid `em` also writes the cross-surface identity link. Returns `skipped` when there are no keywords; never throws.  Auth: public, no credentials required.
+     - returns: RequestBuilder<PixelControllerTrackCoding201Response> 
      */
-    open class func pixelControllerTrackCodingWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func pixelControllerTrackCodingWithRequestBuilder() -> RequestBuilder<PixelControllerTrackCoding201Response> {
         let localVariablePath = "/v1/track/coding"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -483,13 +585,14 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PixelControllerTrackCoding201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Ingest a pixel event via image beacon
+     
      - returns: Void
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
@@ -498,7 +601,9 @@ open class PixelAPI {
     }
 
     /**
+     Ingest a pixel event via image beacon
      - GET /v1/track/event
+     - The noscript / image fallback for /v1/track/event. Query params `pixel_id`, `event`, `event_id`, `url` and `adclid` are read, and the full query string is stored as event params. Always responds with a 1x1 transparent GIF, even on failure.  Auth: public, no credentials required.
      - returns: RequestBuilder<Void> 
      */
     open class func pixelControllerTrackGetWithRequestBuilder() -> RequestBuilder<Void> {
@@ -520,19 +625,22 @@ open class PixelAPI {
     }
 
     /**
-
-     - returns: Void
+     Set user traits for the visitor
+     
+     - returns: PixelControllerTrait201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerTrait() async throws {
+    open class func pixelControllerTrait() async throws -> PixelControllerTrait201Response {
         return try await pixelControllerTraitWithRequestBuilder().execute().body
     }
 
     /**
+     Set user traits for the visitor
      - POST /v1/track/trait
-     - returns: RequestBuilder<Void> 
+     - Stores CDP profile traits (`traits` object) for the caller's uid, resolved to a canonical id using optional hashed `am` identifiers. Traits require consent, so GPC or consent:false skips the write. When the pixel has real-time audiences enabled, trait-based rule audiences are re-evaluated. Fail-soft: errors (including an unknown pixel) return `{status:\"error\"}`.  Auth: public, no credentials required.
+     - returns: RequestBuilder<PixelControllerTrait201Response> 
      */
-    open class func pixelControllerTraitWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func pixelControllerTraitWithRequestBuilder() -> RequestBuilder<PixelControllerTrait201Response> {
         let localVariablePath = "/v1/track/trait"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -545,29 +653,38 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PixelControllerTrait201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Look up a user's CDP traits
+     
      - parameter user: (query)  
      - parameter pixelId: (query)  
-     - returns: Void
+     - returns: PixelControllerTraitLookup200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerTraitLookup(user: String, pixelId: String) async throws {
+    open class func pixelControllerTraitLookup(user: String, pixelId: String) async throws -> PixelControllerTraitLookup200Response {
         return try await pixelControllerTraitLookupWithRequestBuilder(user: user, pixelId: pixelId).execute().body
     }
 
     /**
+     Look up a user's CDP traits
      - GET /v1/advertiser/pixel/traits
+     - Resolves the `user` query value (a canonical `id_...`, a cookie uid, a SHA-256 email/phone hash, or a raw email which is hashed server-side) to a canonical id through the identity map and returns its stored traits. With `pixelId`, only traits set by that pixel are shown. Unknown identifiers return an empty canonical and no traits rather than an error.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter user: (query)  
      - parameter pixelId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PixelControllerTraitLookup200Response> 
      */
-    open class func pixelControllerTraitLookupWithRequestBuilder(user: String, pixelId: String) -> RequestBuilder<Void> {
+    open class func pixelControllerTraitLookupWithRequestBuilder(user: String, pixelId: String) -> RequestBuilder<PixelControllerTraitLookup200Response> {
         let localVariablePath = "/v1/advertiser/pixel/traits"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -584,25 +701,34 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PixelControllerTraitLookup200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Update pixel settings
+     
+     - returns: AudiencePixel
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func pixelControllerUpdateSettings() async throws {
+    open class func pixelControllerUpdateSettings() async throws -> AudiencePixel {
         return try await pixelControllerUpdateSettingsWithRequestBuilder().execute().body
     }
 
     /**
+     Update pixel settings
      - POST /v1/advertiser/pixel/settings
-     - returns: RequestBuilder<Void> 
+     - Patches `name` (max 80 chars), `defaultConsent` (whether events without an explicit consent signal are treated as consented) and `allowedDomains` for `pixelId` (or the primary pixel). Domains are normalized to bare lowercase hosts, deduplicated and capped at 50; once set, events fired from other hosts are rejected. Omitted fields are left unchanged; returns the updated pixel, or 404 if not owned.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AudiencePixel> 
      */
-    open class func pixelControllerUpdateSettingsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func pixelControllerUpdateSettingsWithRequestBuilder() -> RequestBuilder<AudiencePixel> {
         let localVariablePath = "/v1/advertiser/pixel/settings"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -615,8 +741,8 @@ open class PixelAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AudiencePixel>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

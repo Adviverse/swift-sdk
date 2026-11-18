@@ -13,23 +13,32 @@ import AnyCodable
 open class SettingsAPI {
 
     /**
-
+     Get a bid recommendation
+     
      - parameter format: (query)  
      - parameter geo: (query)  
-     - returns: Void
+     - returns: SettingsControllerBidRec200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerBidRec(format: String, geo: String) async throws {
+    open class func settingsControllerBidRec(format: String, geo: String) async throws -> SettingsControllerBidRec200Response {
         return try await settingsControllerBidRecWithRequestBuilder(format: format, geo: geo).execute().body
     }
 
     /**
+     Get a bid recommendation
      - GET /v1/advertiser/insights/bid-recommendation
+     - Recommends a CPM bid for `format` (and optional `geo`) from the last 7 days of valid winning impressions in ClickHouse. `recommendedCpm` is the 60th percentile of clearing CPM, `floorObserved` the median and `competitiveCpm` the 90th percentile, as 4-decimal strings. If the query fails it returns zeros with `note: \"insufficient data\"`.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter format: (query)  
      - parameter geo: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SettingsControllerBidRec200Response> 
      */
-    open class func settingsControllerBidRecWithRequestBuilder(format: String, geo: String) -> RequestBuilder<Void> {
+    open class func settingsControllerBidRecWithRequestBuilder(format: String, geo: String) -> RequestBuilder<SettingsControllerBidRec200Response> {
         let localVariablePath = "/v1/advertiser/insights/bid-recommendation"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -46,29 +55,38 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SettingsControllerBidRec200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Set campaign brand-safety controls
+     
      - parameter id: (path)  
      - parameter brandSafetyDto: (body)  
-     - returns: Void
+     - returns: AdminControllerSetStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerBrandSafety(id: String, brandSafetyDto: BrandSafetyDto) async throws {
+    open class func settingsControllerBrandSafety(id: String, brandSafetyDto: BrandSafetyDto) async throws -> AdminControllerSetStatus201Response {
         return try await settingsControllerBrandSafetyWithRequestBuilder(id: id, brandSafetyDto: brandSafetyDto).execute().body
     }
 
     /**
+     Set campaign brand-safety controls
      - POST /v1/advertiser/campaigns/{id}/brand-safety
+     - Stores brand-safety settings (`categories`, `keywords`, `domains`, `sensitivity`, free-form `options`) as JSON on the campaign, replacing any previous value. Only campaigns owned by the caller are updated; a foreign or unknown id is silently ignored.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter brandSafetyDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
      */
-    open class func settingsControllerBrandSafetyWithRequestBuilder(id: String, brandSafetyDto: BrandSafetyDto) -> RequestBuilder<Void> {
+    open class func settingsControllerBrandSafetyWithRequestBuilder(id: String, brandSafetyDto: BrandSafetyDto) -> RequestBuilder<AdminControllerSetStatus201Response> {
         var localVariablePath = "/v1/advertiser/campaigns/{id}/brand-safety"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -84,27 +102,36 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create an API key
+     
      - parameter createKeyDto: (body)  
-     - returns: Void
+     - returns: ApiKeyCreated
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerCreateKey(createKeyDto: CreateKeyDto) async throws {
+    open class func settingsControllerCreateKey(createKeyDto: CreateKeyDto) async throws -> ApiKeyCreated {
         return try await settingsControllerCreateKeyWithRequestBuilder(createKeyDto: createKeyDto).execute().body
     }
 
     /**
+     Create an API key
      - POST /v1/keys
+     - Creates a scoped API key with `name`, optional `scopes` (default `[\"read\"]`) and optional `expiresInDays` (1-365; omitted = never expires). The full `key` (`ak_<prefix>.<secret>`) is returned exactly once; only its SHA-256 hash is stored. The key is projected to Redis immediately so the ad-engine accepts it without waiting for a resync.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createKeyDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ApiKeyCreated> 
      */
-    open class func settingsControllerCreateKeyWithRequestBuilder(createKeyDto: CreateKeyDto) -> RequestBuilder<Void> {
+    open class func settingsControllerCreateKeyWithRequestBuilder(createKeyDto: CreateKeyDto) -> RequestBuilder<ApiKeyCreated> {
         let localVariablePath = "/v1/keys"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createKeyDto)
@@ -117,27 +144,36 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ApiKeyCreated>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create a terminal serve token
+     
      - parameter createTerminalTokenDto: (body)  
-     - returns: Void
+     - returns: SettingsControllerCreateTerminalToken201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerCreateTerminalToken(createTerminalTokenDto: CreateTerminalTokenDto) async throws {
+    open class func settingsControllerCreateTerminalToken(createTerminalTokenDto: CreateTerminalTokenDto) async throws -> SettingsControllerCreateTerminalToken201Response {
         return try await settingsControllerCreateTerminalTokenWithRequestBuilder(createTerminalTokenDto: createTerminalTokenDto).execute().body
     }
 
     /**
+     Create a terminal serve token
      - POST /v1/advertiser/terminal-tokens
+     - Mints a public `ts_` token for shipping inside a terminal client, with optional `name`, `campaignId` (must be one of your `terminal`-format campaigns) and `switch` policy. A switch policy (`flipAfter` / `flipOnClick`) requires a pinned campaign, and `fallbackTag` must be one of your own placement tags, otherwise 400. The token is projected to Redis so the engine resolves it on the serve path.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createTerminalTokenDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SettingsControllerCreateTerminalToken201Response> 
      */
-    open class func settingsControllerCreateTerminalTokenWithRequestBuilder(createTerminalTokenDto: CreateTerminalTokenDto) -> RequestBuilder<Void> {
+    open class func settingsControllerCreateTerminalTokenWithRequestBuilder(createTerminalTokenDto: CreateTerminalTokenDto) -> RequestBuilder<SettingsControllerCreateTerminalToken201Response> {
         let localVariablePath = "/v1/advertiser/terminal-tokens"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createTerminalTokenDto)
@@ -150,25 +186,34 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SettingsControllerCreateTerminalToken201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List API keys
+     
+     - returns: [ApiKey]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerListKeys() async throws {
+    open class func settingsControllerListKeys() async throws -> [ApiKey] {
         return try await settingsControllerListKeysWithRequestBuilder().execute().body
     }
 
     /**
+     List API keys
      - GET /v1/keys
-     - returns: RequestBuilder<Void> 
+     - Lists the account's live (non-revoked) API keys, newest first. Only the public `key_prefix` is returned; the secret is never shown again after creation. `expired` is true once `expires_at` has passed.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ApiKey]> 
      */
-    open class func settingsControllerListKeysWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func settingsControllerListKeysWithRequestBuilder() -> RequestBuilder<[ApiKey]> {
         let localVariablePath = "/v1/keys"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -181,25 +226,34 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ApiKey]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List terminal serve tokens
+     
+     - returns: [SettingsControllerListTerminalTokens200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerListTerminalTokens() async throws {
+    open class func settingsControllerListTerminalTokens() async throws -> [SettingsControllerListTerminalTokens200ResponseInner] {
         return try await settingsControllerListTerminalTokensWithRequestBuilder().execute().body
     }
 
     /**
+     List terminal serve tokens
      - GET /v1/advertiser/terminal-tokens
-     - returns: RequestBuilder<Void> 
+     - Lists the account's live public terminal serve tokens (`ts_...`), newest first, including any adaptive switch policy columns. These tokens are serve-only and safe to embed in distributed CLIs, so the full value is returned.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[SettingsControllerListTerminalTokens200ResponseInner]> 
      */
-    open class func settingsControllerListTerminalTokensWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func settingsControllerListTerminalTokensWithRequestBuilder() -> RequestBuilder<[SettingsControllerListTerminalTokens200ResponseInner]> {
         let localVariablePath = "/v1/advertiser/terminal-tokens"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -212,27 +266,36 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[SettingsControllerListTerminalTokens200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Revoke an API key
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: SettingsControllerRevokeKey200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerRevokeKey(id: String) async throws {
+    open class func settingsControllerRevokeKey(id: String) async throws -> SettingsControllerRevokeKey200Response {
         return try await settingsControllerRevokeKeyWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Revoke an API key
      - DELETE /v1/keys/{id}
+     - Marks the key revoked and removes it from the engine's Redis credential map, so it stops working everywhere. Revoking an unknown or foreign id is a silent no-op.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SettingsControllerRevokeKey200Response> 
      */
-    open class func settingsControllerRevokeKeyWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func settingsControllerRevokeKeyWithRequestBuilder(id: String) -> RequestBuilder<SettingsControllerRevokeKey200Response> {
         var localVariablePath = "/v1/keys/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -248,27 +311,36 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SettingsControllerRevokeKey200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Revoke a terminal serve token
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: SegmentsControllerRevoke201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerRevokeTerminalToken(id: String) async throws {
+    open class func settingsControllerRevokeTerminalToken(id: String) async throws -> SegmentsControllerRevoke201Response {
         return try await settingsControllerRevokeTerminalTokenWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Revoke a terminal serve token
      - DELETE /v1/advertiser/terminal-tokens/{id}
+     - Marks the token revoked and deletes its Redis projection so the engine stops serving it. Unknown ids are a no-op.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SegmentsControllerRevoke201Response> 
      */
-    open class func settingsControllerRevokeTerminalTokenWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func settingsControllerRevokeTerminalTokenWithRequestBuilder(id: String) -> RequestBuilder<SegmentsControllerRevoke201Response> {
         var localVariablePath = "/v1/advertiser/terminal-tokens/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -284,27 +356,36 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SegmentsControllerRevoke201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Rotate a terminal serve token
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: SettingsControllerRotateTerminalToken201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerRotateTerminalToken(id: String) async throws {
+    open class func settingsControllerRotateTerminalToken(id: String) async throws -> SettingsControllerRotateTerminalToken201Response {
         return try await settingsControllerRotateTerminalTokenWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Rotate a terminal serve token
      - POST /v1/advertiser/terminal-tokens/{id}/rotate
+     - Replaces the token value with a new `ts_` string, keeping its campaign and switch policy. The old value is removed from Redis and stops serving immediately. Returns 400 if the token is not found.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SettingsControllerRotateTerminalToken201Response> 
      */
-    open class func settingsControllerRotateTerminalTokenWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func settingsControllerRotateTerminalTokenWithRequestBuilder(id: String) -> RequestBuilder<SettingsControllerRotateTerminalToken201Response> {
         var localVariablePath = "/v1/advertiser/terminal-tokens/{id}/rotate"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -320,29 +401,38 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SettingsControllerRotateTerminalToken201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update a terminal token switch policy
+     
      - parameter id: (path)  
      - parameter terminalSwitchDto: (body)  
-     - returns: Void
+     - returns: SettingsControllerSetTerminalTokenPolicy200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerSetTerminalTokenPolicy(id: String, terminalSwitchDto: TerminalSwitchDto) async throws {
+    open class func settingsControllerSetTerminalTokenPolicy(id: String, terminalSwitchDto: TerminalSwitchDto) async throws -> SettingsControllerSetTerminalTokenPolicy200Response {
         return try await settingsControllerSetTerminalTokenPolicyWithRequestBuilder(id: id, terminalSwitchDto: terminalSwitchDto).execute().body
     }
 
     /**
+     Update a terminal token switch policy
      - PATCH /v1/advertiser/terminal-tokens/{id}/switch
+     - Arms, changes or disables (`flipAfter: 0`, `flipOnClick: false`) adaptive mode-switching on an existing token without changing its `ts_` value. Same validation as creation; 400 if the token is not found or the policy is invalid. The new policy is re-projected to Redis.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter terminalSwitchDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SettingsControllerSetTerminalTokenPolicy200Response> 
      */
-    open class func settingsControllerSetTerminalTokenPolicyWithRequestBuilder(id: String, terminalSwitchDto: TerminalSwitchDto) -> RequestBuilder<Void> {
+    open class func settingsControllerSetTerminalTokenPolicyWithRequestBuilder(id: String, terminalSwitchDto: TerminalSwitchDto) -> RequestBuilder<SettingsControllerSetTerminalTokenPolicy200Response> {
         var localVariablePath = "/v1/advertiser/terminal-tokens/{id}/switch"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -358,27 +448,36 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SettingsControllerSetTerminalTokenPolicy200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update network membership and cross-fill
+     
      - parameter networkSettingsDto: (body)  
-     - returns: Void
+     - returns: SettingsControllerUpdateNetwork200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerUpdateNetwork(networkSettingsDto: NetworkSettingsDto) async throws {
+    open class func settingsControllerUpdateNetwork(networkSettingsDto: NetworkSettingsDto) async throws -> SettingsControllerUpdateNetwork200Response {
         return try await settingsControllerUpdateNetworkWithRequestBuilder(networkSettingsDto: networkSettingsDto).execute().body
     }
 
     /**
+     Update network membership and cross-fill
      - PATCH /v1/account/network
+     - Sets the account's tenant `networkId` (null or empty = the general open pool) and/or `crossFill` opt-in to transact with other networks. Only provided fields change. Because these flags are projected onto every campaign and placement in the serving index, the indexer republishes after a change.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter networkSettingsDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SettingsControllerUpdateNetwork200Response> 
      */
-    open class func settingsControllerUpdateNetworkWithRequestBuilder(networkSettingsDto: NetworkSettingsDto) -> RequestBuilder<Void> {
+    open class func settingsControllerUpdateNetworkWithRequestBuilder(networkSettingsDto: NetworkSettingsDto) -> RequestBuilder<SettingsControllerUpdateNetwork200Response> {
         let localVariablePath = "/v1/account/network"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: networkSettingsDto)
@@ -391,8 +490,8 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SettingsControllerUpdateNetwork200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

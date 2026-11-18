@@ -13,19 +13,28 @@ import AnyCodable
 open class MetaverseAPI {
 
     /**
-
-     - returns: Void
+     List all world integrations
+     
+     - returns: [MetaverseControllerAdminWorlds200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerAdminWorlds() async throws {
+    open class func metaverseControllerAdminWorlds() async throws -> [MetaverseControllerAdminWorlds200ResponseInner] {
         return try await metaverseControllerAdminWorldsWithRequestBuilder().execute().body
     }
 
     /**
+     List all world integrations
      - GET /v1/admin/metaverse/worlds
-     - returns: RequestBuilder<Void> 
+     - Admin view of up to 1000 world integrations across all accounts, with the operator's email.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[MetaverseControllerAdminWorlds200ResponseInner]> 
      */
-    open class func metaverseControllerAdminWorldsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func metaverseControllerAdminWorldsWithRequestBuilder() -> RequestBuilder<[MetaverseControllerAdminWorlds200ResponseInner]> {
         let localVariablePath = "/v1/admin/metaverse/worlds"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,29 +47,38 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[MetaverseControllerAdminWorlds200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get metaverse proof-of-view for your campaigns
+     
      - parameter from: (query)  
      - parameter to: (query)  
-     - returns: Void
+     - returns: SupSurfaceReport
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerAdvertiserViews(from: String, to: String) async throws {
+    open class func metaverseControllerAdvertiserViews(from: String, to: String) async throws -> SupSurfaceReport {
         return try await metaverseControllerAdvertiserViewsWithRequestBuilder(from: from, to: to).execute().body
     }
 
     /**
+     Get metaverse proof-of-view for your campaigns
      - GET /v1/advertiser/metaverse/views
+     - Same report as the publisher view, scoped to surface events on your campaigns between `from` and `to` (default last 30 days).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter from: (query)  
      - parameter to: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SupSurfaceReport> 
      */
-    open class func metaverseControllerAdvertiserViewsWithRequestBuilder(from: String, to: String) -> RequestBuilder<Void> {
+    open class func metaverseControllerAdvertiserViewsWithRequestBuilder(from: String, to: String) -> RequestBuilder<SupSurfaceReport> {
         let localVariablePath = "/v1/advertiser/metaverse/views"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -77,27 +95,36 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SupSurfaceReport>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Claim a metaverse surface by its pairing code
+     
      - parameter claimSurfaceDto: (body)  
-     - returns: Void
+     - returns: SupSurface
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerClaim(claimSurfaceDto: ClaimSurfaceDto) async throws {
+    open class func metaverseControllerClaim(claimSurfaceDto: ClaimSurfaceDto) async throws -> SupSurface {
         return try await metaverseControllerClaimWithRequestBuilder(claimSurfaceDto: claimSurfaceDto).execute().body
     }
 
     /**
+     Claim a metaverse surface by its pairing code
      - POST /v1/metaverse/surfaces/claim
+     - Attaches the pending surface showing `code` to your account and starts serving: creates a `surface` placement (signed with the world's attestation key) under a per-world property that inherits the world's trust tier. Optional spatial details: `shopId`, `world`, `surfaceType`, `posX/Y/Z`, `widthM`, `heightM`, `floorCpm`, `audienceMultiplier` (default 1), `maxDistanceM`. 404 if no surface is waiting for that code.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter claimSurfaceDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SupSurface> 
      */
-    open class func metaverseControllerClaimWithRequestBuilder(claimSurfaceDto: ClaimSurfaceDto) -> RequestBuilder<Void> {
+    open class func metaverseControllerClaimWithRequestBuilder(claimSurfaceDto: ClaimSurfaceDto) -> RequestBuilder<SupSurface> {
         let localVariablePath = "/v1/metaverse/surfaces/claim"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: claimSurfaceDto)
@@ -110,27 +137,36 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SupSurface>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Register a metaverse world integration
+     
      - parameter createWorldDto: (body)  
-     - returns: Void
+     - returns: MetaverseControllerCreateWorld201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerCreateWorld(createWorldDto: CreateWorldDto) async throws {
+    open class func metaverseControllerCreateWorld(createWorldDto: CreateWorldDto) async throws -> MetaverseControllerCreateWorld201Response {
         return try await metaverseControllerCreateWorldWithRequestBuilder(createWorldDto: createWorldDto).execute().body
     }
 
     /**
+     Register a metaverse world integration
      - POST /v1/metaverse/worlds
+     - Creates a world integration for a metaverse operator from `name` (required) and optional `networkId`. New worlds start `unverified` (their surfaces serve CPA-only until trusted). The response includes `signing_secret`, which the world's server uses to attest proofs of view; it is returned only here. 400 if name is empty.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createWorldDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<MetaverseControllerCreateWorld201Response> 
      */
-    open class func metaverseControllerCreateWorldWithRequestBuilder(createWorldDto: CreateWorldDto) -> RequestBuilder<Void> {
+    open class func metaverseControllerCreateWorldWithRequestBuilder(createWorldDto: CreateWorldDto) -> RequestBuilder<MetaverseControllerCreateWorld201Response> {
         let localVariablePath = "/v1/metaverse/worlds"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createWorldDto)
@@ -143,27 +179,36 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<MetaverseControllerCreateWorld201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get a metaverse surface
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: SupSurface
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerGet(id: String) async throws {
+    open class func metaverseControllerGet(id: String) async throws -> SupSurface {
         return try await metaverseControllerGetWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get a metaverse surface
      - GET /v1/metaverse/surfaces/{id}
+     - Returns one of your surfaces with its serving tag. 404 if not found, 403 if another account owns it.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SupSurface> 
      */
-    open class func metaverseControllerGetWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func metaverseControllerGetWithRequestBuilder(id: String) -> RequestBuilder<SupSurface> {
         var localVariablePath = "/v1/metaverse/surfaces/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -179,25 +224,34 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SupSurface>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List your metaverse surfaces
+     
+     - returns: [MetaverseControllerList200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerList() async throws {
+    open class func metaverseControllerList() async throws -> [MetaverseControllerList200ResponseInner] {
         return try await metaverseControllerListWithRequestBuilder().execute().body
     }
 
     /**
+     List your metaverse surfaces
      - GET /v1/metaverse/surfaces
-     - returns: RequestBuilder<Void> 
+     - Returns your surfaces, newest first, with `online` (heartbeat within 5 minutes) and the latest heartbeat time.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[MetaverseControllerList200ResponseInner]> 
      */
-    open class func metaverseControllerListWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func metaverseControllerListWithRequestBuilder() -> RequestBuilder<[MetaverseControllerList200ResponseInner]> {
         let localVariablePath = "/v1/metaverse/surfaces"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -210,25 +264,34 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[MetaverseControllerList200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List your world integrations
+     
+     - returns: [SupWorld]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerListWorlds() async throws {
+    open class func metaverseControllerListWorlds() async throws -> [SupWorld] {
         return try await metaverseControllerListWorldsWithRequestBuilder().execute().body
     }
 
     /**
+     List your world integrations
      - GET /v1/metaverse/worlds
-     - returns: RequestBuilder<Void> 
+     - Returns the caller's world integrations (without signing secrets), newest first.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[SupWorld]> 
      */
-    open class func metaverseControllerListWorldsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func metaverseControllerListWorldsWithRequestBuilder() -> RequestBuilder<[SupWorld]> {
         let localVariablePath = "/v1/metaverse/worlds"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -241,27 +304,30 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[SupWorld]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Start pairing a metaverse ad surface
+     
      - parameter surfacePairInitDto: (body)  
-     - returns: Void
+     - returns: ScreensControllerPairInit201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerPairInit(surfacePairInitDto: SurfacePairInitDto) async throws {
+    open class func metaverseControllerPairInit(surfacePairInitDto: SurfacePairInitDto) async throws -> ScreensControllerPairInit201Response {
         return try await metaverseControllerPairInitWithRequestBuilder(surfacePairInitDto: surfacePairInitDto).execute().body
     }
 
     /**
+     Start pairing a metaverse ad surface
      - POST /v1/metaverse/pair-init
+     - Public, rate-limited. A world client calls this with `worldId` (must be an active world) and optional `surfaceType` (screen, poster, portal; default screen). Returns a pairing code to show in-world and a poll token. 404 for an unknown world.  Auth: public, no credentials required.
      - parameter surfacePairInitDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ScreensControllerPairInit201Response> 
      */
-    open class func metaverseControllerPairInitWithRequestBuilder(surfacePairInitDto: SurfacePairInitDto) -> RequestBuilder<Void> {
+    open class func metaverseControllerPairInitWithRequestBuilder(surfacePairInitDto: SurfacePairInitDto) -> RequestBuilder<ScreensControllerPairInit201Response> {
         let localVariablePath = "/v1/metaverse/pair-init"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: surfacePairInitDto)
@@ -274,27 +340,30 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ScreensControllerPairInit201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Poll a metaverse surface's pairing status
+     
      - parameter pollToken: (query)  
-     - returns: Void
+     - returns: ScreensControllerPairStatus200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerPairStatus(pollToken: String) async throws {
+    open class func metaverseControllerPairStatus(pollToken: String) async throws -> ScreensControllerPairStatus200Response {
         return try await metaverseControllerPairStatusWithRequestBuilder(pollToken: pollToken).execute().body
     }
 
     /**
+     Poll a metaverse surface's pairing status
      - GET /v1/metaverse/pair-status
+     - Public, rate-limited. Poll with `?pollToken=` until a shop owner claims the code, then receive the serving `tag`. 404 for an unknown token.  Auth: public, no credentials required.
      - parameter pollToken: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ScreensControllerPairStatus200Response> 
      */
-    open class func metaverseControllerPairStatusWithRequestBuilder(pollToken: String) -> RequestBuilder<Void> {
+    open class func metaverseControllerPairStatusWithRequestBuilder(pollToken: String) -> RequestBuilder<ScreensControllerPairStatus200Response> {
         let localVariablePath = "/v1/metaverse/pair-status"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -310,29 +379,38 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ScreensControllerPairStatus200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Get your metaverse proof-of-view report
+     
      - parameter from: (query)  
      - parameter to: (query)  
-     - returns: Void
+     - returns: SupSurfaceReport
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerPublisherViews(from: String, to: String) async throws {
+    open class func metaverseControllerPublisherViews(from: String, to: String) async throws -> SupSurfaceReport {
         return try await metaverseControllerPublisherViewsWithRequestBuilder(from: from, to: to).execute().body
     }
 
     /**
+     Get your metaverse proof-of-view report
      - GET /v1/metaverse/views
+     - Summarizes and lists (up to 2000) surface events on your surfaces between `from` and `to` (default last 30 days): views, valid views, portal enters and completes, spend, and distinct surfaces.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter from: (query)  
      - parameter to: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SupSurfaceReport> 
      */
-    open class func metaverseControllerPublisherViewsWithRequestBuilder(from: String, to: String) -> RequestBuilder<Void> {
+    open class func metaverseControllerPublisherViewsWithRequestBuilder(from: String, to: String) -> RequestBuilder<SupSurfaceReport> {
         let localVariablePath = "/v1/metaverse/views"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -349,25 +427,34 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SupSurfaceReport>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Run world trust scoring now
+     
+     - returns: MetaverseControllerScoreNow201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerScoreNow() async throws {
+    open class func metaverseControllerScoreNow() async throws -> MetaverseControllerScoreNow201Response {
         return try await metaverseControllerScoreNowWithRequestBuilder().execute().body
     }
 
     /**
+     Run world trust scoring now
      - POST /v1/admin/metaverse/score-now
-     - returns: RequestBuilder<Void> 
+     - Scores every active world's last 7 days of surface traffic immediately (normally a scheduled job), stores the snapshots, and promotes or demotes worlds whose computed tier differs from their current one.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<MetaverseControllerScoreNow201Response> 
      */
-    open class func metaverseControllerScoreNowWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func metaverseControllerScoreNowWithRequestBuilder() -> RequestBuilder<MetaverseControllerScoreNow201Response> {
         let localVariablePath = "/v1/admin/metaverse/score-now"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -380,29 +467,38 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<MetaverseControllerScoreNow201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Pause or activate a metaverse surface
+     
      - parameter id: (path)  
      - parameter setSurfaceStatusDto: (body)  
-     - returns: Void
+     - returns: ScreensControllerSetStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerSetStatus(id: String, setSurfaceStatusDto: SetSurfaceStatusDto) async throws {
+    open class func metaverseControllerSetStatus(id: String, setSurfaceStatusDto: SetSurfaceStatusDto) async throws -> ScreensControllerSetStatus201Response {
         return try await metaverseControllerSetStatusWithRequestBuilder(id: id, setSurfaceStatusDto: setSurfaceStatusDto).execute().body
     }
 
     /**
+     Pause or activate a metaverse surface
      - POST /v1/metaverse/surfaces/{id}/status
+     - Sets `status` (`active`/`paused`) on the surface and its placement and republishes the index. 400 if not paired yet; 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter setSurfaceStatusDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ScreensControllerSetStatus201Response> 
      */
-    open class func metaverseControllerSetStatusWithRequestBuilder(id: String, setSurfaceStatusDto: SetSurfaceStatusDto) -> RequestBuilder<Void> {
+    open class func metaverseControllerSetStatusWithRequestBuilder(id: String, setSurfaceStatusDto: SetSurfaceStatusDto) -> RequestBuilder<ScreensControllerSetStatus201Response> {
         var localVariablePath = "/v1/metaverse/surfaces/{id}/status"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -418,29 +514,38 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ScreensControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Set a world's trust tier
+     
      - parameter id: (path)  
      - parameter setWorldTrustDto: (body)  
-     - returns: Void
+     - returns: MetaverseControllerSetWorldTrust201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerSetWorldTrust(id: String, setWorldTrustDto: SetWorldTrustDto) async throws {
+    open class func metaverseControllerSetWorldTrust(id: String, setWorldTrustDto: SetWorldTrustDto) async throws -> MetaverseControllerSetWorldTrust201Response {
         return try await metaverseControllerSetWorldTrustWithRequestBuilder(id: id, setWorldTrustDto: setWorldTrustDto).execute().body
     }
 
     /**
+     Set a world's trust tier
      - POST /v1/admin/metaverse/worlds/{id}/trust
+     - Sets `trust` to `trusted` (surfaces may sell CPM) or `unverified` (CPA-only), cascades it to the world's surface properties, and republishes the index. 404 if the world does not exist.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter setWorldTrustDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<MetaverseControllerSetWorldTrust201Response> 
      */
-    open class func metaverseControllerSetWorldTrustWithRequestBuilder(id: String, setWorldTrustDto: SetWorldTrustDto) -> RequestBuilder<Void> {
+    open class func metaverseControllerSetWorldTrustWithRequestBuilder(id: String, setWorldTrustDto: SetWorldTrustDto) -> RequestBuilder<MetaverseControllerSetWorldTrust201Response> {
         var localVariablePath = "/v1/admin/metaverse/worlds/{id}/trust"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -456,25 +561,34 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<MetaverseControllerSetWorldTrust201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List world trust scores
+     
+     - returns: [MetaverseControllerTrustScores200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerTrustScores() async throws {
+    open class func metaverseControllerTrustScores() async throws -> [MetaverseControllerTrustScores200ResponseInner] {
         return try await metaverseControllerTrustScoresWithRequestBuilder().execute().body
     }
 
     /**
+     List world trust scores
      - GET /v1/admin/metaverse/trust-scores
-     - returns: RequestBuilder<Void> 
+     - Admin view of the latest automatic trust-score snapshot per world (7-day view volume, valid and attested rates, unique-user ratio, dwell-time variation, the tier the scorer chose, and its factors).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[MetaverseControllerTrustScores200ResponseInner]> 
      */
-    open class func metaverseControllerTrustScoresWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func metaverseControllerTrustScoresWithRequestBuilder() -> RequestBuilder<[MetaverseControllerTrustScores200ResponseInner]> {
         let localVariablePath = "/v1/admin/metaverse/trust-scores"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -487,29 +601,38 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[MetaverseControllerTrustScores200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update a metaverse surface
+     
      - parameter id: (path)  
      - parameter updateSurfaceDto: (body)  
-     - returns: Void
+     - returns: SupSurface
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func metaverseControllerUpdate(id: String, updateSurfaceDto: UpdateSurfaceDto) async throws {
+    open class func metaverseControllerUpdate(id: String, updateSurfaceDto: UpdateSurfaceDto) async throws -> SupSurface {
         return try await metaverseControllerUpdateWithRequestBuilder(id: id, updateSurfaceDto: updateSurfaceDto).execute().body
     }
 
     /**
+     Update a metaverse surface
      - PATCH /v1/metaverse/surfaces/{id}
+     - Edits `surfaceType`, `floorCpm`, `audienceMultiplier` and `maxDistanceM` on a paired surface (synced into its placement settings) and republishes the index. 400 if not paired yet; 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter updateSurfaceDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SupSurface> 
      */
-    open class func metaverseControllerUpdateWithRequestBuilder(id: String, updateSurfaceDto: UpdateSurfaceDto) -> RequestBuilder<Void> {
+    open class func metaverseControllerUpdateWithRequestBuilder(id: String, updateSurfaceDto: UpdateSurfaceDto) -> RequestBuilder<SupSurface> {
         var localVariablePath = "/v1/metaverse/surfaces/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -525,8 +648,8 @@ open class MetaverseAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SupSurface>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

@@ -13,21 +13,30 @@ import AnyCodable
 open class BlogAPI {
 
     /**
-
+     List all blog posts
+     
      - parameter locale: (query)  
-     - returns: Void
+     - returns: [BlogPost]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func blogControllerAdminList(locale: String) async throws {
+    open class func blogControllerAdminList(locale: String) async throws -> [BlogPost] {
         return try await blogControllerAdminListWithRequestBuilder(locale: locale).execute().body
     }
 
     /**
+     List all blog posts
      - GET /v1/admin/blog
+     - Returns every post, including unpublished ones, optionally filtered by `locale`.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter locale: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[BlogPost]> 
      */
-    open class func blogControllerAdminListWithRequestBuilder(locale: String) -> RequestBuilder<Void> {
+    open class func blogControllerAdminListWithRequestBuilder(locale: String) -> RequestBuilder<[BlogPost]> {
         let localVariablePath = "/v1/admin/blog"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -43,27 +52,36 @@ open class BlogAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[BlogPost]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create or replace a blog post
+     
      - parameter createPostDto: (body)  
-     - returns: Void
+     - returns: BlogPost
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func blogControllerCreate(createPostDto: CreatePostDto) async throws {
+    open class func blogControllerCreate(createPostDto: CreatePostDto) async throws -> BlogPost {
         return try await blogControllerCreateWithRequestBuilder(createPostDto: createPostDto).execute().body
     }
 
     /**
+     Create or replace a blog post
      - POST /v1/admin/blog
+     - Creates a post from `slug` and `title` with optional `locale` (`en`), `tag` (`News`), `author` (`Adviverse Team`), `excerpt`, Markdown `body`, `cover_image`, `published_at` (now), `position` and `published` (true). An existing post with the same slug and locale is overwritten (upsert). Clears the public cache. Posts without a cover get a generated SVG cover at the next service start.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createPostDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<BlogPost> 
      */
-    open class func blogControllerCreateWithRequestBuilder(createPostDto: CreatePostDto) -> RequestBuilder<Void> {
+    open class func blogControllerCreateWithRequestBuilder(createPostDto: CreatePostDto) -> RequestBuilder<BlogPost> {
         let localVariablePath = "/v1/admin/blog"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createPostDto)
@@ -76,29 +94,32 @@ open class BlogAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<BlogPost>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get a published blog post
+     
      - parameter slug: (path)  
      - parameter locale: (query)  
-     - returns: Void
+     - returns: BlogControllerGet200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func blogControllerGet(slug: String, locale: String) async throws {
+    open class func blogControllerGet(slug: String, locale: String) async throws -> BlogControllerGet200Response {
         return try await blogControllerGetWithRequestBuilder(slug: slug, locale: locale).execute().body
     }
 
     /**
+     Get a published blog post
      - GET /v1/blog/{slug}
+     - Public. Returns a published post by `slug` and `locale` (default `en`). An unknown or unpublished slug returns HTTP 200 with `{ error: \"not_found\" }`, not 404.  Auth: public, no credentials required.
      - parameter slug: (path)  
      - parameter locale: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<BlogControllerGet200Response> 
      */
-    open class func blogControllerGetWithRequestBuilder(slug: String, locale: String) -> RequestBuilder<Void> {
+    open class func blogControllerGetWithRequestBuilder(slug: String, locale: String) -> RequestBuilder<BlogControllerGet200Response> {
         var localVariablePath = "/v1/blog/{slug}"
         let slugPreEscape = "\(APIHelper.mapValueToPathItem(slug))"
         let slugPostEscape = slugPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -117,25 +138,28 @@ open class BlogAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<BlogControllerGet200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Render the public blog index page
+     
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func blogControllerIndexHtml() async throws {
+    open class func blogControllerIndexHtml() async throws -> String {
         return try await blogControllerIndexHtmlWithRequestBuilder().execute().body
     }
 
     /**
+     Render the public blog index page
      - GET /blog
-     - returns: RequestBuilder<Void> 
+     - Public, server-rendered HTML for /blog listing published English posts. Cached (max-age 300, s-maxage 3600).  Auth: public, no credentials required.
+     - returns: RequestBuilder<String> 
      */
-    open class func blogControllerIndexHtmlWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func blogControllerIndexHtmlWithRequestBuilder() -> RequestBuilder<String> {
         let localVariablePath = "/blog"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -148,29 +172,32 @@ open class BlogAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     List published blog posts
+     
      - parameter locale: (query)  
      - parameter tag: (query)  
-     - returns: Void
+     - returns: [BlogPost]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func blogControllerList(locale: String, tag: String) async throws {
+    open class func blogControllerList(locale: String, tag: String) async throws -> [BlogPost] {
         return try await blogControllerListWithRequestBuilder(locale: locale, tag: tag).execute().body
     }
 
     /**
+     List published blog posts
      - GET /v1/blog
+     - Public. Returns published posts for `locale` (default `en`), newest `published_at` first, optionally filtered by `tag`. Reads are cached in Redis for 60 seconds.  Auth: public, no credentials required.
      - parameter locale: (query)  
      - parameter tag: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[BlogPost]> 
      */
-    open class func blogControllerListWithRequestBuilder(locale: String, tag: String) -> RequestBuilder<Void> {
+    open class func blogControllerListWithRequestBuilder(locale: String, tag: String) -> RequestBuilder<[BlogPost]> {
         let localVariablePath = "/v1/blog"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -187,27 +214,30 @@ open class BlogAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[BlogPost]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Render a public blog post page
+     
      - parameter slug: (path)  
-     - returns: Void
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func blogControllerPageHtml(slug: String) async throws {
+    open class func blogControllerPageHtml(slug: String) async throws -> String {
         return try await blogControllerPageHtmlWithRequestBuilder(slug: slug).execute().body
     }
 
     /**
+     Render a public blog post page
      - GET /blog/{slug}
+     - Public, server-rendered HTML for one English post, with its Markdown body rendered escape-first. Unknown slugs return a 404 HTML page.  Auth: public, no credentials required.
      - parameter slug: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<String> 
      */
-    open class func blogControllerPageHtmlWithRequestBuilder(slug: String) -> RequestBuilder<Void> {
+    open class func blogControllerPageHtmlWithRequestBuilder(slug: String) -> RequestBuilder<String> {
         var localVariablePath = "/blog/{slug}"
         let slugPreEscape = "\(APIHelper.mapValueToPathItem(slug))"
         let slugPostEscape = slugPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -223,27 +253,36 @@ open class BlogAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Delete a blog post
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdminControllerSetStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func blogControllerRemove(id: String) async throws {
+    open class func blogControllerRemove(id: String) async throws -> AdminControllerSetStatus201Response {
         return try await blogControllerRemoveWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete a blog post
      - DELETE /v1/admin/blog/{id}
+     - Deletes the post and clears the public cache. Returns `{ ok: true }` even for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
      */
-    open class func blogControllerRemoveWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func blogControllerRemoveWithRequestBuilder(id: String) -> RequestBuilder<AdminControllerSetStatus201Response> {
         var localVariablePath = "/v1/admin/blog/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -259,25 +298,28 @@ open class BlogAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get the blog sitemap
+     
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func blogControllerSitemap() async throws {
+    open class func blogControllerSitemap() async throws -> String {
         return try await blogControllerSitemapWithRequestBuilder().execute().body
     }
 
     /**
+     Get the blog sitemap
      - GET /blog/sitemap.xml
-     - returns: RequestBuilder<Void> 
+     - Public XML sitemap listing /blog and every published English post page.  Auth: public, no credentials required.
+     - returns: RequestBuilder<String> 
      */
-    open class func blogControllerSitemapWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func blogControllerSitemapWithRequestBuilder() -> RequestBuilder<String> {
         let localVariablePath = "/blog/sitemap.xml"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -290,29 +332,38 @@ open class BlogAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Update a blog post
+     
      - parameter id: (path)  
      - parameter updatePostDto: (body)  
-     - returns: Void
+     - returns: BlogPost
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func blogControllerUpdate(id: String, updatePostDto: UpdatePostDto) async throws {
+    open class func blogControllerUpdate(id: String, updatePostDto: UpdatePostDto) async throws -> BlogPost {
         return try await blogControllerUpdateWithRequestBuilder(id: id, updatePostDto: updatePostDto).execute().body
     }
 
     /**
+     Update a blog post
      - PATCH /v1/admin/blog/{id}
+     - Partially updates any post field (slug, locale, title, tag, author, excerpt, body, cover_image, position, published, published_at) and clears the public cache. Returns the updated post, or null for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter updatePostDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<BlogPost> 
      */
-    open class func blogControllerUpdateWithRequestBuilder(id: String, updatePostDto: UpdatePostDto) -> RequestBuilder<Void> {
+    open class func blogControllerUpdateWithRequestBuilder(id: String, updatePostDto: UpdatePostDto) -> RequestBuilder<BlogPost> {
         var localVariablePath = "/v1/admin/blog/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -328,8 +379,8 @@ open class BlogAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<BlogPost>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

@@ -13,19 +13,28 @@ import AnyCodable
 open class AgencyAPI {
 
     /**
-
-     - returns: Void
+     Accept a pixel transfer
+     
+     - returns: AgencyControllerAcceptTransfer201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerAcceptTransfer() async throws {
+    open class func agencyControllerAcceptTransfer() async throws -> AgencyControllerAcceptTransfer201Response {
         return try await agencyControllerAcceptTransferWithRequestBuilder().execute().body
     }
 
     /**
+     Accept a pixel transfer
      - POST /v1/transfers/accept
-     - returns: RequestBuilder<Void> 
+     - The recipient, signed in to their own account, accepts with `token`. In one transaction the pixel, its pixel-scoped audiences and their sync destinations move to the accepting account, and the sender's campaigns tagged to a client linked to that pixel are untagged. Audience membership keys are unchanged, so serving continues; historical analytics stay with the sender. Returns 400 if the transfer is not pending, has expired, is your own, or the pixel is gone.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AgencyControllerAcceptTransfer201Response> 
      */
-    open class func agencyControllerAcceptTransferWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func agencyControllerAcceptTransferWithRequestBuilder() -> RequestBuilder<AgencyControllerAcceptTransfer201Response> {
         let localVariablePath = "/v1/transfers/accept"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,27 +47,36 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyControllerAcceptTransfer201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Add a line item to a draft invoice
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AgencyInvoice
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerAddItem(id: String) async throws {
+    open class func agencyControllerAddItem(id: String) async throws -> AgencyInvoice {
         return try await agencyControllerAddItemWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Add a line item to a draft invoice
      - POST /v1/advertiser/invoices/{id}/items
+     - Appends a line with `description` (required), optional `kind` (default `fee`), `quantity` (default 1) and `unitAmount`. `amount` defaults to quantity x unitAmount, rounded to cents. Draft invoices only (400 otherwise); totals are recomputed.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyInvoice> 
      */
-    open class func agencyControllerAddItemWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func agencyControllerAddItemWithRequestBuilder(id: String) -> RequestBuilder<AgencyInvoice> {
         var localVariablePath = "/v1/advertiser/invoices/{id}/items"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -74,27 +92,36 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyInvoice>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Cancel a pending pixel transfer
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AgencyControllerCancelTransfer201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerCancelTransfer(id: String) async throws {
+    open class func agencyControllerCancelTransfer(id: String) async throws -> AgencyControllerCancelTransfer201Response {
         return try await agencyControllerCancelTransferWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Cancel a pending pixel transfer
      - POST /v1/advertiser/transfers/{id}/cancel
+     - Cancels a transfer this account started. Only `pending` transfers can be cancelled (400 otherwise); 404 if unknown.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyControllerCancelTransfer201Response> 
      */
-    open class func agencyControllerCancelTransferWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func agencyControllerCancelTransferWithRequestBuilder(id: String) -> RequestBuilder<AgencyControllerCancelTransfer201Response> {
         var localVariablePath = "/v1/advertiser/transfers/{id}/cancel"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -110,31 +137,40 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyControllerCancelTransfer201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get spend and delivery for a client
+     
      - parameter id: (path)  
      - parameter from: (query)  
      - parameter to: (query)  
-     - returns: Void
+     - returns: AgencyControllerClientSpend200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerClientSpend(id: String, from: String, to: String) async throws {
+    open class func agencyControllerClientSpend(id: String, from: String, to: String) async throws -> AgencyControllerClientSpend200Response {
         return try await agencyControllerClientSpendWithRequestBuilder(id: id, from: from, to: to).execute().body
     }
 
     /**
+     Get spend and delivery for a client
      - GET /v1/advertiser/clients/{id}/spend
+     - Sums spend, impressions, clicks and conversions from the ClickHouse hourly rollup across the client's tagged campaigns for the inclusive date range `from`..`to` (YYYY-MM-DD). Defaults to the last 30 days. Returns zeros when no campaigns are tagged. 404 for an unknown client.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter from: (query)  
      - parameter to: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyControllerClientSpend200Response> 
      */
-    open class func agencyControllerClientSpendWithRequestBuilder(id: String, from: String, to: String) -> RequestBuilder<Void> {
+    open class func agencyControllerClientSpendWithRequestBuilder(id: String, from: String, to: String) -> RequestBuilder<AgencyControllerClientSpend200Response> {
         var localVariablePath = "/v1/advertiser/clients/{id}/spend"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -154,25 +190,34 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyControllerClientSpend200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Create an agency client
+     
+     - returns: AgencyClient
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerCreateClient() async throws {
+    open class func agencyControllerCreateClient() async throws -> AgencyClient {
         return try await agencyControllerCreateClientWithRequestBuilder().execute().body
     }
 
     /**
+     Create an agency client
      - POST /v1/advertiser/clients
-     - returns: RequestBuilder<Void> 
+     - Creates a client with `name` (required, truncated to 160 chars), optional `billingEmail` (lowercased; used when sending invoices), `pixelId` and `notes` (truncated to 2000 chars). A supplied `pixelId` must belong to the calling account, otherwise 400. A missing name also returns 400.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AgencyClient> 
      */
-    open class func agencyControllerCreateClientWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func agencyControllerCreateClientWithRequestBuilder() -> RequestBuilder<AgencyClient> {
         let localVariablePath = "/v1/advertiser/clients"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -185,25 +230,34 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyClient>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Create a draft invoice for a client
+     
+     - returns: AgencyInvoice
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerCreateInvoice() async throws {
+    open class func agencyControllerCreateInvoice() async throws -> AgencyInvoice {
         return try await agencyControllerCreateInvoiceWithRequestBuilder().execute().body
     }
 
     /**
+     Create a draft invoice for a client
      - POST /v1/advertiser/invoices
-     - returns: RequestBuilder<Void> 
+     - Creates a draft invoice numbered `INV-NNNN` for `clientId` (required, must be owned). When `periodStart` and `periodEnd` are set and `includeSpend` is not false, an \"Ad spend\" line is added from the client's tagged-campaign spend, plus an agency fee line of `markupPct` percent of it. Optional `items` (description, kind, quantity, unitAmount, amount) are appended; `currency` defaults to USD. Totals are recomputed from the lines.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AgencyInvoice> 
      */
-    open class func agencyControllerCreateInvoiceWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func agencyControllerCreateInvoiceWithRequestBuilder() -> RequestBuilder<AgencyInvoice> {
         let localVariablePath = "/v1/advertiser/invoices"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -216,27 +270,36 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyInvoice>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get an agency client
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AgencyClient
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerGetClient(id: String) async throws {
+    open class func agencyControllerGetClient(id: String) async throws -> AgencyClient {
         return try await agencyControllerGetClientWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get an agency client
      - GET /v1/advertiser/clients/{id}
+     - Returns one client owned by the calling account. 404 if it does not exist or belongs to another account. The single-client view reports `taggedCampaigns` as 0; use the list endpoint for counts.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyClient> 
      */
-    open class func agencyControllerGetClientWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func agencyControllerGetClientWithRequestBuilder(id: String) -> RequestBuilder<AgencyClient> {
         var localVariablePath = "/v1/advertiser/clients/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -252,27 +315,36 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyClient>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get an invoice with line items
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AgencyInvoice
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerGetInvoice(id: String) async throws {
+    open class func agencyControllerGetInvoice(id: String) async throws -> AgencyInvoice {
         return try await agencyControllerGetInvoiceWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get an invoice with line items
      - GET /v1/advertiser/invoices/{id}
+     - Returns one invoice owned by the calling account, including its line items ordered by sort position. 404 if unknown.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyInvoice> 
      */
-    open class func agencyControllerGetInvoiceWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func agencyControllerGetInvoiceWithRequestBuilder(id: String) -> RequestBuilder<AgencyInvoice> {
         var localVariablePath = "/v1/advertiser/invoices/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -288,25 +360,34 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyInvoice>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Start a pixel ownership transfer
+     
+     - returns: AgencyTransfer
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerInitiateTransfer() async throws {
+    open class func agencyControllerInitiateTransfer() async throws -> AgencyTransfer {
         return try await agencyControllerInitiateTransferWithRequestBuilder().execute().body
     }
 
     /**
+     Start a pixel ownership transfer
      - POST /v1/advertiser/transfers
-     - returns: RequestBuilder<Void> 
+     - Offers one of the account's pixels (`pixelId`), with its pixel-scoped audiences, to the account at `email`. The recipient is emailed a link that expires in 14 days. Returns 400 for an invalid email, a transfer to yourself, or a pixel that already has a pending transfer, and 404 for an unknown pixel. Not available to manager/analyst team seats.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AgencyTransfer> 
      */
-    open class func agencyControllerInitiateTransferWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func agencyControllerInitiateTransferWithRequestBuilder() -> RequestBuilder<AgencyTransfer> {
         let localVariablePath = "/v1/advertiser/transfers"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -319,25 +400,34 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyTransfer>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List agency clients
+     
+     - returns: [AgencyClient]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerListClients() async throws {
+    open class func agencyControllerListClients() async throws -> [AgencyClient] {
         return try await agencyControllerListClientsWithRequestBuilder().execute().body
     }
 
     /**
+     List agency clients
      - GET /v1/advertiser/clients
-     - returns: RequestBuilder<Void> 
+     - Returns the billable clients this agency account runs campaigns and pixels for, newest first. Each client includes `taggedCampaigns`, the number of non-deleted campaigns currently tagged to it.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AgencyClient]> 
      */
-    open class func agencyControllerListClientsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func agencyControllerListClientsWithRequestBuilder() -> RequestBuilder<[AgencyClient]> {
         let localVariablePath = "/v1/advertiser/clients"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -350,27 +440,36 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AgencyClient]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List agency invoices
+     
      - parameter clientId: (query)  
-     - returns: Void
+     - returns: [AgencyInvoice]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerListInvoices(clientId: String) async throws {
+    open class func agencyControllerListInvoices(clientId: String) async throws -> [AgencyInvoice] {
         return try await agencyControllerListInvoicesWithRequestBuilder(clientId: clientId).execute().body
     }
 
     /**
+     List agency invoices
      - GET /v1/advertiser/invoices
+     - Returns the account's client invoices, newest first, optionally filtered by `clientId`. List entries carry an empty `items` array; fetch a single invoice for its line items.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter clientId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[AgencyInvoice]> 
      */
-    open class func agencyControllerListInvoicesWithRequestBuilder(clientId: String) -> RequestBuilder<Void> {
+    open class func agencyControllerListInvoicesWithRequestBuilder(clientId: String) -> RequestBuilder<[AgencyInvoice]> {
         let localVariablePath = "/v1/advertiser/invoices"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -386,25 +485,34 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AgencyInvoice]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List outgoing pixel transfers
+     
+     - returns: [AgencyTransfer]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerListTransfers() async throws {
+    open class func agencyControllerListTransfers() async throws -> [AgencyTransfer] {
         return try await agencyControllerListTransfersWithRequestBuilder().execute().body
     }
 
     /**
+     List outgoing pixel transfers
      - GET /v1/advertiser/transfers
-     - returns: RequestBuilder<Void> 
+     - Returns up to 100 transfers this account has started, newest first, with pixel names and current status.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AgencyTransfer]> 
      */
-    open class func agencyControllerListTransfersWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func agencyControllerListTransfersWithRequestBuilder() -> RequestBuilder<[AgencyTransfer]> {
         let localVariablePath = "/v1/advertiser/transfers"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -417,27 +525,36 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AgencyTransfer]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Mark an invoice paid manually
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AgencyInvoice
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerMarkPaid(id: String) async throws {
+    open class func agencyControllerMarkPaid(id: String) async throws -> AgencyInvoice {
         return try await agencyControllerMarkPaidWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Mark an invoice paid manually
      - POST /v1/advertiser/invoices/{id}/mark-paid
+     - Records an offline payment by setting the status to `paid` and stamping `paidAt`. No ledger entry is posted. Void invoices return 400.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyInvoice> 
      */
-    open class func agencyControllerMarkPaidWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func agencyControllerMarkPaidWithRequestBuilder(id: String) -> RequestBuilder<AgencyInvoice> {
         var localVariablePath = "/v1/advertiser/invoices/{id}/mark-paid"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -453,27 +570,30 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyInvoice>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get the public view of an invoice
+     
      - parameter token: (path)  
-     - returns: Void
+     - returns: AgencyControllerPayInfo200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerPayInfo(token: String) async throws {
+    open class func agencyControllerPayInfo(token: String) async throws -> AgencyControllerPayInfo200Response {
         return try await agencyControllerPayInfoWithRequestBuilder(token: token).execute().body
     }
 
     /**
+     Get the public view of an invoice
      - GET /v1/pay/{token}
+     - Unauthenticated: the pay token in the path grants access. Returns what the client needs to review an invoice: number, status, total, agency and client names, period, notes, due/paid dates and line descriptions with amounts. 404 for an unknown token.  Auth: public, no credentials required.
      - parameter token: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyControllerPayInfo200Response> 
      */
-    open class func agencyControllerPayInfoWithRequestBuilder(token: String) -> RequestBuilder<Void> {
+    open class func agencyControllerPayInfoWithRequestBuilder(token: String) -> RequestBuilder<AgencyControllerPayInfo200Response> {
         var localVariablePath = "/v1/pay/{token}"
         let tokenPreEscape = "\(APIHelper.mapValueToPathItem(token))"
         let tokenPostEscape = tokenPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -489,27 +609,36 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyControllerPayInfo200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Delete an agency client
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: PixelControllerDeletePixel200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerRemoveClient(id: String) async throws {
+    open class func agencyControllerRemoveClient(id: String) async throws -> PixelControllerDeletePixel200Response {
         return try await agencyControllerRemoveClientWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete an agency client
      - DELETE /v1/advertiser/clients/{id}
+     - Deletes the client if it belongs to the calling account. Campaigns tagged to it are untagged by the database (ON DELETE SET NULL). Returns `{ deleted: true }` even when no matching client existed.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PixelControllerDeletePixel200Response> 
      */
-    open class func agencyControllerRemoveClientWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func agencyControllerRemoveClientWithRequestBuilder(id: String) -> RequestBuilder<PixelControllerDeletePixel200Response> {
         var localVariablePath = "/v1/advertiser/clients/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -525,29 +654,38 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PixelControllerDeletePixel200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Remove a line item from a draft invoice
+     
      - parameter id: (path)  
      - parameter itemId: (path)  
-     - returns: Void
+     - returns: AgencyInvoice
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerRemoveItem(id: String, itemId: String) async throws {
+    open class func agencyControllerRemoveItem(id: String, itemId: String) async throws -> AgencyInvoice {
         return try await agencyControllerRemoveItemWithRequestBuilder(id: id, itemId: itemId).execute().body
     }
 
     /**
+     Remove a line item from a draft invoice
      - DELETE /v1/advertiser/invoices/{id}/items/{itemId}
+     - Deletes the line item `itemId` from a draft invoice and recomputes the totals. Returns 400 if the invoice is not a draft.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter itemId: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyInvoice> 
      */
-    open class func agencyControllerRemoveItemWithRequestBuilder(id: String, itemId: String) -> RequestBuilder<Void> {
+    open class func agencyControllerRemoveItemWithRequestBuilder(id: String, itemId: String) -> RequestBuilder<AgencyInvoice> {
         var localVariablePath = "/v1/advertiser/invoices/{id}/items/{itemId}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -566,27 +704,36 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyInvoice>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Send an invoice and mint its pay link
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AgencyInvoice
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerSendInvoice(id: String) async throws {
+    open class func agencyControllerSendInvoice(id: String) async throws -> AgencyInvoice {
         return try await agencyControllerSendInvoiceWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Send an invoice and mint its pay link
      - POST /v1/advertiser/invoices/{id}/send
+     - Moves the invoice to `sent`, mints a public pay token (reused if already set) and stamps `issuedAt`. If the client has a billing email, it is emailed a link to the hosted pay page. Fails with 400 for paid or void invoices or a non-positive total. The response adds `payLink`.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyInvoice> 
      */
-    open class func agencyControllerSendInvoiceWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func agencyControllerSendInvoiceWithRequestBuilder(id: String) -> RequestBuilder<AgencyInvoice> {
         var localVariablePath = "/v1/advertiser/invoices/{id}/send"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -602,27 +749,30 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyInvoice>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Start paying an invoice
+     
      - parameter token: (path)  
-     - returns: Void
+     - returns: AgencyControllerStartPayment201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerStartPayment(token: String) async throws {
+    open class func agencyControllerStartPayment(token: String) async throws -> AgencyControllerStartPayment201Response {
         return try await agencyControllerStartPaymentWithRequestBuilder(token: token).execute().body
     }
 
     /**
+     Start paying an invoice
      - POST /v1/pay/{token}
+     - Unauthenticated (pay token in the path). Creates a pending deposit on the agency's account linked to the invoice and starts checkout with `provider` (`crypto`, anything else means Stripe). When the provider confirms, the deposit credits the agency balance and marks the invoice paid. Only `sent` invoices can be paid (400 otherwise).  Auth: public, no credentials required.
      - parameter token: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyControllerStartPayment201Response> 
      */
-    open class func agencyControllerStartPaymentWithRequestBuilder(token: String) -> RequestBuilder<Void> {
+    open class func agencyControllerStartPaymentWithRequestBuilder(token: String) -> RequestBuilder<AgencyControllerStartPayment201Response> {
         var localVariablePath = "/v1/pay/{token}"
         let tokenPreEscape = "\(APIHelper.mapValueToPathItem(token))"
         let tokenPostEscape = tokenPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -638,25 +788,34 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyControllerStartPayment201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Tag or untag a campaign to a client
+     
+     - returns: AgencyControllerTagCampaign201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerTagCampaign() async throws {
+    open class func agencyControllerTagCampaign() async throws -> AgencyControllerTagCampaign201Response {
         return try await agencyControllerTagCampaignWithRequestBuilder().execute().body
     }
 
     /**
+     Tag or untag a campaign to a client
      - POST /v1/advertiser/clients/tag
-     - returns: RequestBuilder<Void> 
+     - Sets `campaignId`'s client tag to `clientId`, or clears it when `clientId` is null. Both the campaign and the client must belong to the calling account (404 otherwise). Tagged campaigns' spend is what client spend reports and auto-generated invoices bill.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AgencyControllerTagCampaign201Response> 
      */
-    open class func agencyControllerTagCampaignWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func agencyControllerTagCampaignWithRequestBuilder() -> RequestBuilder<AgencyControllerTagCampaign201Response> {
         let localVariablePath = "/v1/advertiser/clients/tag"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -669,25 +828,34 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyControllerTagCampaign201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List campaigns available for client tagging
+     
+     - returns: [AgencyControllerTaggable200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerTaggable() async throws {
+    open class func agencyControllerTaggable() async throws -> [AgencyControllerTaggable200ResponseInner] {
         return try await agencyControllerTaggableWithRequestBuilder().execute().body
     }
 
     /**
+     List campaigns available for client tagging
      - GET /v1/advertiser/clients/campaigns
-     - returns: RequestBuilder<Void> 
+     - Returns up to 500 of the account's non-deleted campaigns (ad sets) with their current `client_id` tag, newest first. Used by the tagging UI to assign campaign spend to a client.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AgencyControllerTaggable200ResponseInner]> 
      */
-    open class func agencyControllerTaggableWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func agencyControllerTaggableWithRequestBuilder() -> RequestBuilder<[AgencyControllerTaggable200ResponseInner]> {
         let localVariablePath = "/v1/advertiser/clients/campaigns"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -700,27 +868,36 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AgencyControllerTaggable200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Preview a pixel transfer by token
+     
      - parameter token: (query)  
-     - returns: Void
+     - returns: AgencyControllerTransferInfo200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerTransferInfo(token: String) async throws {
+    open class func agencyControllerTransferInfo(token: String) async throws -> AgencyControllerTransferInfo200Response {
         return try await agencyControllerTransferInfoWithRequestBuilder(token: token).execute().body
     }
 
     /**
+     Preview a pixel transfer by token
      - GET /v1/transfers/info
+     - Looks up a transfer by the `token` query parameter from the email link, so the recipient can review it before accepting. A pending transfer past its expiry is reported as `expired`. 404 for an unknown token.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter token: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyControllerTransferInfo200Response> 
      */
-    open class func agencyControllerTransferInfoWithRequestBuilder(token: String) -> RequestBuilder<Void> {
+    open class func agencyControllerTransferInfoWithRequestBuilder(token: String) -> RequestBuilder<AgencyControllerTransferInfo200Response> {
         let localVariablePath = "/v1/transfers/info"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -736,27 +913,36 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyControllerTransferInfo200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update an agency client
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AgencyClient
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerUpdateClient(id: String) async throws {
+    open class func agencyControllerUpdateClient(id: String) async throws -> AgencyClient {
         return try await agencyControllerUpdateClientWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Update an agency client
      - POST /v1/advertiser/clients/{id}
+     - Partially updates `name`, `billingEmail`, `pixelId`, `notes` and `status`. Only fields present are changed; `status` is applied only when it is `active` or `archived`. A new `pixelId` must belong to the account (400 otherwise); an empty string clears it. Returns the updated client.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyClient> 
      */
-    open class func agencyControllerUpdateClientWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func agencyControllerUpdateClientWithRequestBuilder(id: String) -> RequestBuilder<AgencyClient> {
         var localVariablePath = "/v1/advertiser/clients/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -772,27 +958,36 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyClient>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update a draft invoice
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AgencyInvoice
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerUpdateInvoice(id: String) async throws {
+    open class func agencyControllerUpdateInvoice(id: String) async throws -> AgencyInvoice {
         return try await agencyControllerUpdateInvoiceWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Update a draft invoice
      - POST /v1/advertiser/invoices/{id}
+     - Updates `notes` (truncated to 4000 chars) and/or `dueAt` on a draft invoice. Returns 400 if the invoice is no longer a draft and 404 if unknown.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyInvoice> 
      */
-    open class func agencyControllerUpdateInvoiceWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func agencyControllerUpdateInvoiceWithRequestBuilder(id: String) -> RequestBuilder<AgencyInvoice> {
         var localVariablePath = "/v1/advertiser/invoices/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -808,27 +1003,36 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyInvoice>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Void an invoice
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AgencyInvoice
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func agencyControllerVoidInvoice(id: String) async throws {
+    open class func agencyControllerVoidInvoice(id: String) async throws -> AgencyInvoice {
         return try await agencyControllerVoidInvoiceWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Void an invoice
      - POST /v1/advertiser/invoices/{id}/void
+     - Sets the invoice status to `void`; its pay link stops accepting payments. Paid invoices cannot be voided (400).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AgencyInvoice> 
      */
-    open class func agencyControllerVoidInvoiceWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func agencyControllerVoidInvoiceWithRequestBuilder(id: String) -> RequestBuilder<AgencyInvoice> {
         var localVariablePath = "/v1/advertiser/invoices/{id}/void"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -844,8 +1048,8 @@ open class AgencyAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AgencyInvoice>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

@@ -13,19 +13,28 @@ import AnyCodable
 open class DoohAPI {
 
     /**
-
-     - returns: Void
+     Get your DOOH network registration
+     
+     - returns: SupDoohPartner
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func doohControllerGetSetup() async throws {
+    open class func doohControllerGetSetup() async throws -> SupDoohPartner {
         return try await doohControllerGetSetupWithRequestBuilder().execute().body
     }
 
     /**
+     Get your DOOH network registration
      - GET /v1/dooh/setup
-     - returns: RequestBuilder<Void> 
+     - Returns the account's DOOH partner registration (company, contact, screen count, venue types, integration, onboarding status), or null if it has not registered one.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<SupDoohPartner> 
      */
-    open class func doohControllerGetSetupWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func doohControllerGetSetupWithRequestBuilder() -> RequestBuilder<SupDoohPartner> {
         let localVariablePath = "/v1/dooh/setup"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,27 +47,36 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SupDoohPartner>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List DOOH partner registrations
+     
      - parameter status: (query)  
-     - returns: Void
+     - returns: [DoohControllerList200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func doohControllerList(status: String) async throws {
+    open class func doohControllerList(status: String) async throws -> [DoohControllerList200ResponseInner] {
         return try await doohControllerListWithRequestBuilder(status: status).execute().body
     }
 
     /**
+     List DOOH partner registrations
      - GET /v1/admin/dooh/partners
+     - Admin view of up to 500 DOOH registrations, newest first, each with the registering account's email. Optional `?status=` filters by new, contacted, onboarding, live or rejected (other values are ignored).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter status: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[DoohControllerList200ResponseInner]> 
      */
-    open class func doohControllerListWithRequestBuilder(status: String) -> RequestBuilder<Void> {
+    open class func doohControllerListWithRequestBuilder(status: String) -> RequestBuilder<[DoohControllerList200ResponseInner]> {
         let localVariablePath = "/v1/admin/dooh/partners"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -74,27 +92,36 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[DoohControllerList200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create or update your DOOH network registration
+     
      - parameter doohSetupDto: (body)  
-     - returns: Void
+     - returns: DoohControllerSaveSetup201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func doohControllerSaveSetup(doohSetupDto: DoohSetupDto) async throws {
+    open class func doohControllerSaveSetup(doohSetupDto: DoohSetupDto) async throws -> DoohControllerSaveSetup201Response {
         return try await doohControllerSaveSetupWithRequestBuilder(doohSetupDto: doohSetupDto).execute().body
     }
 
     /**
+     Create or update your DOOH network registration
      - POST /v1/dooh/setup
+     - Upserts the account's single DOOH registration. `company` is required; `contactName`, `email`, `website`, `country`, `screenCount`, `venueTypes` (max 20), `integration` and `notes` are optional and trimmed to length limits. Returns the row id and its current onboarding status. 400 if `company` is empty.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter doohSetupDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<DoohControllerSaveSetup201Response> 
      */
-    open class func doohControllerSaveSetupWithRequestBuilder(doohSetupDto: DoohSetupDto) -> RequestBuilder<Void> {
+    open class func doohControllerSaveSetupWithRequestBuilder(doohSetupDto: DoohSetupDto) -> RequestBuilder<DoohControllerSaveSetup201Response> {
         let localVariablePath = "/v1/dooh/setup"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: doohSetupDto)
@@ -107,27 +134,36 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<DoohControllerSaveSetup201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Set a DOOH registration's onboarding status
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AuthControllerResendVerification201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func doohControllerSetStatus(id: String) async throws {
+    open class func doohControllerSetStatus(id: String) async throws -> AuthControllerResendVerification201Response {
         return try await doohControllerSetStatusWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Set a DOOH registration's onboarding status
      - PATCH /v1/admin/dooh/partners/{id}
+     - Moves a registration to `status` new, contacted, onboarding, live or rejected. 400 for any other value. Returns ok even if the id does not exist.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerResendVerification201Response> 
      */
-    open class func doohControllerSetStatusWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func doohControllerSetStatusWithRequestBuilder(id: String) -> RequestBuilder<AuthControllerResendVerification201Response> {
         var localVariablePath = "/v1/admin/dooh/partners/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -143,25 +179,34 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerResendVerification201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List all paired DOOH screens
+     
+     - returns: [ScreensControllerAdminScreens200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func screensControllerAdminScreens() async throws {
+    open class func screensControllerAdminScreens() async throws -> [ScreensControllerAdminScreens200ResponseInner] {
         return try await screensControllerAdminScreensWithRequestBuilder().execute().body
     }
 
     /**
+     List all paired DOOH screens
      - GET /v1/admin/dooh/screens
-     - returns: RequestBuilder<Void> 
+     - Admin fleet overview: up to 2000 claimed screens across all accounts, newest first, with serving tag and owner email.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ScreensControllerAdminScreens200ResponseInner]> 
      */
-    open class func screensControllerAdminScreensWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func screensControllerAdminScreensWithRequestBuilder() -> RequestBuilder<[ScreensControllerAdminScreens200ResponseInner]> {
         let localVariablePath = "/v1/admin/dooh/screens"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -174,29 +219,38 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ScreensControllerAdminScreens200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get DOOH proof-of-play for your campaigns
+     
      - parameter from: (query)  
      - parameter to: (query)  
-     - returns: Void
+     - returns: SupDoohPlayReport
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func screensControllerAdvertiserPlays(from: String, to: String) async throws {
+    open class func screensControllerAdvertiserPlays(from: String, to: String) async throws -> SupDoohPlayReport {
         return try await screensControllerAdvertiserPlaysWithRequestBuilder(from: from, to: to).execute().body
     }
 
     /**
+     Get DOOH proof-of-play for your campaigns
      - GET /v1/advertiser/dooh/plays
+     - Advertiser verification report over your campaigns' DOOH plays between `from` and `to` (default last 30 days), including venue name and any screenshot attestation per play. Same shape as the publisher report.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter from: (query)  
      - parameter to: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SupDoohPlayReport> 
      */
-    open class func screensControllerAdvertiserPlaysWithRequestBuilder(from: String, to: String) -> RequestBuilder<Void> {
+    open class func screensControllerAdvertiserPlaysWithRequestBuilder(from: String, to: String) -> RequestBuilder<SupDoohPlayReport> {
         let localVariablePath = "/v1/advertiser/dooh/plays"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -213,25 +267,28 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SupDoohPlayReport>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Upload a proof-of-play screenshot
+     
+     - returns: ScreensControllerAttest201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func screensControllerAttest() async throws {
+    open class func screensControllerAttest() async throws -> ScreensControllerAttest201Response {
         return try await screensControllerAttestWithRequestBuilder().execute().body
     }
 
     /**
+     Upload a proof-of-play screenshot
      - POST /v1/dooh/attest
-     - returns: RequestBuilder<Void> 
+     - Public, rate-limited endpoint used by the native DOOH player, authenticated by the active screen's serving `tag`. Body `image` is a base64 JPEG (data-URL prefix allowed, max ~2.5 MB). The image is stored and attached to the play identified by `popToken`, or to the screen's most recent play if omitted, and also counts as a heartbeat. 400 if tag/image are missing or the image is invalid, 404 if the tag is not an active screen.  Auth: public, no credentials required.
+     - returns: RequestBuilder<ScreensControllerAttest201Response> 
      */
-    open class func screensControllerAttestWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func screensControllerAttestWithRequestBuilder() -> RequestBuilder<ScreensControllerAttest201Response> {
         let localVariablePath = "/v1/dooh/attest"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -244,27 +301,36 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ScreensControllerAttest201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Claim a DOOH screen by its pairing code
+     
      - parameter claimScreenDto: (body)  
-     - returns: Void
+     - returns: SupDoohScreen
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func screensControllerClaim(claimScreenDto: ClaimScreenDto) async throws {
+    open class func screensControllerClaim(claimScreenDto: ClaimScreenDto) async throws -> SupDoohScreen {
         return try await screensControllerClaimWithRequestBuilder(claimScreenDto: claimScreenDto).execute().body
     }
 
     /**
+     Claim a DOOH screen by its pairing code
      - POST /v1/dooh/screens/claim
+     - Attaches the pending screen showing `code` to your account and starts serving: creates a `dooh` placement under your DOOH property (created on first use) and stores venue details (`venueName`, `venueType`, `orientation`, resolution, `lat`/`lng`, `timezone`, `loopSeconds` default 8, `floorCpm`, `audienceMultiplier` default 1). Republishes the serving index. 404 if no screen is waiting for that code.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter claimScreenDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SupDoohScreen> 
      */
-    open class func screensControllerClaimWithRequestBuilder(claimScreenDto: ClaimScreenDto) -> RequestBuilder<Void> {
+    open class func screensControllerClaimWithRequestBuilder(claimScreenDto: ClaimScreenDto) -> RequestBuilder<SupDoohScreen> {
         let localVariablePath = "/v1/dooh/screens/claim"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: claimScreenDto)
@@ -277,27 +343,36 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SupDoohScreen>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get a DOOH screen
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: SupDoohScreen
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func screensControllerGet(id: String) async throws {
+    open class func screensControllerGet(id: String) async throws -> SupDoohScreen {
         return try await screensControllerGetWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get a DOOH screen
      - GET /v1/dooh/screens/{id}
+     - Returns one of your screens with its serving tag. 404 if it does not exist, 403 if another account owns it.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SupDoohScreen> 
      */
-    open class func screensControllerGetWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func screensControllerGetWithRequestBuilder(id: String) -> RequestBuilder<SupDoohScreen> {
         var localVariablePath = "/v1/dooh/screens/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -313,25 +388,34 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SupDoohScreen>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List your DOOH screens
+     
+     - returns: [ScreensControllerList200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func screensControllerList() async throws {
+    open class func screensControllerList() async throws -> [ScreensControllerList200ResponseInner] {
         return try await screensControllerListWithRequestBuilder().execute().body
     }
 
     /**
+     List your DOOH screens
      - GET /v1/dooh/screens
-     - returns: RequestBuilder<Void> 
+     - Returns your screen fleet, newest first, with `online` (heartbeat within 5 minutes) and the latest heartbeat time and player version taken from live heartbeat data when available.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ScreensControllerList200ResponseInner]> 
      */
-    open class func screensControllerListWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func screensControllerListWithRequestBuilder() -> RequestBuilder<[ScreensControllerList200ResponseInner]> {
         let localVariablePath = "/v1/dooh/screens"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -344,27 +428,30 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ScreensControllerList200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Start pairing a DOOH screen
+     
      - parameter pairInitDto: (body)  
-     - returns: Void
+     - returns: ScreensControllerPairInit201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func screensControllerPairInit(pairInitDto: PairInitDto) async throws {
+    open class func screensControllerPairInit(pairInitDto: PairInitDto) async throws -> ScreensControllerPairInit201Response {
         return try await screensControllerPairInitWithRequestBuilder(pairInitDto: pairInitDto).execute().body
     }
 
     /**
+     Start pairing a DOOH screen
      - POST /v1/dooh/pair-init
+     - Public, rate-limited endpoint the DOOH player calls on first boot. Creates a pending screen and returns a human-readable `pairingCode` to show on the display plus a secret `pollToken`. Optional body `version` records the player version.  Auth: public, no credentials required.
      - parameter pairInitDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ScreensControllerPairInit201Response> 
      */
-    open class func screensControllerPairInitWithRequestBuilder(pairInitDto: PairInitDto) -> RequestBuilder<Void> {
+    open class func screensControllerPairInitWithRequestBuilder(pairInitDto: PairInitDto) -> RequestBuilder<ScreensControllerPairInit201Response> {
         let localVariablePath = "/v1/dooh/pair-init"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: pairInitDto)
@@ -377,27 +464,30 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ScreensControllerPairInit201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Poll a DOOH screen's pairing status
+     
      - parameter pollToken: (query)  
-     - returns: Void
+     - returns: ScreensControllerPairStatus200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func screensControllerPairStatus(pollToken: String) async throws {
+    open class func screensControllerPairStatus(pollToken: String) async throws -> ScreensControllerPairStatus200Response {
         return try await screensControllerPairStatusWithRequestBuilder(pollToken: pollToken).execute().body
     }
 
     /**
+     Poll a DOOH screen's pairing status
      - GET /v1/dooh/pair-status
+     - Public, rate-limited. The player polls with `?pollToken=` until a publisher claims its code; then it receives its serving `tag` and `servingBase`. 404 for an unknown poll token.  Auth: public, no credentials required.
      - parameter pollToken: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ScreensControllerPairStatus200Response> 
      */
-    open class func screensControllerPairStatusWithRequestBuilder(pollToken: String) -> RequestBuilder<Void> {
+    open class func screensControllerPairStatusWithRequestBuilder(pollToken: String) -> RequestBuilder<ScreensControllerPairStatus200Response> {
         let localVariablePath = "/v1/dooh/pair-status"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -413,29 +503,38 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ScreensControllerPairStatus200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Get your DOOH proof-of-play report
+     
      - parameter from: (query)  
      - parameter to: (query)  
-     - returns: Void
+     - returns: SupDoohPlayReport
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func screensControllerPublisherPlays(from: String, to: String) async throws {
+    open class func screensControllerPublisherPlays(from: String, to: String) async throws -> SupDoohPlayReport {
         return try await screensControllerPublisherPlaysWithRequestBuilder(from: from, to: to).execute().body
     }
 
     /**
+     Get your DOOH proof-of-play report
      - GET /v1/dooh/plays
+     - Summarizes and lists (up to 2000) plays on your screens between `from` and `to` (ISO dates; default last 30 days): play and completion counts, completion rate (0-1), spend on completed plays, and distinct screens.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter from: (query)  
      - parameter to: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SupDoohPlayReport> 
      */
-    open class func screensControllerPublisherPlaysWithRequestBuilder(from: String, to: String) -> RequestBuilder<Void> {
+    open class func screensControllerPublisherPlaysWithRequestBuilder(from: String, to: String) -> RequestBuilder<SupDoohPlayReport> {
         let localVariablePath = "/v1/dooh/plays"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -452,29 +551,38 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SupDoohPlayReport>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Pause or activate a DOOH screen
+     
      - parameter id: (path)  
      - parameter setScreenStatusDto: (body)  
-     - returns: Void
+     - returns: ScreensControllerSetStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func screensControllerSetStatus(id: String, setScreenStatusDto: SetScreenStatusDto) async throws {
+    open class func screensControllerSetStatus(id: String, setScreenStatusDto: SetScreenStatusDto) async throws -> ScreensControllerSetStatus201Response {
         return try await screensControllerSetStatusWithRequestBuilder(id: id, setScreenStatusDto: setScreenStatusDto).execute().body
     }
 
     /**
+     Pause or activate a DOOH screen
      - POST /v1/dooh/screens/{id}/status
+     - Sets `status` (`active` or `paused`) on both the screen and its placement, then republishes the index so serving stops or resumes. 400 if not paired yet; 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter setScreenStatusDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ScreensControllerSetStatus201Response> 
      */
-    open class func screensControllerSetStatusWithRequestBuilder(id: String, setScreenStatusDto: SetScreenStatusDto) -> RequestBuilder<Void> {
+    open class func screensControllerSetStatusWithRequestBuilder(id: String, setScreenStatusDto: SetScreenStatusDto) -> RequestBuilder<ScreensControllerSetStatus201Response> {
         var localVariablePath = "/v1/dooh/screens/{id}/status"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -490,29 +598,38 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ScreensControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update a DOOH screen
+     
      - parameter id: (path)  
      - parameter updateScreenDto: (body)  
-     - returns: Void
+     - returns: SupDoohScreen
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func screensControllerUpdate(id: String, updateScreenDto: UpdateScreenDto) async throws {
+    open class func screensControllerUpdate(id: String, updateScreenDto: UpdateScreenDto) async throws -> SupDoohScreen {
         return try await screensControllerUpdateWithRequestBuilder(id: id, updateScreenDto: updateScreenDto).execute().body
     }
 
     /**
+     Update a DOOH screen
      - PATCH /v1/dooh/screens/{id}
+     - Edits `venueName`, `venueType`, `orientation`, `loopSeconds`, `floorCpm` and `audienceMultiplier` on a paired screen, keeping its placement settings in sync, and republishes the index. 400 if the screen is not paired yet; 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter updateScreenDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<SupDoohScreen> 
      */
-    open class func screensControllerUpdateWithRequestBuilder(id: String, updateScreenDto: UpdateScreenDto) -> RequestBuilder<Void> {
+    open class func screensControllerUpdateWithRequestBuilder(id: String, updateScreenDto: UpdateScreenDto) -> RequestBuilder<SupDoohScreen> {
         var localVariablePath = "/v1/dooh/screens/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -528,8 +645,8 @@ open class DoohAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SupDoohScreen>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

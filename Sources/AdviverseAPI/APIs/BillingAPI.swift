@@ -13,21 +13,30 @@ import AnyCodable
 open class BillingAPI {
 
     /**
-
+     Generate a draft invoice for an account (admin)
+     
      - parameter generateInvoiceDto: (body)  
-     - returns: Void
+     - returns: BillingControllerGenerate201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func billingControllerGenerate(generateInvoiceDto: GenerateInvoiceDto) async throws {
+    open class func billingControllerGenerate(generateInvoiceDto: GenerateInvoiceDto) async throws -> BillingControllerGenerate201Response {
         return try await billingControllerGenerateWithRequestBuilder(generateInvoiceDto: generateInvoiceDto).execute().body
     }
 
     /**
+     Generate a draft invoice for an account (admin)
      - POST /v1/billing/invoices/generate
+     - Creates a draft invoice for `accountId` over `periodStart`..`periodEnd` (YYYY-MM-DD, inclusive). The charge equals the account's ledger 'spend' for the period; ClickHouse impression/click counts only label zero-amount detail lines. Tax comes from tax_rates for the account's tax_country (0 if none). Numbered INV-YYYY-NNNNNN. 404 if the account does not exist.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter generateInvoiceDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<BillingControllerGenerate201Response> 
      */
-    open class func billingControllerGenerateWithRequestBuilder(generateInvoiceDto: GenerateInvoiceDto) -> RequestBuilder<Void> {
+    open class func billingControllerGenerateWithRequestBuilder(generateInvoiceDto: GenerateInvoiceDto) -> RequestBuilder<BillingControllerGenerate201Response> {
         let localVariablePath = "/v1/billing/invoices/generate"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: generateInvoiceDto)
@@ -40,27 +49,36 @@ open class BillingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<BillingControllerGenerate201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get an invoice with its line items
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: BillingInvoiceWithLines
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func billingControllerGet(id: String) async throws {
+    open class func billingControllerGet(id: String) async throws -> BillingInvoiceWithLines {
         return try await billingControllerGetWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get an invoice with its line items
      - GET /v1/billing/invoices/{id}
+     - Returns one invoice by id with its lines. Advertisers may only read their own invoices (403 otherwise); 404 if not found.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<BillingInvoiceWithLines> 
      */
-    open class func billingControllerGetWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func billingControllerGetWithRequestBuilder(id: String) -> RequestBuilder<BillingInvoiceWithLines> {
         var localVariablePath = "/v1/billing/invoices/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -76,27 +94,36 @@ open class BillingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<BillingInvoiceWithLines>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Issue a draft invoice (admin)
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: BillingInvoice
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func billingControllerIssue(id: String) async throws {
+    open class func billingControllerIssue(id: String) async throws -> BillingInvoice {
         return try await billingControllerIssueWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Issue a draft invoice (admin)
      - POST /v1/billing/invoices/{id}/issue
+     - Moves a draft invoice to 'issued', setting issued_at to now and due_date from the account's payment_terms_days. 400 if the invoice is not a draft.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<BillingInvoice> 
      */
-    open class func billingControllerIssueWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func billingControllerIssueWithRequestBuilder(id: String) -> RequestBuilder<BillingInvoice> {
         var localVariablePath = "/v1/billing/invoices/{id}/issue"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -112,27 +139,36 @@ open class BillingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<BillingInvoice>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List invoices
+     
      - parameter accountId: (query)  
-     - returns: Void
+     - returns: [BillingInvoice]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func billingControllerList(accountId: String) async throws {
+    open class func billingControllerList(accountId: String) async throws -> [BillingInvoice] {
         return try await billingControllerListWithRequestBuilder(accountId: accountId).execute().body
     }
 
     /**
+     List invoices
      - GET /v1/billing/invoices
+     - Returns up to 500 invoices, newest first. Advertisers see only their own; admins see all and may filter with `?accountId=`.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter accountId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[BillingInvoice]> 
      */
-    open class func billingControllerListWithRequestBuilder(accountId: String) -> RequestBuilder<Void> {
+    open class func billingControllerListWithRequestBuilder(accountId: String) -> RequestBuilder<[BillingInvoice]> {
         let localVariablePath = "/v1/billing/invoices"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -148,27 +184,36 @@ open class BillingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[BillingInvoice]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Pay an issued invoice from the balance
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: BillingInvoice
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func billingControllerPay(id: String) async throws {
+    open class func billingControllerPay(id: String) async throws -> BillingInvoice {
         return try await billingControllerPayWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Pay an issued invoice from the balance
      - POST /v1/billing/invoices/{id}/pay
+     - Posts an 'invoice_payment' debit for the invoice total against the account's available balance (idempotent per invoice) and marks the invoice paid. Already-paid invoices are returned unchanged; other non-issued statuses return 400, and insufficient funds return 400. Advertisers may pay only their own invoices.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<BillingInvoice> 
      */
-    open class func billingControllerPayWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func billingControllerPayWithRequestBuilder(id: String) -> RequestBuilder<BillingInvoice> {
         var localVariablePath = "/v1/billing/invoices/{id}/pay"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -184,27 +229,36 @@ open class BillingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<BillingInvoice>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Render an invoice as HTML
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func billingControllerRender(id: String) async throws {
+    open class func billingControllerRender(id: String) async throws -> String {
         return try await billingControllerRenderWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Render an invoice as HTML
      - GET /v1/billing/invoices/{id}/render
+     - Returns a self-contained printable HTML document for the invoice (number, status, period, dates, line items and totals). Same access rules as fetching the invoice.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<String> 
      */
-    open class func billingControllerRenderWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func billingControllerRenderWithRequestBuilder(id: String) -> RequestBuilder<String> {
         var localVariablePath = "/v1/billing/invoices/{id}/render"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -220,25 +274,34 @@ open class BillingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get an account statement from the ledger
+     
+     - returns: BillingControllerStatement200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func billingControllerStatement() async throws {
+    open class func billingControllerStatement() async throws -> BillingControllerStatement200Response {
         return try await billingControllerStatementWithRequestBuilder().execute().body
     }
 
     /**
+     Get an account statement from the ledger
      - GET /v1/billing/statement
-     - returns: RequestBuilder<Void> 
+     - Derives a statement over `from`..`to` (YYYY-MM-DD; defaults 2020-01-01 to today) from ledger entries that touched the available balance: opening balance, charges (debits), payments (credits), closing balance, and up to 1000 entries in the window. Admins may pass `?accountId=`; advertisers always get their own.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<BillingControllerStatement200Response> 
      */
-    open class func billingControllerStatementWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func billingControllerStatementWithRequestBuilder() -> RequestBuilder<BillingControllerStatement200Response> {
         let localVariablePath = "/v1/billing/statement"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -251,27 +314,36 @@ open class BillingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<BillingControllerStatement200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Void an invoice (admin)
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: BillingInvoice
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func billingControllerVoid(id: String) async throws {
+    open class func billingControllerVoid(id: String) async throws -> BillingInvoice {
         return try await billingControllerVoidWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Void an invoice (admin)
      - POST /v1/billing/invoices/{id}/void
+     - Marks any unpaid invoice as 'void'. Paid invoices cannot be voided (400); an already-void invoice is returned unchanged.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<BillingInvoice> 
      */
-    open class func billingControllerVoidWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func billingControllerVoidWithRequestBuilder(id: String) -> RequestBuilder<BillingInvoice> {
         var localVariablePath = "/v1/billing/invoices/{id}/void"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -287,8 +359,8 @@ open class BillingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<BillingInvoice>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

@@ -13,21 +13,30 @@ import AnyCodable
 open class DealsAPI {
 
     /**
-
+     Accept a deal offered to you
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: DealsControllerClaim201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func dealsControllerAccept(id: String) async throws {
+    open class func dealsControllerAccept(id: String) async throws -> DealsControllerClaim201Response {
         return try await dealsControllerAcceptWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Accept a deal offered to you
      - POST /v1/deals/{id}/accept
+     - The targeted advertiser accepts the deal, which becomes `active` and is published to the engine index; the publisher is emailed. Returns 403 if the caller is not the deal's advertiser and 404 if the deal is unknown.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<DealsControllerClaim201Response> 
      */
-    open class func dealsControllerAcceptWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func dealsControllerAcceptWithRequestBuilder(id: String) -> RequestBuilder<DealsControllerClaim201Response> {
         var localVariablePath = "/v1/deals/{id}/accept"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -43,27 +52,36 @@ open class DealsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<DealsControllerClaim201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Claim an open deal
+     
      - parameter token: (path)  
-     - returns: Void
+     - returns: DealsControllerClaim201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func dealsControllerClaim(token: String) async throws {
+    open class func dealsControllerClaim(token: String) async throws -> DealsControllerClaim201Response {
         return try await dealsControllerClaimWithRequestBuilder(token: token).execute().body
     }
 
     /**
+     Claim an open deal
      - POST /v1/deals/claim/{token}
+     - The caller becomes the deal's advertiser; the deal goes `active`, the claim token is cleared and the publisher is emailed. Returns 400 if the deal already has an advertiser or the caller is its publisher, and 404 for an unknown token.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter token: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<DealsControllerClaim201Response> 
      */
-    open class func dealsControllerClaimWithRequestBuilder(token: String) -> RequestBuilder<Void> {
+    open class func dealsControllerClaimWithRequestBuilder(token: String) -> RequestBuilder<DealsControllerClaim201Response> {
         var localVariablePath = "/v1/deals/claim/{token}"
         let tokenPreEscape = "\(APIHelper.mapValueToPathItem(token))"
         let tokenPostEscape = tokenPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -79,27 +97,36 @@ open class DealsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<DealsControllerClaim201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create a deal
+     
      - parameter createDealDto: (body)  
-     - returns: Void
+     - returns: Deal
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func dealsControllerCreate(createDealDto: CreateDealDto) async throws {
+    open class func dealsControllerCreate(createDealDto: CreateDealDto) async throws -> Deal {
         return try await dealsControllerCreateWithRequestBuilder(createDealDto: createDealDto).execute().body
     }
 
     /**
+     Create a deal
      - POST /v1/deals
+     - Creates a `pending` deal with `name` (required), `dealType` (`pmp` default, `preferred`, `guaranteed`), `floorCpm`, `currency` (USD), optional `placementId` and `startsAt`/`endsAt`. Fields are also accepted in snake_case. With `advertiserId` (must be an advertiser account) the advertiser is emailed an invite; without it the deal is open and gets a `claim_token` to share. The placement must belong to the creating publisher (403); its owner becomes the deal's publisher. Active deals are republished to the engine index.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createDealDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<Deal> 
      */
-    open class func dealsControllerCreateWithRequestBuilder(createDealDto: CreateDealDto) -> RequestBuilder<Void> {
+    open class func dealsControllerCreateWithRequestBuilder(createDealDto: CreateDealDto) -> RequestBuilder<Deal> {
         let localVariablePath = "/v1/deals"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createDealDto)
@@ -112,25 +139,34 @@ open class DealsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<Deal>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List deals
+     
+     - returns: [Deal]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func dealsControllerList() async throws {
+    open class func dealsControllerList() async throws -> [Deal] {
         return try await dealsControllerListWithRequestBuilder().execute().body
     }
 
     /**
+     List deals
      - GET /v1/deals
-     - returns: RequestBuilder<Void> 
+     - Lists private-marketplace deals for the caller. Accounts can act on both sides, so `role=publisher` returns deals the account sells and `role=advertiser` returns deals offered to it. Without `role` the account type decides. Admins see all deals (capped at 500 when unpaginated). Supports optional `limit`/`offset`.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[Deal]> 
      */
-    open class func dealsControllerListWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func dealsControllerListWithRequestBuilder() -> RequestBuilder<[Deal]> {
         let localVariablePath = "/v1/deals"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -143,27 +179,36 @@ open class DealsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[Deal]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Find an advertiser by email
+     
      - parameter email: (query)  
-     - returns: Void
+     - returns: DealsControllerLookupAdvertiser200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func dealsControllerLookupAdvertiser(email: String) async throws {
+    open class func dealsControllerLookupAdvertiser(email: String) async throws -> DealsControllerLookupAdvertiser200Response {
         return try await dealsControllerLookupAdvertiserWithRequestBuilder(email: email).execute().body
     }
 
     /**
+     Find an advertiser by email
      - GET /v1/deals/advertiser-lookup
+     - Resolves an advertiser account by exact, case-insensitive `email` so a publisher can target a deal without knowing the account id. Exact match only, to avoid account enumeration. Returns 400 without an email and 404 when no advertiser matches.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter email: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<DealsControllerLookupAdvertiser200Response> 
      */
-    open class func dealsControllerLookupAdvertiserWithRequestBuilder(email: String) -> RequestBuilder<Void> {
+    open class func dealsControllerLookupAdvertiserWithRequestBuilder(email: String) -> RequestBuilder<DealsControllerLookupAdvertiser200Response> {
         let localVariablePath = "/v1/deals/advertiser-lookup"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -179,27 +224,36 @@ open class DealsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<DealsControllerLookupAdvertiser200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Preview an open deal from its claim link
+     
      - parameter token: (path)  
-     - returns: Void
+     - returns: DealsControllerPreviewClaim200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func dealsControllerPreviewClaim(token: String) async throws {
+    open class func dealsControllerPreviewClaim(token: String) async throws -> DealsControllerPreviewClaim200Response {
         return try await dealsControllerPreviewClaimWithRequestBuilder(token: token).execute().body
     }
 
     /**
+     Preview an open deal from its claim link
      - GET /v1/deals/claim/{token}
+     - Returns the deal behind a claim token (code, name, type, floor, currency, status and publisher company name) plus `claimable`, which is true while no advertiser is attached. 404 when the token is unknown or already used.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter token: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<DealsControllerPreviewClaim200Response> 
      */
-    open class func dealsControllerPreviewClaimWithRequestBuilder(token: String) -> RequestBuilder<Void> {
+    open class func dealsControllerPreviewClaimWithRequestBuilder(token: String) -> RequestBuilder<DealsControllerPreviewClaim200Response> {
         var localVariablePath = "/v1/deals/claim/{token}"
         let tokenPreEscape = "\(APIHelper.mapValueToPathItem(token))"
         let tokenPostEscape = tokenPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -215,27 +269,36 @@ open class DealsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<DealsControllerPreviewClaim200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Change a deal's status
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: DealsControllerStatus201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func dealsControllerStatus(id: String) async throws {
+    open class func dealsControllerStatus(id: String) async throws -> DealsControllerStatus201Response {
         return try await dealsControllerStatusWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Change a deal's status
      - POST /v1/deals/{id}/status
+     - Sets `status` to `active`, `paused`, `pending` or `expired`. Only the deal's publisher or an admin may do this (403 otherwise). The engine's active-deal index is republished, so pausing takes effect for serving right away.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<DealsControllerStatus201Response> 
      */
-    open class func dealsControllerStatusWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func dealsControllerStatusWithRequestBuilder(id: String) -> RequestBuilder<DealsControllerStatus201Response> {
         var localVariablePath = "/v1/deals/{id}/status"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -251,8 +314,8 @@ open class DealsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<DealsControllerStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

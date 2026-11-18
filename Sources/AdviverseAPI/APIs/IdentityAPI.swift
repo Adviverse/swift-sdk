@@ -13,21 +13,30 @@ import AnyCodable
 open class IdentityAPI {
 
     /**
-
+     Set identity consent state
+     
      - parameter consentDto: (body)  
-     - returns: Void
+     - returns: IdentityControllerConsent201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func identityControllerConsent(consentDto: ConsentDto) async throws {
+    open class func identityControllerConsent(consentDto: ConsentDto) async throws -> IdentityControllerConsent201Response {
         return try await identityControllerConsentWithRequestBuilder(consentDto: consentDto).execute().body
     }
 
     /**
+     Set identity consent state
      - POST /v1/identity/consent
+     - Sets `state` (`granted` or `denied`) on the identity `canonicalId`. `denied` blocks future cross-identity merges and signal moves involving it. Returns 404 if the identity does not exist or the caller does not own it (admins bypass).  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter consentDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<IdentityControllerConsent201Response> 
      */
-    open class func identityControllerConsentWithRequestBuilder(consentDto: ConsentDto) -> RequestBuilder<Void> {
+    open class func identityControllerConsentWithRequestBuilder(consentDto: ConsentDto) -> RequestBuilder<IdentityControllerConsent201Response> {
         let localVariablePath = "/v1/identity/consent"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: consentDto)
@@ -40,27 +49,36 @@ open class IdentityAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<IdentityControllerConsent201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get an identity with its signals
+     
      - parameter canonicalId: (path)  
-     - returns: Void
+     - returns: IdentityControllerGet200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func identityControllerGet(canonicalId: String) async throws {
+    open class func identityControllerGet(canonicalId: String) async throws -> IdentityControllerGet200Response {
         return try await identityControllerGetWithRequestBuilder(canonicalId: canonicalId).execute().body
     }
 
     /**
+     Get an identity with its signals
      - GET /v1/identity/{canonicalId}
+     - Returns the identity row, the signals on it that the caller supplied (oldest first; admins see all) and the raw cookie/device ids among them. Never returns signals supplied by other accounts. Returns 404 if `canonicalId` does not exist or the caller does not own it (owns none of its signals).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter canonicalId: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<IdentityControllerGet200Response> 
      */
-    open class func identityControllerGetWithRequestBuilder(canonicalId: String) -> RequestBuilder<Void> {
+    open class func identityControllerGetWithRequestBuilder(canonicalId: String) -> RequestBuilder<IdentityControllerGet200Response> {
         var localVariablePath = "/v1/identity/{canonicalId}"
         let canonicalIdPreEscape = "\(APIHelper.mapValueToPathItem(canonicalId))"
         let canonicalIdPostEscape = canonicalIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -76,27 +94,36 @@ open class IdentityAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<IdentityControllerGet200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Link signals to an identity
+     
      - parameter linkIdentityDto: (body)  
-     - returns: Void
+     - returns: IdentityControllerLink201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func identityControllerLink(linkIdentityDto: LinkIdentityDto) async throws {
+    open class func identityControllerLink(linkIdentityDto: LinkIdentityDto) async throws -> IdentityControllerLink201Response {
         return try await identityControllerLinkWithRequestBuilder(linkIdentityDto: linkIdentityDto).execute().body
     }
 
     /**
+     Link signals to an identity
      - POST /v1/identity/link
+     - Adds `signals` (each `{ type, value }`, type one of email/phone/cookie/device/ip_ua) to the identity `canonicalId` without merging identities. A signal owned by another identity is moved only if neither identity has denied consent; otherwise it is skipped. The caller becomes an owner of the linked signals. Returns 404 if the identity does not exist or the caller does not own it (has not resolved/linked any of its signals; admins bypass), and 400 for an empty list.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter linkIdentityDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<IdentityControllerLink201Response> 
      */
-    open class func identityControllerLinkWithRequestBuilder(linkIdentityDto: LinkIdentityDto) -> RequestBuilder<Void> {
+    open class func identityControllerLinkWithRequestBuilder(linkIdentityDto: LinkIdentityDto) -> RequestBuilder<IdentityControllerLink201Response> {
         let localVariablePath = "/v1/identity/link"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: linkIdentityDto)
@@ -109,27 +136,36 @@ open class IdentityAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<IdentityControllerLink201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Resolve signals to a canonical identity
+     
      - parameter resolveIdentityDto: (body)  
-     - returns: Void
+     - returns: IdentityControllerResolve201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func identityControllerResolve(resolveIdentityDto: ResolveIdentityDto) async throws {
+    open class func identityControllerResolve(resolveIdentityDto: ResolveIdentityDto) async throws -> IdentityControllerResolve201Response {
         return try await identityControllerResolveWithRequestBuilder(resolveIdentityDto: resolveIdentityDto).execute().body
     }
 
     /**
+     Resolve signals to a canonical identity
      - POST /v1/identity/resolve
+     - Resolves any of `email`, `phone`, `cookieId`, `deviceId` (at least one, else 400) to a canonical identity, creating one if none matches and linking all signals to it. If the signals already belong to different identities they are merged into the oldest one, unless any of them has consent `denied`, in which case no merge happens and their signals stay put. Email and phone are normalized and hashed; mappings are mirrored to Redis for the ad-engine. The graph is shared across accounts (the same person resolves to one `canonicalId`), but the caller is recorded as an owner of the signals it supplied and the response lists only those signals, never signals supplied by other accounts.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter resolveIdentityDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<IdentityControllerResolve201Response> 
      */
-    open class func identityControllerResolveWithRequestBuilder(resolveIdentityDto: ResolveIdentityDto) -> RequestBuilder<Void> {
+    open class func identityControllerResolveWithRequestBuilder(resolveIdentityDto: ResolveIdentityDto) -> RequestBuilder<IdentityControllerResolve201Response> {
         let localVariablePath = "/v1/identity/resolve"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: resolveIdentityDto)
@@ -142,25 +178,34 @@ open class IdentityAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<IdentityControllerResolve201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get identity graph counts
+     
+     - returns: IdentityControllerStats200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func identityControllerStats() async throws {
+    open class func identityControllerStats() async throws -> IdentityControllerStats200Response {
         return try await identityControllerStatsWithRequestBuilder().execute().body
     }
 
     /**
+     Get identity graph counts
      - GET /v1/identity/stats
-     - returns: RequestBuilder<Void> 
+     - Returns counts across the identity graph: identities, linked signals, distinct households and identities that belong to a household (merged). Scoped to the calling account: only identities it owns and signals it supplied (admins get graph-wide totals).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<IdentityControllerStats200Response> 
      */
-    open class func identityControllerStatsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func identityControllerStatsWithRequestBuilder() -> RequestBuilder<IdentityControllerStats200Response> {
         let localVariablePath = "/v1/identity/stats"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -173,8 +218,8 @@ open class IdentityAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<IdentityControllerStats200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

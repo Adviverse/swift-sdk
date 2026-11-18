@@ -13,21 +13,24 @@ import AnyCodable
 open class CapiAPI {
 
     /**
-
+     Ingest server-side conversion events (CAPI)
+     
      - parameter capiEventsDto: (body)  
-     - returns: Void
+     - returns: CapiControllerEvents201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func capiControllerEvents(capiEventsDto: CapiEventsDto) async throws {
+    open class func capiControllerEvents(capiEventsDto: CapiEventsDto) async throws -> CapiControllerEvents201Response {
         return try await capiControllerEventsWithRequestBuilder(capiEventsDto: capiEventsDto).execute().body
     }
 
     /**
+     Ingest server-side conversion events (CAPI)
      - POST /v1/capi/events
+     - Server-to-server batch ingest authenticated by the advertiser's CAPI token in the `X-CAPI-Token` header, not a session; a missing or invalid token returns 401. Each item in `events` needs `eventId` and `eventName`, plus optional `value`, `currency`, `clickId`, hashed `identifiers` (emailHash, phoneHash, externalId), `eventTime` and `customData`. Events are deduplicated per advertiser on `eventId` and attributed by click id first, then by the identity graph's most recent eligible click or impression. Results are per event and a failing event never fails the batch.  Auth: public, no credentials required.
      - parameter capiEventsDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<CapiControllerEvents201Response> 
      */
-    open class func capiControllerEventsWithRequestBuilder(capiEventsDto: CapiEventsDto) -> RequestBuilder<Void> {
+    open class func capiControllerEventsWithRequestBuilder(capiEventsDto: CapiEventsDto) -> RequestBuilder<CapiControllerEvents201Response> {
         let localVariablePath = "/v1/capi/events"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: capiEventsDto)
@@ -40,27 +43,36 @@ open class CapiAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<CapiControllerEvents201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     List recent CAPI events
+     
      - parameter limit: (query)  
-     - returns: Void
+     - returns: [CapiControllerRecent200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func capiControllerRecent(limit: String) async throws {
+    open class func capiControllerRecent(limit: String) async throws -> [CapiControllerRecent200ResponseInner] {
         return try await capiControllerRecentWithRequestBuilder(limit: limit).execute().body
     }
 
     /**
+     List recent CAPI events
      - GET /v1/capi/events
+     - Returns the advertiser's most recent CAPI-sourced postback log rows, newest first. `limit` defaults to 100 and is capped at 500. `attributed` shows whether the event was matched to a campaign.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter limit: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[CapiControllerRecent200ResponseInner]> 
      */
-    open class func capiControllerRecentWithRequestBuilder(limit: String) -> RequestBuilder<Void> {
+    open class func capiControllerRecentWithRequestBuilder(limit: String) -> RequestBuilder<[CapiControllerRecent200ResponseInner]> {
         let localVariablePath = "/v1/capi/events"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -76,25 +88,34 @@ open class CapiAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[CapiControllerRecent200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Rotate the CAPI access token
+     
+     - returns: CapiControllerToken201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func capiControllerToken() async throws {
+    open class func capiControllerToken() async throws -> CapiControllerToken201Response {
         return try await capiControllerTokenWithRequestBuilder().execute().body
     }
 
     /**
+     Rotate the CAPI access token
      - POST /v1/capi/token
-     - returns: RequestBuilder<Void> 
+     - Revokes any active CAPI token for the advertiser and issues a new one. The full token (`<prefix>.<secret>`) is returned only in this response; the server stores only its hash. Use it as the `X-CAPI-Token` header on POST /v1/capi/events.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<CapiControllerToken201Response> 
      */
-    open class func capiControllerTokenWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func capiControllerTokenWithRequestBuilder() -> RequestBuilder<CapiControllerToken201Response> {
         let localVariablePath = "/v1/capi/token"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -107,8 +128,8 @@ open class CapiAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<CapiControllerToken201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

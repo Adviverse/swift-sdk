@@ -13,21 +13,30 @@ import AnyCodable
 open class PortalAPI {
 
     /**
-
+     Save a portal template config
+     
      - parameter createPortalConfigDto: (body)  
-     - returns: Void
+     - returns: PortalTemplatesControllerCreateConfig201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func portalTemplatesControllerCreateConfig(createPortalConfigDto: CreatePortalConfigDto) async throws {
+    open class func portalTemplatesControllerCreateConfig(createPortalConfigDto: CreatePortalConfigDto) async throws -> PortalTemplatesControllerCreateConfig201Response {
         return try await portalTemplatesControllerCreateConfigWithRequestBuilder(createPortalConfigDto: createPortalConfigDto).execute().body
     }
 
     /**
+     Save a portal template config
      - POST /v1/portal/configs
+     - Stores a `config` object for template key `template` and returns its id and the hosted template URL that renders it. Use the URL as an `html5` creative's asset URL (for example on a metaverse portal surface). 400 for an unknown template.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createPortalConfigDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PortalTemplatesControllerCreateConfig201Response> 
      */
-    open class func portalTemplatesControllerCreateConfigWithRequestBuilder(createPortalConfigDto: CreatePortalConfigDto) -> RequestBuilder<Void> {
+    open class func portalTemplatesControllerCreateConfigWithRequestBuilder(createPortalConfigDto: CreatePortalConfigDto) -> RequestBuilder<PortalTemplatesControllerCreateConfig201Response> {
         let localVariablePath = "/v1/portal/configs"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createPortalConfigDto)
@@ -40,27 +49,30 @@ open class PortalAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PortalTemplatesControllerCreateConfig201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Fetch a portal config
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: PortalTemplatesControllerGetConfig200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func portalTemplatesControllerGetConfig(id: String) async throws {
+    open class func portalTemplatesControllerGetConfig(id: String) async throws -> PortalTemplatesControllerGetConfig200Response {
         return try await portalTemplatesControllerGetConfigWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Fetch a portal config
      - GET /v1/portal/config/{id}
+     - Public endpoint the hosted template calls at runtime to load its saved configuration. 404 if the config id does not exist.  Auth: public, no credentials required.
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PortalTemplatesControllerGetConfig200Response> 
      */
-    open class func portalTemplatesControllerGetConfigWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func portalTemplatesControllerGetConfigWithRequestBuilder(id: String) -> RequestBuilder<PortalTemplatesControllerGetConfig200Response> {
         var localVariablePath = "/v1/portal/config/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -76,25 +88,34 @@ open class PortalAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PortalTemplatesControllerGetConfig200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     List portal experience templates
+     
+     - returns: [PortalTemplatesControllerListTemplates200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func portalTemplatesControllerListTemplates() async throws {
+    open class func portalTemplatesControllerListTemplates() async throws -> [PortalTemplatesControllerListTemplates200ResponseInner] {
         return try await portalTemplatesControllerListTemplatesWithRequestBuilder().execute().body
     }
 
     /**
+     List portal experience templates
      - GET /v1/portal/templates
-     - returns: RequestBuilder<Void> 
+     - Returns the catalog of prebuilt HTML5 portal templates (product-showcase, spin-to-win, 360-viewer, reward-to-play, reward-onchain), each with the config fields it accepts.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[PortalTemplatesControllerListTemplates200ResponseInner]> 
      */
-    open class func portalTemplatesControllerListTemplatesWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func portalTemplatesControllerListTemplatesWithRequestBuilder() -> RequestBuilder<[PortalTemplatesControllerListTemplates200ResponseInner]> {
         let localVariablePath = "/v1/portal/templates"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -107,8 +128,8 @@ open class PortalAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[PortalTemplatesControllerListTemplates200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

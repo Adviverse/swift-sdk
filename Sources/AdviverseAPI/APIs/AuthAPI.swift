@@ -13,19 +13,28 @@ import AnyCodable
 open class AuthAPI {
 
     /**
-
-     - returns: Void
+     List linked SSO providers
+     
+     - returns: [AuthControllerConnections200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerConnections() async throws {
+    open class func authControllerConnections() async throws -> [AuthControllerConnections200ResponseInner] {
         return try await authControllerConnectionsWithRequestBuilder().execute().body
     }
 
     /**
+     List linked SSO providers
      - GET /v1/auth/connections
-     - returns: RequestBuilder<Void> 
+     - Lists the social sign-in providers connected to the current account, oldest first.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AuthControllerConnections200ResponseInner]> 
      */
-    open class func authControllerConnectionsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func authControllerConnectionsWithRequestBuilder() -> RequestBuilder<[AuthControllerConnections200ResponseInner]> {
         let localVariablePath = "/v1/auth/connections"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,27 +47,36 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AuthControllerConnections200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Disconnect an SSO provider
+     
      - parameter provider: (path)  
-     - returns: Void
+     - returns: AuthControllerResendVerification201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerDisconnect(provider: String) async throws {
+    open class func authControllerDisconnect(provider: String) async throws -> AuthControllerResendVerification201Response {
         return try await authControllerDisconnectWithRequestBuilder(provider: provider).execute().body
     }
 
     /**
+     Disconnect an SSO provider
      - DELETE /v1/auth/connections/{provider}
+     - Removes the connection for `provider` from the current account. Refuses with 400 when the account has no password and this is its only connection, so the user cannot lock themselves out. Unknown providers are a no-op.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter provider: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerResendVerification201Response> 
      */
-    open class func authControllerDisconnectWithRequestBuilder(provider: String) -> RequestBuilder<Void> {
+    open class func authControllerDisconnectWithRequestBuilder(provider: String) -> RequestBuilder<AuthControllerResendVerification201Response> {
         var localVariablePath = "/v1/auth/connections/{provider}"
         let providerPreEscape = "\(APIHelper.mapValueToPathItem(provider))"
         let providerPostEscape = providerPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -74,25 +92,34 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerResendVerification201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Confirm and enable TOTP 2FA
+     
+     - returns: AuthControllerEnable2fa201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerEnable2fa() async throws {
+    open class func authControllerEnable2fa() async throws -> AuthControllerEnable2fa201Response {
         return try await authControllerEnable2faWithRequestBuilder().execute().body
     }
 
     /**
+     Confirm and enable TOTP 2FA
      - POST /v1/auth/2fa/enable
-     - returns: RequestBuilder<Void> 
+     - Verifies `totp` against the secret from the setup step and turns on 2FA, after which login requires a code. Returns 400 `run setup first` if no secret exists, or `invalid code`.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AuthControllerEnable2fa201Response> 
      */
-    open class func authControllerEnable2faWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func authControllerEnable2faWithRequestBuilder() -> RequestBuilder<AuthControllerEnable2fa201Response> {
         let localVariablePath = "/v1/auth/2fa/enable"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -105,27 +132,30 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerEnable2fa201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Start a password reset
+     
      - parameter emailDto: (body)  
-     - returns: Void
+     - returns: AuthControllerResendVerification201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerForgotPassword(emailDto: EmailDto) async throws {
+    open class func authControllerForgotPassword(emailDto: EmailDto) async throws -> AuthControllerResendVerification201Response {
         return try await authControllerForgotPasswordWithRequestBuilder(emailDto: emailDto).execute().body
     }
 
     /**
+     Start a password reset
      - POST /v1/auth/forgot-password
+     - Emails a one-hour password reset link to `email` when an account exists. Always returns `{ ok: true }` to avoid account enumeration. Rate-limited per IP.  Auth: public, no credentials required.
      - parameter emailDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerResendVerification201Response> 
      */
-    open class func authControllerForgotPasswordWithRequestBuilder(emailDto: EmailDto) -> RequestBuilder<Void> {
+    open class func authControllerForgotPasswordWithRequestBuilder(emailDto: EmailDto) -> RequestBuilder<AuthControllerResendVerification201Response> {
         let localVariablePath = "/v1/auth/forgot-password"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: emailDto)
@@ -138,13 +168,14 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerResendVerification201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     GitHub OAuth callback
+     
      - parameter code: (query)  
      - parameter state: (query)  
      - returns: Void
@@ -155,7 +186,9 @@ open class AuthAPI {
     }
 
     /**
+     GitHub OAuth callback
      - GET /v1/auth/oauth/github/callback
+     - Browser redirect target for GitHub. Exchanges `code`, verifies `state`, then 302-redirects to the dashboard: `/settings#sso=connected` after linking, `/login#sso_token=<token>` after login/signup, or `/login#sso_error=github` on any failure. The session token is passed in the URL fragment so it never reaches a server. Callbacks carrying a state issued by the Atlas identity service are forwarded there instead.  Auth: public, no credentials required.
      - parameter code: (query)  
      - parameter state: (query)  
      - returns: RequestBuilder<Void> 
@@ -183,23 +216,26 @@ open class AuthAPI {
     }
 
     /**
-
+     Start GitHub sign-in
+     
      - parameter authorization: (header)  
      - parameter oauthStartDto: (body)  
-     - returns: Void
+     - returns: AuthControllerGithubStart201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerGithubStart(authorization: String, oauthStartDto: OauthStartDto) async throws {
+    open class func authControllerGithubStart(authorization: String, oauthStartDto: OauthStartDto) async throws -> AuthControllerGithubStart201Response {
         return try await authControllerGithubStartWithRequestBuilder(authorization: authorization, oauthStartDto: oauthStartDto).execute().body
     }
 
     /**
+     Start GitHub sign-in
      - POST /v1/auth/oauth/github/start
+     - Returns the GitHub authorize URL with a signed state carrying the optional signup `type` and, if a bearer token was sent, a \"connect to this account\" intent. POST is used so the session token never appears in a URL. Returns 401 if GitHub SSO is not configured.  Auth: public, no credentials required.
      - parameter authorization: (header)  
      - parameter oauthStartDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerGithubStart201Response> 
      */
-    open class func authControllerGithubStartWithRequestBuilder(authorization: String, oauthStartDto: OauthStartDto) -> RequestBuilder<Void> {
+    open class func authControllerGithubStartWithRequestBuilder(authorization: String, oauthStartDto: OauthStartDto) -> RequestBuilder<AuthControllerGithubStart201Response> {
         let localVariablePath = "/v1/auth/oauth/github/start"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: oauthStartDto)
@@ -213,27 +249,30 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerGithubStart201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Log in with email and password
+     
      - parameter loginDto: (body)  
-     - returns: Void
+     - returns: AuthSession
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerLogin(loginDto: LoginDto) async throws {
+    open class func authControllerLogin(loginDto: LoginDto) async throws -> AuthSession {
         return try await authControllerLoginWithRequestBuilder(loginDto: loginDto).execute().body
     }
 
     /**
+     Log in with email and password
      - POST /v1/auth/login
+     - Exchanges `email` + `password` for a session bearer token. When 2FA is enabled a `totp` code is required; without one the call fails with 401 `2fa_required`. Emails not found on an account are tried as agency team-member seats, in which case the session is bound to the agency account and `account.member` is set. Returns 401 for bad credentials, banned/suspended accounts, or SSO-only accounts without a password. A Turnstile token is checked when configured; rate-limited per IP.  Auth: public, no credentials required.
      - parameter loginDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthSession> 
      */
-    open class func authControllerLoginWithRequestBuilder(loginDto: LoginDto) -> RequestBuilder<Void> {
+    open class func authControllerLoginWithRequestBuilder(loginDto: LoginDto) -> RequestBuilder<AuthSession> {
         let localVariablePath = "/v1/auth/login"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: loginDto)
@@ -246,27 +285,36 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthSession>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Log out
+     
      - parameter authorization: (header)  
-     - returns: Void
+     - returns: AuthControllerResendVerification201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerLogout(authorization: String) async throws {
+    open class func authControllerLogout(authorization: String) async throws -> AuthControllerResendVerification201Response {
         return try await authControllerLogoutWithRequestBuilder(authorization: authorization).execute().body
     }
 
     /**
+     Log out
      - POST /v1/auth/logout
+     - Revokes the session identified by the bearer token in the Authorization header. Always returns `{ ok: true }`.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter authorization: (header)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerResendVerification201Response> 
      */
-    open class func authControllerLogoutWithRequestBuilder(authorization: String) -> RequestBuilder<Void> {
+    open class func authControllerLogoutWithRequestBuilder(authorization: String) -> RequestBuilder<AuthControllerResendVerification201Response> {
         let localVariablePath = "/v1/auth/logout"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -279,25 +327,34 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerResendVerification201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get the current session account
+     
+     - returns: AuthMe
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerMe() async throws {
+    open class func authControllerMe() async throws -> AuthMe {
         return try await authControllerMeWithRequestBuilder().execute().body
     }
 
     /**
+     Get the current session account
      - GET /v1/auth/me
-     - returns: RequestBuilder<Void> 
+     - Returns the account behind the current session or API key. `roles` is `[\"admin\"]` for admins and `[\"publisher\",\"advertiser\"]` for every other account, since all accounts are dual-sided; `type` is only the signup choice. For agency team-member sessions `email` is the member email and `member` describes the seat role and pixel grant; otherwise `member` is null.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AuthMe> 
      */
-    open class func authControllerMeWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func authControllerMeWithRequestBuilder() -> RequestBuilder<AuthMe> {
         let localVariablePath = "/v1/auth/me"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -310,13 +367,14 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthMe>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Microsoft OAuth callback
+     
      - parameter code: (query)  
      - parameter state: (query)  
      - returns: Void
@@ -327,7 +385,9 @@ open class AuthAPI {
     }
 
     /**
+     Microsoft OAuth callback
      - GET /v1/auth/oauth/microsoft/callback
+     - Browser redirect target for Microsoft. Completes the code flow and 302-redirects to the dashboard with `#sso=connected`, `#sso_token=<token>` or `#sso_error=microsoft`, same as the GitHub callback. Atlas-issued states are forwarded to Atlas.  Auth: public, no credentials required.
      - parameter code: (query)  
      - parameter state: (query)  
      - returns: RequestBuilder<Void> 
@@ -355,23 +415,26 @@ open class AuthAPI {
     }
 
     /**
-
+     Start Microsoft sign-in
+     
      - parameter authorization: (header)  
      - parameter oauthStartDto: (body)  
-     - returns: Void
+     - returns: AuthControllerGithubStart201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerMicrosoftStart(authorization: String, oauthStartDto: OauthStartDto) async throws {
+    open class func authControllerMicrosoftStart(authorization: String, oauthStartDto: OauthStartDto) async throws -> AuthControllerGithubStart201Response {
         return try await authControllerMicrosoftStartWithRequestBuilder(authorization: authorization, oauthStartDto: oauthStartDto).execute().body
     }
 
     /**
+     Start Microsoft sign-in
      - POST /v1/auth/oauth/microsoft/start
+     - Returns the Microsoft (Entra) authorize URL with a signed state, exactly like the GitHub start endpoint. An optional bearer token marks a connect intent; `type` sets the account type for a new signup. Returns 401 if Microsoft SSO is not configured.  Auth: public, no credentials required.
      - parameter authorization: (header)  
      - parameter oauthStartDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerGithubStart201Response> 
      */
-    open class func authControllerMicrosoftStartWithRequestBuilder(authorization: String, oauthStartDto: OauthStartDto) -> RequestBuilder<Void> {
+    open class func authControllerMicrosoftStartWithRequestBuilder(authorization: String, oauthStartDto: OauthStartDto) -> RequestBuilder<AuthControllerGithubStart201Response> {
         let localVariablePath = "/v1/auth/oauth/microsoft/start"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: oauthStartDto)
@@ -385,29 +448,32 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerGithubStart201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Sign in or connect with Discord
+     
      - parameter authorization: (header)  
      - parameter oauthDiscordDto: (body)  
-     - returns: Void
+     - returns: AuthControllerOauthDiscord201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerOauthDiscord(authorization: String, oauthDiscordDto: OauthDiscordDto) async throws {
+    open class func authControllerOauthDiscord(authorization: String, oauthDiscordDto: OauthDiscordDto) async throws -> AuthControllerOauthDiscord201Response {
         return try await authControllerOauthDiscordWithRequestBuilder(authorization: authorization, oauthDiscordDto: oauthDiscordDto).execute().body
     }
 
     /**
+     Sign in or connect with Discord
      - POST /v1/auth/oauth/discord
+     - Verifies a single-use RestoreHub widget `token` and resolves the Discord identity. Without a bearer token it logs in the account already connected to that identity, else attaches it to an account with the same provider-verified email, else creates a new passwordless account of `type`. With a valid bearer token the identity is linked to the current account instead and `{ linked: true }` is returned. Returns 400 when the email belongs to an existing account but is not verified by the provider, or no email is shared.  Auth: public, no credentials required.
      - parameter authorization: (header)  
      - parameter oauthDiscordDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerOauthDiscord201Response> 
      */
-    open class func authControllerOauthDiscordWithRequestBuilder(authorization: String, oauthDiscordDto: OauthDiscordDto) -> RequestBuilder<Void> {
+    open class func authControllerOauthDiscordWithRequestBuilder(authorization: String, oauthDiscordDto: OauthDiscordDto) -> RequestBuilder<AuthControllerOauthDiscord201Response> {
         let localVariablePath = "/v1/auth/oauth/discord"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: oauthDiscordDto)
@@ -421,29 +487,32 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerOauthDiscord201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Sign in or connect with Google
+     
      - parameter authorization: (header)  
      - parameter oauthGoogleDto: (body)  
-     - returns: Void
+     - returns: AuthControllerOauthDiscord201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerOauthGoogle(authorization: String, oauthGoogleDto: OauthGoogleDto) async throws {
+    open class func authControllerOauthGoogle(authorization: String, oauthGoogleDto: OauthGoogleDto) async throws -> AuthControllerOauthDiscord201Response {
         return try await authControllerOauthGoogleWithRequestBuilder(authorization: authorization, oauthGoogleDto: oauthGoogleDto).execute().body
     }
 
     /**
+     Sign in or connect with Google
      - POST /v1/auth/oauth/google
+     - Validates a Google Identity Services ID token (`credential`) against Google tokeninfo, checking that the audience is the Adviverse client id and the issuer is Google. Login, auto-link and signup behave as for Discord; with a bearer token the Google identity is linked to the current account. Returns 401 `verification_failed` for an invalid token, or when Google SSO is not configured.  Auth: public, no credentials required.
      - parameter authorization: (header)  
      - parameter oauthGoogleDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerOauthDiscord201Response> 
      */
-    open class func authControllerOauthGoogleWithRequestBuilder(authorization: String, oauthGoogleDto: OauthGoogleDto) -> RequestBuilder<Void> {
+    open class func authControllerOauthGoogleWithRequestBuilder(authorization: String, oauthGoogleDto: OauthGoogleDto) -> RequestBuilder<AuthControllerOauthDiscord201Response> {
         let localVariablePath = "/v1/auth/oauth/google"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: oauthGoogleDto)
@@ -457,27 +526,30 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerOauthDiscord201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Resend the verification email
+     
      - parameter emailDto: (body)  
-     - returns: Void
+     - returns: AuthControllerResendVerification201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerResendVerification(emailDto: EmailDto) async throws {
+    open class func authControllerResendVerification(emailDto: EmailDto) async throws -> AuthControllerResendVerification201Response {
         return try await authControllerResendVerificationWithRequestBuilder(emailDto: emailDto).execute().body
     }
 
     /**
+     Resend the verification email
      - POST /v1/auth/resend-verification
+     - Sends a fresh verification link to `email` if an account exists and is not yet verified. Always returns `{ ok: true }` so the response does not reveal whether the email is registered. Rate-limited per IP.  Auth: public, no credentials required.
      - parameter emailDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerResendVerification201Response> 
      */
-    open class func authControllerResendVerificationWithRequestBuilder(emailDto: EmailDto) -> RequestBuilder<Void> {
+    open class func authControllerResendVerificationWithRequestBuilder(emailDto: EmailDto) -> RequestBuilder<AuthControllerResendVerification201Response> {
         let localVariablePath = "/v1/auth/resend-verification"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: emailDto)
@@ -490,27 +562,30 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerResendVerification201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Complete a password reset
+     
      - parameter resetPasswordDto: (body)  
-     - returns: Void
+     - returns: AuthControllerResendVerification201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerResetPassword(resetPasswordDto: ResetPasswordDto) async throws {
+    open class func authControllerResetPassword(resetPasswordDto: ResetPasswordDto) async throws -> AuthControllerResendVerification201Response {
         return try await authControllerResetPasswordWithRequestBuilder(resetPasswordDto: resetPasswordDto).execute().body
     }
 
     /**
+     Complete a password reset
      - POST /v1/auth/reset-password
+     - Sets a new `password` (min 8 chars) using the single-use reset `token` from the email. On success the token is consumed and every active session of the account is revoked, so the user must log in again. Returns 400 for an invalid or expired token. Rate-limited per IP.  Auth: public, no credentials required.
      - parameter resetPasswordDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerResendVerification201Response> 
      */
-    open class func authControllerResetPasswordWithRequestBuilder(resetPasswordDto: ResetPasswordDto) -> RequestBuilder<Void> {
+    open class func authControllerResetPasswordWithRequestBuilder(resetPasswordDto: ResetPasswordDto) -> RequestBuilder<AuthControllerResendVerification201Response> {
         let localVariablePath = "/v1/auth/reset-password"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: resetPasswordDto)
@@ -523,27 +598,36 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerResendVerification201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Set or change the password
+     
      - parameter setPasswordDto: (body)  
-     - returns: Void
+     - returns: AuthControllerSetPassword201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerSetPassword(setPasswordDto: SetPasswordDto) async throws {
+    open class func authControllerSetPassword(setPasswordDto: SetPasswordDto) async throws -> AuthControllerSetPassword201Response {
         return try await authControllerSetPasswordWithRequestBuilder(setPasswordDto: setPasswordDto).execute().body
     }
 
     /**
+     Set or change the password
      - POST /v1/auth/password
+     - Sets `newPassword` (min 8 chars). If the account already has a password, `currentPassword` is required and must match (400 if missing, 401 if wrong); SSO-only accounts can set a first password without it, which enables email login. Team-member seats get 403. `hadPassword` tells whether this was a change or a first set.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter setPasswordDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerSetPassword201Response> 
      */
-    open class func authControllerSetPasswordWithRequestBuilder(setPasswordDto: SetPasswordDto) -> RequestBuilder<Void> {
+    open class func authControllerSetPasswordWithRequestBuilder(setPasswordDto: SetPasswordDto) -> RequestBuilder<AuthControllerSetPassword201Response> {
         let localVariablePath = "/v1/auth/password"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: setPasswordDto)
@@ -556,25 +640,34 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerSetPassword201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Begin TOTP 2FA setup
+     
+     - returns: AuthControllerSetup2fa201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerSetup2fa() async throws {
+    open class func authControllerSetup2fa() async throws -> AuthControllerSetup2fa201Response {
         return try await authControllerSetup2faWithRequestBuilder().execute().body
     }
 
     /**
+     Begin TOTP 2FA setup
      - POST /v1/auth/2fa/setup
-     - returns: RequestBuilder<Void> 
+     - Generates a new TOTP secret, stores it on the account and returns it with an `otpauth://` URI for authenticator apps. 2FA is not active until confirmed with the enable endpoint. Calling again replaces any unconfirmed secret.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AuthControllerSetup2fa201Response> 
      */
-    open class func authControllerSetup2faWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func authControllerSetup2faWithRequestBuilder() -> RequestBuilder<AuthControllerSetup2fa201Response> {
         let localVariablePath = "/v1/auth/2fa/setup"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -587,27 +680,30 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerSetup2fa201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create an account
+     
      - parameter signupDto: (body)  
-     - returns: Void
+     - returns: AuthControllerSignup201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerSignup(signupDto: SignupDto) async throws {
+    open class func authControllerSignup(signupDto: SignupDto) async throws -> AuthControllerSignup201Response {
         return try await authControllerSignupWithRequestBuilder(signupDto: signupDto).execute().body
     }
 
     /**
+     Create an account
      - POST /v1/auth/signup
+     - Registers a new account from `email` and `password` (min 8 chars), with optional `type` (advertiser|publisher, default advertiser; only the default landing side, every account is dual-sided), `companyName`, `country` and `referredByCode`. A Turnstile token (`turnstileToken`) is checked first when Turnstile is configured. Creates a zero balance, records the referral if the code matches, emails a 48-hour verification link and returns a session token so the client is logged in immediately. The account starts in `pending` status until the email is verified. Returns 400 if the email is already registered.  Auth: public, no credentials required.
      - parameter signupDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerSignup201Response> 
      */
-    open class func authControllerSignupWithRequestBuilder(signupDto: SignupDto) -> RequestBuilder<Void> {
+    open class func authControllerSignupWithRequestBuilder(signupDto: SignupDto) -> RequestBuilder<AuthControllerSignup201Response> {
         let localVariablePath = "/v1/auth/signup"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: signupDto)
@@ -620,25 +716,28 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerSignup201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Get public SSO and Turnstile config
+     
+     - returns: AuthControllerSsoConfig200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerSsoConfig() async throws {
+    open class func authControllerSsoConfig() async throws -> AuthControllerSsoConfig200Response {
         return try await authControllerSsoConfigWithRequestBuilder().execute().body
     }
 
     /**
+     Get public SSO and Turnstile config
      - GET /v1/auth/sso-config
-     - returns: RequestBuilder<Void> 
+     - Returns the public settings the login page needs to render SSO buttons and the Turnstile widget: the Google client id (or null), whether GitHub and Microsoft SSO are configured, and the Turnstile site key (or null). No secrets are returned.  Auth: public, no credentials required.
+     - returns: RequestBuilder<AuthControllerSsoConfig200Response> 
      */
-    open class func authControllerSsoConfigWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func authControllerSsoConfigWithRequestBuilder() -> RequestBuilder<AuthControllerSsoConfig200Response> {
         let localVariablePath = "/v1/auth/sso-config"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -651,25 +750,28 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerSsoConfig200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Verify an email address
+     
+     - returns: AuthControllerVerify201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func authControllerVerify() async throws {
+    open class func authControllerVerify() async throws -> AuthControllerVerify201Response {
         return try await authControllerVerifyWithRequestBuilder().execute().body
     }
 
     /**
+     Verify an email address
      - POST /v1/auth/verify-email
-     - returns: RequestBuilder<Void> 
+     - Consumes the single-use `token` from the verification email. Marks the account email as verified and moves a `pending` account to `active`. Returns 400 if the token is unknown, already used or expired (tokens live 48 hours).  Auth: public, no credentials required.
+     - returns: RequestBuilder<AuthControllerVerify201Response> 
      */
-    open class func authControllerVerifyWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func authControllerVerifyWithRequestBuilder() -> RequestBuilder<AuthControllerVerify201Response> {
         let localVariablePath = "/v1/auth/verify-email"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -682,7 +784,7 @@ open class AuthAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerVerify201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }

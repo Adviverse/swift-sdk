@@ -13,21 +13,30 @@ import AnyCodable
 open class RegionsAPI {
 
     /**
-
+     Create a serving region
+     
      - parameter createRegionDto: (body)  
-     - returns: Void
+     - returns: RewRegion
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func regionsControllerCreate(createRegionDto: CreateRegionDto) async throws {
+    open class func regionsControllerCreate(createRegionDto: CreateRegionDto) async throws -> RewRegion {
         return try await regionsControllerCreateWithRequestBuilder(createRegionDto: createRegionDto).execute().body
     }
 
     /**
+     Create a serving region
      - POST /v1/admin/regions
+     - Adds a region from `code` (lowercase slug, unique), `name`, `public_endpoint`, `lat`, `lng`, optional `country_codes` (uppercased), `status` (active, draining, disabled; default active) and `priority` (default 100, lower wins). Invalidates the region cache.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createRegionDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<RewRegion> 
      */
-    open class func regionsControllerCreateWithRequestBuilder(createRegionDto: CreateRegionDto) -> RequestBuilder<Void> {
+    open class func regionsControllerCreateWithRequestBuilder(createRegionDto: CreateRegionDto) -> RequestBuilder<RewRegion> {
         let localVariablePath = "/v1/admin/regions"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createRegionDto)
@@ -40,25 +49,28 @@ open class RegionsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<RewRegion>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get per-region engine health
+     
+     - returns: [RegionsControllerHealth200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func regionsControllerHealth() async throws {
+    open class func regionsControllerHealth() async throws -> [RegionsControllerHealth200ResponseInner] {
         return try await regionsControllerHealthWithRequestBuilder().execute().body
     }
 
     /**
+     Get per-region engine health
      - GET /v1/regions/health
-     - returns: RequestBuilder<Void> 
+     - Public. Probes every configured region's engine `/healthz` (1.5s timeout) and reports whether it is up with its indexed campaign and placement counts and version. Unreachable engines report `up: false` with null metrics.  Auth: public, no credentials required.
+     - returns: RequestBuilder<[RegionsControllerHealth200ResponseInner]> 
      */
-    open class func regionsControllerHealthWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func regionsControllerHealthWithRequestBuilder() -> RequestBuilder<[RegionsControllerHealth200ResponseInner]> {
         let localVariablePath = "/v1/regions/health"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -71,25 +83,28 @@ open class RegionsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[RegionsControllerHealth200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     List active serving regions
+     
+     - returns: [RewRegion]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func regionsControllerList() async throws {
+    open class func regionsControllerList() async throws -> [RewRegion] {
         return try await regionsControllerListWithRequestBuilder().execute().body
     }
 
     /**
+     List active serving regions
      - GET /v1/regions
-     - returns: RequestBuilder<Void> 
+     - Public. Returns the active ad-engine regions ordered by priority, served from a 30-second in-memory cache.  Auth: public, no credentials required.
+     - returns: RequestBuilder<[RewRegion]> 
      */
-    open class func regionsControllerListWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func regionsControllerListWithRequestBuilder() -> RequestBuilder<[RewRegion]> {
         let localVariablePath = "/v1/regions"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -102,31 +117,34 @@ open class RegionsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[RewRegion]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Resolve the best serving region
+     
      - parameter country: (query)  
      - parameter lat: (query)  
      - parameter lng: (query)  
-     - returns: Void
+     - returns: RegionsControllerNearest200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func regionsControllerNearest(country: String, lat: String, lng: String) async throws {
+    open class func regionsControllerNearest(country: String, lat: String, lng: String) async throws -> RegionsControllerNearest200Response {
         return try await regionsControllerNearestWithRequestBuilder(country: country, lat: lat, lng: lng).execute().body
     }
 
     /**
+     Resolve the best serving region
      - GET /v1/regions/nearest
+     - Public and fail-soft; the SDK calls it before auth to choose an engine. Matches `?country=` (ISO alpha-2) against region country lists, else picks the nearest region to `?lat=&lng=`, else the highest-priority region. Falls back to a built-in default region if none are configured or lookup fails.  Auth: public, no credentials required.
      - parameter country: (query)  
      - parameter lat: (query)  
      - parameter lng: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<RegionsControllerNearest200Response> 
      */
-    open class func regionsControllerNearestWithRequestBuilder(country: String, lat: String, lng: String) -> RequestBuilder<Void> {
+    open class func regionsControllerNearestWithRequestBuilder(country: String, lat: String, lng: String) -> RequestBuilder<RegionsControllerNearest200Response> {
         let localVariablePath = "/v1/regions/nearest"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -144,29 +162,38 @@ open class RegionsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<RegionsControllerNearest200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Update a serving region
+     
      - parameter id: (path)  
      - parameter updateRegionDto: (body)  
-     - returns: Void
+     - returns: RewRegion
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func regionsControllerUpdate(id: String, updateRegionDto: UpdateRegionDto) async throws {
+    open class func regionsControllerUpdate(id: String, updateRegionDto: UpdateRegionDto) async throws -> RewRegion {
         return try await regionsControllerUpdateWithRequestBuilder(id: id, updateRegionDto: updateRegionDto).execute().body
     }
 
     /**
+     Update a serving region
      - PATCH /v1/admin/regions/{id}
+     - Patches `status`, `public_endpoint`, `priority`, `country_codes` or `name` of the region with UUID `id` and invalidates the cache. 404 if the region does not exist.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter updateRegionDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<RewRegion> 
      */
-    open class func regionsControllerUpdateWithRequestBuilder(id: String, updateRegionDto: UpdateRegionDto) -> RequestBuilder<Void> {
+    open class func regionsControllerUpdateWithRequestBuilder(id: String, updateRegionDto: UpdateRegionDto) -> RequestBuilder<RewRegion> {
         var localVariablePath = "/v1/admin/regions/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -182,8 +209,8 @@ open class RegionsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<RewRegion>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

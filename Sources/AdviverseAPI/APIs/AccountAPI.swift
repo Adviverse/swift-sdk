@@ -13,25 +13,28 @@ import AnyCodable
 open class AccountAPI {
 
     /**
-
+     Receive Didit verification webhooks
+     
      - parameter xSignatureSimple: (header)  
      - parameter xSignatureV2: (header)  
      - parameter xSignature: (header)  
-     - returns: Void
+     - returns: AccountControllerDiditWebhook201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func accountControllerDiditWebhook(xSignatureSimple: String, xSignatureV2: String, xSignature: String) async throws {
+    open class func accountControllerDiditWebhook(xSignatureSimple: String, xSignatureV2: String, xSignature: String) async throws -> AccountControllerDiditWebhook201Response {
         return try await accountControllerDiditWebhookWithRequestBuilder(xSignatureSimple: xSignatureSimple, xSignatureV2: xSignatureV2, xSignature: xSignature).execute().body
     }
 
     /**
+     Receive Didit verification webhooks
      - POST /v1/account/kyc/didit/webhook
+     - Public callback for Didit, authenticated by HMAC signature (`x-signature-simple`, `x-signature-v2` or `x-signature` over the raw body) plus a `created_at` within 5 minutes. Updates the KYC session and maps the decision onto the account's KYC status, never downgrading a verified account. Returns 401 on a bad or stale signature, otherwise 200 so Didit does not retry.  Auth: public, no credentials required.
      - parameter xSignatureSimple: (header)  
      - parameter xSignatureV2: (header)  
      - parameter xSignature: (header)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AccountControllerDiditWebhook201Response> 
      */
-    open class func accountControllerDiditWebhookWithRequestBuilder(xSignatureSimple: String, xSignatureV2: String, xSignature: String) -> RequestBuilder<Void> {
+    open class func accountControllerDiditWebhookWithRequestBuilder(xSignatureSimple: String, xSignatureV2: String, xSignature: String) -> RequestBuilder<AccountControllerDiditWebhook201Response> {
         let localVariablePath = "/v1/account/kyc/didit/webhook"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -46,25 +49,34 @@ open class AccountAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AccountControllerDiditWebhook201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Get KYC verification status
+     
+     - returns: AccountControllerKycStatus200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func accountControllerKycStatus() async throws {
+    open class func accountControllerKycStatus() async throws -> AccountControllerKycStatus200Response {
         return try await accountControllerKycStatusWithRequestBuilder().execute().body
     }
 
     /**
+     Get KYC verification status
      - GET /v1/account/kyc
-     - returns: RequestBuilder<Void> 
+     - Returns the account's identity verification status (`none`, `submitted`, `verified` or `rejected`) and `instantProvider`, which is `didit` when hosted verification is configured and null otherwise. There is no manual document upload path.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AccountControllerKycStatus200Response> 
      */
-    open class func accountControllerKycStatusWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func accountControllerKycStatusWithRequestBuilder() -> RequestBuilder<AccountControllerKycStatus200Response> {
         let localVariablePath = "/v1/account/kyc"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -77,25 +89,34 @@ open class AccountAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AccountControllerKycStatus200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Start a hosted KYC session
+     
+     - returns: AccountControllerStartDidit201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func accountControllerStartDidit() async throws {
+    open class func accountControllerStartDidit() async throws -> AccountControllerStartDidit201Response {
         return try await accountControllerStartDiditWithRequestBuilder().execute().body
     }
 
     /**
+     Start a hosted KYC session
      - POST /v1/account/kyc/didit/start
-     - returns: RequestBuilder<Void> 
+     - Creates a Didit verification session and returns the URL to send the user to. Documents are captured and reviewed by Didit; Adviverse never receives them. Records the session and sets the account to `submitted` unless already verified. Returns 400 if the provider is not configured or the session could not be created.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AccountControllerStartDidit201Response> 
      */
-    open class func accountControllerStartDiditWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func accountControllerStartDiditWithRequestBuilder() -> RequestBuilder<AccountControllerStartDidit201Response> {
         let localVariablePath = "/v1/account/kyc/didit/start"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -108,27 +129,36 @@ open class AccountAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AccountControllerStartDidit201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Save onboarding profile answers
+     
      - parameter profileDto: (body)  
-     - returns: Void
+     - returns: OnboardingControllerSaveProfile201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func onboardingControllerSaveProfile(profileDto: ProfileDto) async throws {
+    open class func onboardingControllerSaveProfile(profileDto: ProfileDto) async throws -> OnboardingControllerSaveProfile201Response {
         return try await onboardingControllerSaveProfileWithRequestBuilder(profileDto: profileDto).execute().body
     }
 
     /**
+     Save onboarding profile answers
      - POST /v1/onboarding/profile
+     - Stores the onboarding wizard answers. `company` and `country` (2 letters) update the account columns; `currency` updates the account currency when it is a 2-12 character code; `goal` (advertiser|publisher|both, default both) sets the default landing side. `name`, `timezone`, `marketingOptIn` and an onboarding-completed flag are merged into account metadata. Idempotent.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter profileDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<OnboardingControllerSaveProfile201Response> 
      */
-    open class func onboardingControllerSaveProfileWithRequestBuilder(profileDto: ProfileDto) -> RequestBuilder<Void> {
+    open class func onboardingControllerSaveProfileWithRequestBuilder(profileDto: ProfileDto) -> RequestBuilder<OnboardingControllerSaveProfile201Response> {
         let localVariablePath = "/v1/onboarding/profile"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: profileDto)
@@ -141,25 +171,34 @@ open class AccountAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<OnboardingControllerSaveProfile201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get onboarding checklist progress
+     
+     - returns: OnboardingControllerStatus200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func onboardingControllerStatus() async throws {
+    open class func onboardingControllerStatus() async throws -> OnboardingControllerStatus200Response {
         return try await onboardingControllerStatusWithRequestBuilder().execute().body
     }
 
     /**
+     Get onboarding checklist progress
      - GET /v1/onboarding
-     - returns: RequestBuilder<Void> 
+     - Returns onboarding checklist booleans for both sides, derived from real account state in one query: properties, verified properties, placements and tax form for the publisher side; a completed deposit, campaigns, creatives and an active campaign for the advertiser side.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<OnboardingControllerStatus200Response> 
      */
-    open class func onboardingControllerStatusWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func onboardingControllerStatusWithRequestBuilder() -> RequestBuilder<OnboardingControllerStatus200Response> {
         let localVariablePath = "/v1/onboarding"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -172,8 +211,8 @@ open class AccountAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<OnboardingControllerStatus200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

@@ -13,23 +13,32 @@ import AnyCodable
 open class AdvertiserAPI {
 
     /**
-
+     Add hashed members to an audience
+     
      - parameter id: (path)  
      - parameter audienceMembersDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerAddAudienceMembers201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerAddAudienceMembers(id: String, audienceMembersDto: AudienceMembersDto) async throws {
+    open class func advertiserControllerAddAudienceMembers(id: String, audienceMembersDto: AudienceMembersDto) async throws -> AdvertiserControllerAddAudienceMembers201Response {
         return try await advertiserControllerAddAudienceMembersWithRequestBuilder(id: id, audienceMembersDto: audienceMembersDto).execute().body
     }
 
     /**
+     Add hashed members to an audience
      - POST /v1/advertiser/audiences/{id}/members
+     - Adds the strings in `hashes` (user id hashes) to the audience's member set; empty or non-string entries are skipped. Returns the number of accepted entries and the resulting set size. Responds 404/403 when the audience is missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter audienceMembersDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerAddAudienceMembers201Response> 
      */
-    open class func advertiserControllerAddAudienceMembersWithRequestBuilder(id: String, audienceMembersDto: AudienceMembersDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerAddAudienceMembersWithRequestBuilder(id: String, audienceMembersDto: AudienceMembersDto) -> RequestBuilder<AdvertiserControllerAddAudienceMembers201Response> {
         var localVariablePath = "/v1/advertiser/audiences/{id}/members"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -45,29 +54,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerAddAudienceMembers201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Add a DCO component to a creative's pool
+     
      - parameter id: (path)  
      - parameter addComponentDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerAddComponent201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerAddComponent(id: String, addComponentDto: AddComponentDto) async throws {
+    open class func advertiserControllerAddComponent(id: String, addComponentDto: AddComponentDto) async throws -> AdvertiserControllerAddComponent201Response {
         return try await advertiserControllerAddComponentWithRequestBuilder(id: id, addComponentDto: addComponentDto).execute().body
     }
 
     /**
+     Add a DCO component to a creative's pool
      - POST /v1/advertiser/creatives/{id}/components
+     - Adds one `{ slot, value }` component to the component pool of the creative's campaign. `slot` is headline, body, image, cta, logo or bg_color; `value` must be non-empty and image/logo values are SSRF-checked (400). The creative must be owned and authored under a campaign (404 otherwise). Republishes the serving index.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter addComponentDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerAddComponent201Response> 
      */
-    open class func advertiserControllerAddComponentWithRequestBuilder(id: String, addComponentDto: AddComponentDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerAddComponentWithRequestBuilder(id: String, addComponentDto: AddComponentDto) -> RequestBuilder<AdvertiserControllerAddComponent201Response> {
         var localVariablePath = "/v1/advertiser/creatives/{id}/components"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -83,29 +101,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerAddComponent201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Attach a library creative to a campaign
+     
      - parameter id: (path)  
      - parameter attachCreativeDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerAttachCreative201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerAttachCreative(id: String, attachCreativeDto: AttachCreativeDto) async throws {
+    open class func advertiserControllerAttachCreative(id: String, attachCreativeDto: AttachCreativeDto) async throws -> AdvertiserControllerAttachCreative201Response {
         return try await advertiserControllerAttachCreativeWithRequestBuilder(id: id, attachCreativeDto: attachCreativeDto).execute().body
     }
 
     /**
+     Attach a library creative to a campaign
      - POST /v1/advertiser/creatives/{id}/attach
+     - Links the creative to `campaignId` with an optional rotation `weight` (minimum 1, default 1). Attaching again updates the weight and re-enables the link. Both the creative (404) and campaign (404/403) must be owned. Republishes the serving index.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter attachCreativeDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerAttachCreative201Response> 
      */
-    open class func advertiserControllerAttachCreativeWithRequestBuilder(id: String, attachCreativeDto: AttachCreativeDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerAttachCreativeWithRequestBuilder(id: String, attachCreativeDto: AttachCreativeDto) -> RequestBuilder<AdvertiserControllerAttachCreative201Response> {
         var localVariablePath = "/v1/advertiser/creatives/{id}/attach"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -121,27 +148,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerAttachCreative201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get the retargeting pixel snippet for an audience
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvertiserControllerAudiencePixel200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerAudiencePixel(id: String) async throws {
+    open class func advertiserControllerAudiencePixel(id: String) async throws -> AdvertiserControllerAudiencePixel200Response {
         return try await advertiserControllerAudiencePixelWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get the retargeting pixel snippet for an audience
      - GET /v1/advertiser/audiences/{id}/pixel
+     - Returns the tracking URL plus ready-to-paste `<img>` and `<script>` snippets that add the visiting user to this audience via /v1/track/audience. Replace the USER_ID placeholder (the script uses window.ADNET_UID). 404/403 when the audience is not owned.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerAudiencePixel200Response> 
      */
-    open class func advertiserControllerAudiencePixelWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerAudiencePixelWithRequestBuilder(id: String) -> RequestBuilder<AdvertiserControllerAudiencePixel200Response> {
         var localVariablePath = "/v1/advertiser/audiences/{id}/pixel"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -157,27 +193,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerAudiencePixel200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Suggest audiences from pixel activity
+     
      - parameter days: (query)  
-     - returns: Void
+     - returns: AdvertiserControllerAudienceSuggestions200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerAudienceSuggestions(days: String) async throws {
+    open class func advertiserControllerAudienceSuggestions(days: String) async throws -> AdvertiserControllerAudienceSuggestions200Response {
         return try await advertiserControllerAudienceSuggestionsWithRequestBuilder(days: days).execute().body
     }
 
     /**
+     Suggest audiences from pixel activity
      - GET /v1/advertiser/audiences/suggestions
+     - Inspects the account's pixel events over the last `days` (1-180, default 30) and returns ready-to-create rule audiences such as all visitors, engaged visitors, cart and checkout abandoners, purchasers, high-value buyers, unconverted leads and viewers of the top 5 products. Each suggestion has a `rule` to pass to POST /audiences and an `estReach` upper bound. `eventInventory` maps each event name to its distinct users.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter days: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerAudienceSuggestions200Response> 
      */
-    open class func advertiserControllerAudienceSuggestionsWithRequestBuilder(days: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerAudienceSuggestionsWithRequestBuilder(days: String) -> RequestBuilder<AdvertiserControllerAudienceSuggestions200Response> {
         let localVariablePath = "/v1/advertiser/audiences/suggestions"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -193,27 +238,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerAudienceSuggestions200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create a campaign (ad set)
+     
      - parameter createCampaignDto: (body)  
-     - returns: Void
+     - returns: AdvCampaign
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerCreate(createCampaignDto: CreateCampaignDto) async throws {
+    open class func advertiserControllerCreate(createCampaignDto: CreateCampaignDto) async throws -> AdvCampaign {
         return try await advertiserControllerCreateWithRequestBuilder(createCampaignDto: createCampaignDto).execute().body
     }
 
     /**
+     Create a campaign (ad set)
      - POST /v1/advertiser/campaigns
+     - Creates a campaign in `draft` status together with its targeting row and, if `conversion` is given, a conversion config. Key body fields: `name`, `format`, `pricingModel`, `bidAmount`, budgets, `pacing`, schedule, `targeting`, `bidStrategy`/`targetCpa`/`targetRoas`, `houseAd`, `priorityTier`, `groupId`. The currency is always taken from the advertiser's account (a client-sent `currency` is ignored), `terminal` format is forced to CPM, and `groupId` is silently dropped unless the advertiser owns that group. A house ad with no placement whitelist is confined to the owner's own active placements. Submit the draft for review to start serving.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createCampaignDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvCampaign> 
      */
-    open class func advertiserControllerCreateWithRequestBuilder(createCampaignDto: CreateCampaignDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerCreateWithRequestBuilder(createCampaignDto: CreateCampaignDto) -> RequestBuilder<AdvCampaign> {
         let localVariablePath = "/v1/advertiser/campaigns"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createCampaignDto)
@@ -226,27 +280,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvCampaign>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create an audience
+     
      - parameter createAudienceDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerCreateAudience201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerCreateAudience(createAudienceDto: CreateAudienceDto) async throws {
+    open class func advertiserControllerCreateAudience(createAudienceDto: CreateAudienceDto) async throws -> AdvertiserControllerCreateAudience201Response {
         return try await advertiserControllerCreateAudienceWithRequestBuilder(createAudienceDto: createAudienceDto).execute().body
     }
 
     /**
+     Create an audience
      - POST /v1/advertiser/audiences
+     - Creates an audience. Passing a `rule` makes it an event-rule audience (type `rule`) built from pixel events: the rule is bounds-checked (400), membership is resolved immediately in the background, and the resolver keeps it fresh. Without a rule, `type` selects uploaded, lookalike or retargeting (the default). `pixelId` scopes the audience to one pixel.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createAudienceDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerCreateAudience201Response> 
      */
-    open class func advertiserControllerCreateAudienceWithRequestBuilder(createAudienceDto: CreateAudienceDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerCreateAudienceWithRequestBuilder(createAudienceDto: CreateAudienceDto) -> RequestBuilder<AdvertiserControllerCreateAudience201Response> {
         let localVariablePath = "/v1/advertiser/audiences"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createAudienceDto)
@@ -259,27 +322,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerCreateAudience201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create a creative
+     
      - parameter createCreativeDto: (body)  
-     - returns: Void
+     - returns: AdvCreative
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerCreateCreative(createCreativeDto: CreateCreativeDto) async throws {
+    open class func advertiserControllerCreateCreative(createCreativeDto: CreateCreativeDto) async throws -> AdvCreative {
         return try await advertiserControllerCreateCreativeWithRequestBuilder(createCreativeDto: createCreativeDto).execute().body
     }
 
     /**
+     Create a creative
      - POST /v1/advertiser/creatives
+     - Creates a creative in the library; pass `campaignId` to also author it directly under a campaign (404/403 if that campaign is not owned). Every URL field is SSRF-checked (400 for internal destinations) and video/VAST fields are validated (`duration` 1-600, `skipOffsetSec`, https `vastTagUrl`/`vpaidUrl`, `companions`); `carouselItems` is capped at 20. Marketplace creatives start `pending` and enter moderation; creatives under a house-ad campaign are approved immediately. A malware scan always runs, video assets are queued for HLS transcoding, and a VAST tag without `duration` is probed in the background.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createCreativeDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvCreative> 
      */
-    open class func advertiserControllerCreateCreativeWithRequestBuilder(createCreativeDto: CreateCreativeDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerCreateCreativeWithRequestBuilder(createCreativeDto: CreateCreativeDto) -> RequestBuilder<AdvCreative> {
         let localVariablePath = "/v1/advertiser/creatives"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createCreativeDto)
@@ -292,29 +364,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvCreative>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Add a sync destination to an audience
+     
      - parameter id: (path)  
      - parameter createDestinationDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerCreateAudience201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerCreateDestination(id: String, createDestinationDto: CreateDestinationDto) async throws {
+    open class func advertiserControllerCreateDestination(id: String, createDestinationDto: CreateDestinationDto) async throws -> AdvertiserControllerCreateAudience201Response {
         return try await advertiserControllerCreateDestinationWithRequestBuilder(id: id, createDestinationDto: createDestinationDto).execute().body
     }
 
     /**
+     Add a sync destination to an audience
      - POST /v1/advertiser/audiences/{id}/destinations
+     - Creates a destination of `type` webhook (default; HMAC-signed, SSRF-guarded HTTPS push), meta_custom_audience or google_customer_match, with adapter settings and credentials in `config`. Responds 404 when the audience is not owned. Active destinations are synced on a schedule; PII destinations receive only hashed email/phone, never raw PII.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter createDestinationDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerCreateAudience201Response> 
      */
-    open class func advertiserControllerCreateDestinationWithRequestBuilder(id: String, createDestinationDto: CreateDestinationDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerCreateDestinationWithRequestBuilder(id: String, createDestinationDto: CreateDestinationDto) -> RequestBuilder<AdvertiserControllerCreateAudience201Response> {
         var localVariablePath = "/v1/advertiser/audiences/{id}/destinations"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -330,27 +411,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerCreateAudience201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Register a product feed
+     
      - parameter createFeedDto: (body)  
-     - returns: Void
+     - returns: AdvProductFeed
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerCreateFeed(createFeedDto: CreateFeedDto) async throws {
+    open class func advertiserControllerCreateFeed(createFeedDto: CreateFeedDto) async throws -> AdvProductFeed {
         return try await advertiserControllerCreateFeedWithRequestBuilder(createFeedDto: createFeedDto).execute().body
     }
 
     /**
+     Register a product feed
      - POST /v1/advertiser/feeds
+     - Registers a product feed for dynamic product ads. Body: `name`, `url` (http/https), `format` (csv, xml or google_merchant) and optional `scheduleCron`. Responds 400 for a missing name, a non-http URL or an unknown format. The feed is not fetched until a fetch is triggered or the scheduler runs.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createFeedDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvProductFeed> 
      */
-    open class func advertiserControllerCreateFeedWithRequestBuilder(createFeedDto: CreateFeedDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerCreateFeedWithRequestBuilder(createFeedDto: CreateFeedDto) -> RequestBuilder<AdvProductFeed> {
         let localVariablePath = "/v1/advertiser/feeds"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createFeedDto)
@@ -363,27 +453,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvProductFeed>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create a campaign group
+     
      - parameter campaignGroupDto: (body)  
-     - returns: Void
+     - returns: AdvCampaignGroup
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerCreateGroup(campaignGroupDto: CampaignGroupDto) async throws {
+    open class func advertiserControllerCreateGroup(campaignGroupDto: CampaignGroupDto) async throws -> AdvCampaignGroup {
         return try await advertiserControllerCreateGroupWithRequestBuilder(campaignGroupDto: campaignGroupDto).execute().body
     }
 
     /**
+     Create a campaign group
      - POST /v1/advertiser/campaign-groups
+     - Creates a campaign group with `name` and an optional `objective`. New groups start with status `active`. Ad sets are attached to a group by passing `groupId` when creating a campaign.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter campaignGroupDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvCampaignGroup> 
      */
-    open class func advertiserControllerCreateGroupWithRequestBuilder(campaignGroupDto: CampaignGroupDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerCreateGroupWithRequestBuilder(campaignGroupDto: CampaignGroupDto) -> RequestBuilder<AdvCampaignGroup> {
         let localVariablePath = "/v1/advertiser/campaign-groups"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: campaignGroupDto)
@@ -396,27 +495,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvCampaignGroup>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create a sponsored-product promote campaign
+     
      - parameter createPromoteCampaignDto: (body)  
-     - returns: Void
+     - returns: AdvPromoteCampaign
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerCreatePromote(createPromoteCampaignDto: CreatePromoteCampaignDto) async throws {
+    open class func advertiserControllerCreatePromote(createPromoteCampaignDto: CreatePromoteCampaignDto) async throws -> AdvPromoteCampaign {
         return try await advertiserControllerCreatePromoteWithRequestBuilder(createPromoteCampaignDto: createPromoteCampaignDto).execute().body
     }
 
     /**
+     Create a sponsored-product promote campaign
      - POST /v1/advertiser/promote-campaigns
+     - Creates a draft campaign that promotes catalog items. `itemSelector` must be exactly one of `{ item_ids }`, `{ keywords }` or `{ all: true }`. `pricingModel` is cpc (default) or cpa; cpc and flat cpa need `bidAmount` > 0, while cpa with `cpaMode: percent` needs `cpaPercent` in (0, 1]. Also accepts budgets, `pacing` (even|asap), `minOrderValue` (CPA fraud floor), `currency`, schedule and `targeting`. Validation failures return 400. The created row is returned with NUMERIC columns as strings.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createPromoteCampaignDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvPromoteCampaign> 
      */
-    open class func advertiserControllerCreatePromoteWithRequestBuilder(createPromoteCampaignDto: CreatePromoteCampaignDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerCreatePromoteWithRequestBuilder(createPromoteCampaignDto: CreatePromoteCampaignDto) -> RequestBuilder<AdvPromoteCampaign> {
         let localVariablePath = "/v1/advertiser/promote-campaigns"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createPromoteCampaignDto)
@@ -429,27 +537,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvPromoteCampaign>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List campaigns a creative is attached to
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: [AdvCreativeAssignment]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerCreativeAssignments(id: String) async throws {
+    open class func advertiserControllerCreativeAssignments(id: String) async throws -> [AdvCreativeAssignment] {
         return try await advertiserControllerCreativeAssignmentsWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     List campaigns a creative is attached to
      - GET /v1/advertiser/creatives/{id}/campaigns
+     - Returns the non-deleted campaigns this library creative is attached to, with the attachment `weight` and `enabled` flag. Creatives authored directly under a campaign without an attachment do not appear. 404 when the creative is not owned.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[AdvCreativeAssignment]> 
      */
-    open class func advertiserControllerCreativeAssignmentsWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerCreativeAssignmentsWithRequestBuilder(id: String) -> RequestBuilder<[AdvCreativeAssignment]> {
         var localVariablePath = "/v1/advertiser/creatives/{id}/campaigns"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -465,29 +582,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvCreativeAssignment]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Detach a library creative from a campaign
+     
      - parameter id: (path)  
      - parameter attachCreativeDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerDetachCreative201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerDetachCreative(id: String, attachCreativeDto: AttachCreativeDto) async throws {
+    open class func advertiserControllerDetachCreative(id: String, attachCreativeDto: AttachCreativeDto) async throws -> AdvertiserControllerDetachCreative201Response {
         return try await advertiserControllerDetachCreativeWithRequestBuilder(id: id, attachCreativeDto: attachCreativeDto).execute().body
     }
 
     /**
+     Detach a library creative from a campaign
      - POST /v1/advertiser/creatives/{id}/detach
+     - Removes the link between the creative and `campaignId` and republishes the serving index. Succeeds even if no link existed. 404 when the creative is not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter attachCreativeDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerDetachCreative201Response> 
      */
-    open class func advertiserControllerDetachCreativeWithRequestBuilder(id: String, attachCreativeDto: AttachCreativeDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerDetachCreativeWithRequestBuilder(id: String, attachCreativeDto: AttachCreativeDto) -> RequestBuilder<AdvertiserControllerDetachCreative201Response> {
         var localVariablePath = "/v1/advertiser/creatives/{id}/detach"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -503,27 +629,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerDetachCreative201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Estimate the size of an audience rule
+     
      - parameter createAudienceDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerEstimateAudience201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerEstimateAudience(createAudienceDto: CreateAudienceDto) async throws {
+    open class func advertiserControllerEstimateAudience(createAudienceDto: CreateAudienceDto) async throws -> AdvertiserControllerEstimateAudience201Response {
         return try await advertiserControllerEstimateAudienceWithRequestBuilder(createAudienceDto: createAudienceDto).execute().body
     }
 
     /**
+     Estimate the size of an audience rule
      - POST /v1/advertiser/audiences/estimate
+     - Counts the distinct users matching `rule` (optionally limited to `pixelId`) without creating an audience. The rule is bounds-checked (400). A query failure returns 0. Rate-limited to 20 calls per throttle window because each call runs a ClickHouse aggregation.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createAudienceDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerEstimateAudience201Response> 
      */
-    open class func advertiserControllerEstimateAudienceWithRequestBuilder(createAudienceDto: CreateAudienceDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerEstimateAudienceWithRequestBuilder(createAudienceDto: CreateAudienceDto) -> RequestBuilder<AdvertiserControllerEstimateAudience201Response> {
         let localVariablePath = "/v1/advertiser/audiences/estimate"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createAudienceDto)
@@ -536,27 +671,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerEstimateAudience201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Fetch a product feed now
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvertiserControllerFetchFeed201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerFetchFeed(id: String) async throws {
+    open class func advertiserControllerFetchFeed(id: String) async throws -> AdvertiserControllerFetchFeed201Response {
         return try await advertiserControllerFetchFeedWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Fetch a product feed now
      - POST /v1/advertiser/feeds/{id}/fetch
+     - Downloads (SSRF-guarded) and parses the feed immediately and upserts its products, returning the parsed and upserted counts. Rate-limited to 5 calls per throttle window. Responds 404 when the feed does not exist and 403 when it belongs to another advertiser.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerFetchFeed201Response> 
      */
-    open class func advertiserControllerFetchFeedWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerFetchFeedWithRequestBuilder(id: String) -> RequestBuilder<AdvertiserControllerFetchFeed201Response> {
         var localVariablePath = "/v1/advertiser/feeds/{id}/fetch"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -572,27 +716,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerFetchFeed201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get a campaign with targeting and creatives
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvCampaignDetail
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerGet(id: String) async throws {
+    open class func advertiserControllerGet(id: String) async throws -> AdvCampaignDetail {
         return try await advertiserControllerGetWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get a campaign with targeting and creatives
      - GET /v1/advertiser/campaigns/{id}
+     - Returns the campaign row plus its raw `targeting` row and the creatives authored directly under it (library-attached creatives are listed by GET /campaigns/{id}/creatives). Responds 404 when the campaign does not exist or is deleted, and 403 when it belongs to another advertiser.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvCampaignDetail> 
      */
-    open class func advertiserControllerGetWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerGetWithRequestBuilder(id: String) -> RequestBuilder<AdvCampaignDetail> {
         var localVariablePath = "/v1/advertiser/campaigns/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -608,27 +761,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvCampaignDetail>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get a campaign's conversion config
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvConversionConfig
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerGetConversionConfig(id: String) async throws {
+    open class func advertiserControllerGetConversionConfig(id: String) async throws -> AdvConversionConfig {
         return try await advertiserControllerGetConversionConfigWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get a campaign's conversion config
      - GET /v1/advertiser/campaigns/{id}/conversion-config
+     - Returns the conversion-tracking config for the campaign (event type, payout, postback URL, dedupe and attribution windows, CPA mode). The body is empty (null) when none has been set. Responds 404 when the campaign is missing and 403 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvConversionConfig> 
      */
-    open class func advertiserControllerGetConversionConfigWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerGetConversionConfigWithRequestBuilder(id: String) -> RequestBuilder<AdvConversionConfig> {
         var localVariablePath = "/v1/advertiser/campaigns/{id}/conversion-config"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -644,27 +806,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvConversionConfig>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get a creative
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvCreative
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerGetCreative(id: String) async throws {
+    open class func advertiserControllerGetCreative(id: String) async throws -> AdvCreative {
         return try await advertiserControllerGetCreativeWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get a creative
      - GET /v1/advertiser/creatives/{id}
+     - Returns one creative owned by the advertiser. Responds 404 when it does not exist, is deleted, or belongs to another advertiser.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvCreative> 
      */
-    open class func advertiserControllerGetCreativeWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerGetCreativeWithRequestBuilder(id: String) -> RequestBuilder<AdvCreative> {
         var localVariablePath = "/v1/advertiser/creatives/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -680,27 +851,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvCreative>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get a campaign group
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvCampaignGroup
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerGetGroup(id: String) async throws {
+    open class func advertiserControllerGetGroup(id: String) async throws -> AdvCampaignGroup {
         return try await advertiserControllerGetGroupWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get a campaign group
      - GET /v1/advertiser/campaign-groups/{id}
+     - Returns one campaign group row. Responds 404 when the group does not exist, is deleted, or belongs to another advertiser. Ad sets are not nested here; the list endpoint includes them.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvCampaignGroup> 
      */
-    open class func advertiserControllerGetGroupWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerGetGroupWithRequestBuilder(id: String) -> RequestBuilder<AdvCampaignGroup> {
         var localVariablePath = "/v1/advertiser/campaign-groups/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -716,27 +896,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvCampaignGroup>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get campaign targeting
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvTargeting
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerGetTargeting(id: String) async throws {
+    open class func advertiserControllerGetTargeting(id: String) async throws -> AdvTargeting {
         return try await advertiserControllerGetTargetingWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get campaign targeting
      - GET /v1/advertiser/campaigns/{id}/targeting
+     - Returns the campaign's targeting normalized to the camelCase shape accepted by create/update. Absent fields come back as empty arrays (or null for `osVersionMin` and `frequencyCap`). `dayparting` is a 168-element array indexed weekday*24+hour (Sunday=0); empty means all hours. 404/403 as for GET campaign.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvTargeting> 
      */
-    open class func advertiserControllerGetTargetingWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerGetTargetingWithRequestBuilder(id: String) -> RequestBuilder<AdvTargeting> {
         var localVariablePath = "/v1/advertiser/campaigns/{id}/targeting"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -752,25 +941,34 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvTargeting>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List campaigns (ad sets)
+     
+     - returns: [AdvCampaign]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerList() async throws {
+    open class func advertiserControllerList() async throws -> [AdvCampaign] {
         return try await advertiserControllerListWithRequestBuilder().execute().body
     }
 
     /**
+     List campaigns (ad sets)
      - GET /v1/advertiser/campaigns
-     - returns: RequestBuilder<Void> 
+     - Returns the advertiser's non-deleted `campaigns` rows (the UI \"Ad set\", the real targeting and serving unit), newest first. Pagination is opt-in: pass `limit` (clamped to 1-500) and `offset`; without `limit` the full set is returned.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AdvCampaign]> 
      */
-    open class func advertiserControllerListWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func advertiserControllerListWithRequestBuilder() -> RequestBuilder<[AdvCampaign]> {
         let localVariablePath = "/v1/advertiser/campaigns"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -783,25 +981,34 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvCampaign]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List the creative library
+     
+     - returns: [AdvLibraryCreative]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerListAllCreatives() async throws {
+    open class func advertiserControllerListAllCreatives() async throws -> [AdvLibraryCreative] {
         return try await advertiserControllerListAllCreativesWithRequestBuilder().execute().body
     }
 
     /**
+     List the creative library
      - GET /v1/advertiser/creatives
-     - returns: RequestBuilder<Void> 
+     - Returns every non-deleted creative owned by the advertiser, independent of campaigns, with `campaign_count` (number of library attachments). Used by Creative Studio.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AdvLibraryCreative]> 
      */
-    open class func advertiserControllerListAllCreativesWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func advertiserControllerListAllCreativesWithRequestBuilder() -> RequestBuilder<[AdvLibraryCreative]> {
         let localVariablePath = "/v1/advertiser/creatives"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -814,25 +1021,34 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvLibraryCreative]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List audiences
+     
+     - returns: [AdvAudience]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerListAudiences() async throws {
+    open class func advertiserControllerListAudiences() async throws -> [AdvAudience] {
         return try await advertiserControllerListAudiencesWithRequestBuilder().execute().body
     }
 
     /**
+     List audiences
      - GET /v1/advertiser/audiences
-     - returns: RequestBuilder<Void> 
+     - Returns the account's audiences, newest first, with the live member count read from the serving set. A team member scoped to specific pixels only sees audiences tied to those pixels.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AdvAudience]> 
      */
-    open class func advertiserControllerListAudiencesWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func advertiserControllerListAudiencesWithRequestBuilder() -> RequestBuilder<[AdvAudience]> {
         let localVariablePath = "/v1/advertiser/audiences"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -845,25 +1061,34 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvAudience]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List marketplace catalog items
+     
+     - returns: [AdvCatalogItem]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerListCatalog() async throws {
+    open class func advertiserControllerListCatalog() async throws -> [AdvCatalogItem] {
         return try await advertiserControllerListCatalogWithRequestBuilder().execute().body
     }
 
     /**
+     List marketplace catalog items
      - GET /v1/advertiser/marketplace-catalog
-     - returns: RequestBuilder<Void> 
+     - Returns the advertiser's non-deleted catalog items, most recently updated first.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AdvCatalogItem]> 
      */
-    open class func advertiserControllerListCatalogWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func advertiserControllerListCatalogWithRequestBuilder() -> RequestBuilder<[AdvCatalogItem]> {
         let localVariablePath = "/v1/advertiser/marketplace-catalog"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -876,25 +1101,34 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvCatalogItem]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List scheduled catalog feeds
+     
+     - returns: [AdvCatalogFeed]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerListCatalogFeeds() async throws {
+    open class func advertiserControllerListCatalogFeeds() async throws -> [AdvCatalogFeed] {
         return try await advertiserControllerListCatalogFeedsWithRequestBuilder().execute().body
     }
 
     /**
+     List scheduled catalog feeds
      - GET /v1/advertiser/catalog-feeds
-     - returns: RequestBuilder<Void> 
+     - Returns the advertiser's non-deleted catalog feeds, newest first, with the last sync time and last error.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AdvCatalogFeed]> 
      */
-    open class func advertiserControllerListCatalogFeedsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func advertiserControllerListCatalogFeedsWithRequestBuilder() -> RequestBuilder<[AdvCatalogFeed]> {
         let localVariablePath = "/v1/advertiser/catalog-feeds"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -907,27 +1141,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvCatalogFeed]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List DCO components for a creative
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: [AdvCreativeComponent]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerListComponents(id: String) async throws {
+    open class func advertiserControllerListComponents(id: String) async throws -> [AdvCreativeComponent] {
         return try await advertiserControllerListComponentsWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     List DCO components for a creative
      - GET /v1/advertiser/creatives/{id}/components
+     - Returns the components in the creative's campaign pool plus account-wide components (no campaign), ordered by slot. Each row includes bandit impressions/clicks and the derived `ctr` (0 with no impressions). 404 when the creative is not owned or has no campaign.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[AdvCreativeComponent]> 
      */
-    open class func advertiserControllerListComponentsWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerListComponentsWithRequestBuilder(id: String) -> RequestBuilder<[AdvCreativeComponent]> {
         var localVariablePath = "/v1/advertiser/creatives/{id}/components"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -943,27 +1186,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvCreativeComponent]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List creatives serving a campaign
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: [AdvCampaignCreative]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerListCreatives(id: String) async throws {
+    open class func advertiserControllerListCreatives(id: String) async throws -> [AdvCampaignCreative] {
         return try await advertiserControllerListCreativesWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     List creatives serving a campaign
      - GET /v1/advertiser/campaigns/{id}/creatives
+     - Returns creatives authored directly under the campaign plus library creatives attached to it, newest first. Each row adds `effective_weight` (attachment weight, else the creative weight) and `attached`. Returns an empty list for a campaign the advertiser does not own.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[AdvCampaignCreative]> 
      */
-    open class func advertiserControllerListCreativesWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerListCreativesWithRequestBuilder(id: String) -> RequestBuilder<[AdvCampaignCreative]> {
         var localVariablePath = "/v1/advertiser/campaigns/{id}/creatives"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -979,27 +1231,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvCampaignCreative]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List sync destinations for an audience
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: [AdvAudienceDestination]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerListDestinations(id: String) async throws {
+    open class func advertiserControllerListDestinations(id: String) async throws -> [AdvAudienceDestination] {
         return try await advertiserControllerListDestinationsWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     List sync destinations for an audience
      - GET /v1/advertiser/audiences/{id}/destinations
+     - Returns the destinations that push this audience's members to external systems, newest first. Secrets and tokens in `config` are redacted. Returns an empty list for an audience the account does not own.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[AdvAudienceDestination]> 
      */
-    open class func advertiserControllerListDestinationsWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerListDestinationsWithRequestBuilder(id: String) -> RequestBuilder<[AdvAudienceDestination]> {
         var localVariablePath = "/v1/advertiser/audiences/{id}/destinations"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1015,31 +1276,40 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvAudienceDestination]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List products parsed from a feed
+     
      - parameter id: (path)  
      - parameter limit: (query)  
      - parameter offset: (query)  
-     - returns: Void
+     - returns: AdvertiserControllerListFeedProducts200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerListFeedProducts(id: String, limit: String, offset: String) async throws {
+    open class func advertiserControllerListFeedProducts(id: String, limit: String, offset: String) async throws -> AdvertiserControllerListFeedProducts200Response {
         return try await advertiserControllerListFeedProductsWithRequestBuilder(id: id, limit: limit, offset: offset).execute().body
     }
 
     /**
+     List products parsed from a feed
      - GET /v1/advertiser/feeds/{id}/products
+     - Returns products from the feed, most recently updated first. Query `limit` (1-500, default 50) and `offset` (default 0). Responds 404/403 when the feed is missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter limit: (query)  
      - parameter offset: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerListFeedProducts200Response> 
      */
-    open class func advertiserControllerListFeedProductsWithRequestBuilder(id: String, limit: String, offset: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerListFeedProductsWithRequestBuilder(id: String, limit: String, offset: String) -> RequestBuilder<AdvertiserControllerListFeedProducts200Response> {
         var localVariablePath = "/v1/advertiser/feeds/{id}/products"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1059,25 +1329,34 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerListFeedProducts200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List product feeds
+     
+     - returns: [AdvProductFeed]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerListFeeds() async throws {
+    open class func advertiserControllerListFeeds() async throws -> [AdvProductFeed] {
         return try await advertiserControllerListFeedsWithRequestBuilder().execute().body
     }
 
     /**
+     List product feeds
      - GET /v1/advertiser/feeds
-     - returns: RequestBuilder<Void> 
+     - Returns the advertiser's non-deleted product feeds, newest first, with their fetch schedule, last fetch time and status.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AdvProductFeed]> 
      */
-    open class func advertiserControllerListFeedsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func advertiserControllerListFeedsWithRequestBuilder() -> RequestBuilder<[AdvProductFeed]> {
         let localVariablePath = "/v1/advertiser/feeds"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1090,25 +1369,34 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvProductFeed]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List campaign groups with their ad sets
+     
+     - returns: [AdvCampaignGroupWithAdSets]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerListGroups() async throws {
+    open class func advertiserControllerListGroups() async throws -> [AdvCampaignGroupWithAdSets] {
         return try await advertiserControllerListGroupsWithRequestBuilder().execute().body
     }
 
     /**
+     List campaign groups with their ad sets
      - GET /v1/advertiser/campaign-groups
-     - returns: RequestBuilder<Void> 
+     - Returns every non-deleted campaign group (the UI \"Campaign\") owned by the advertiser, newest first. Each group carries a spend rollup (`spent_total`, summed over its live ad sets) and an `adSets` array with a compact summary of each ad set (`campaigns` row) under it. Ad sets with no group are not included here; use GET /v1/advertiser/campaigns for those.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AdvCampaignGroupWithAdSets]> 
      */
-    open class func advertiserControllerListGroupsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func advertiserControllerListGroupsWithRequestBuilder() -> RequestBuilder<[AdvCampaignGroupWithAdSets]> {
         let localVariablePath = "/v1/advertiser/campaign-groups"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1121,25 +1409,34 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvCampaignGroupWithAdSets]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List sponsored-product promote campaigns
+     
+     - returns: [AdvPromoteCampaign]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerListPromote() async throws {
+    open class func advertiserControllerListPromote() async throws -> [AdvPromoteCampaign] {
         return try await advertiserControllerListPromoteWithRequestBuilder().execute().body
     }
 
     /**
+     List sponsored-product promote campaigns
      - GET /v1/advertiser/promote-campaigns
-     - returns: RequestBuilder<Void> 
+     - Returns the advertiser's non-deleted promote campaigns, newest first, with money fields as numbers.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AdvPromoteCampaign]> 
      */
-    open class func advertiserControllerListPromoteWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func advertiserControllerListPromoteWithRequestBuilder() -> RequestBuilder<[AdvPromoteCampaign]> {
         let localVariablePath = "/v1/advertiser/promote-campaigns"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1152,29 +1449,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvPromoteCampaign]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create a heuristic lookalike audience
+     
      - parameter id: (path)  
      - parameter lookalikeDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerLookalikeAudience201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerLookalikeAudience(id: String, lookalikeDto: LookalikeDto) async throws {
+    open class func advertiserControllerLookalikeAudience(id: String, lookalikeDto: LookalikeDto) async throws -> AdvertiserControllerLookalikeAudience201Response {
         return try await advertiserControllerLookalikeAudienceWithRequestBuilder(id: id, lookalikeDto: lookalikeDto).execute().body
     }
 
     /**
+     Create a heuristic lookalike audience
      - POST /v1/advertiser/audiences/{id}/lookalike
+     - Builds a new `lookalike` audience from the seed audience using a profile heuristic, not a trained model: it finds the dominant geo/device of the seed's recent impressions (falling back to the network-wide profile) and selects other recent users with that profile, excluding seed members. `size` is capped by LOOKALIKE_MAX (default 50,000). The result can be empty. 404/403 when the seed is not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter lookalikeDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerLookalikeAudience201Response> 
      */
-    open class func advertiserControllerLookalikeAudienceWithRequestBuilder(id: String, lookalikeDto: LookalikeDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerLookalikeAudienceWithRequestBuilder(id: String, lookalikeDto: LookalikeDto) -> RequestBuilder<AdvertiserControllerLookalikeAudience201Response> {
         var localVariablePath = "/v1/advertiser/audiences/{id}/lookalike"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1190,27 +1496,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerLookalikeAudience201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create a modeled lookalike audience
+     
      - parameter modeledLookalikeDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerModeledLookalike201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerModeledLookalike(modeledLookalikeDto: ModeledLookalikeDto) async throws {
+    open class func advertiserControllerModeledLookalike(modeledLookalikeDto: ModeledLookalikeDto) async throws -> AdvertiserControllerModeledLookalike201Response {
         return try await advertiserControllerModeledLookalikeWithRequestBuilder(modeledLookalikeDto: modeledLookalikeDto).execute().body
     }
 
     /**
+     Create a modeled lookalike audience
      - POST /v1/advertiser/audiences/lookalike-modeled
+     - Fits a model of the seed audience's distinctive first-party pixel features against the account's background audience, scores recent pixel-active users (excluding seed members and opt-outs) and creates a new lookalike audience. Body: `seedAudienceId`, optional `size` and `minScore` (0-1). Responds 400 when the seed or the output is below the k-anonymity floor, and 404/403 when the seed is not owned. The audience is rebuilt periodically.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter modeledLookalikeDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerModeledLookalike201Response> 
      */
-    open class func advertiserControllerModeledLookalikeWithRequestBuilder(modeledLookalikeDto: ModeledLookalikeDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerModeledLookalikeWithRequestBuilder(modeledLookalikeDto: ModeledLookalikeDto) -> RequestBuilder<AdvertiserControllerModeledLookalike201Response> {
         let localVariablePath = "/v1/advertiser/audiences/lookalike-modeled"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: modeledLookalikeDto)
@@ -1223,27 +1538,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerModeledLookalike201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Preview a modeled lookalike for a seed
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvertiserControllerModeledLookalikePreview200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerModeledLookalikePreview(id: String) async throws {
+    open class func advertiserControllerModeledLookalikePreview(id: String) async throws -> AdvertiserControllerModeledLookalikePreview200Response {
         return try await advertiserControllerModeledLookalikePreviewWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Preview a modeled lookalike for a seed
      - GET /v1/advertiser/audiences/{id}/lookalike-modeled/preview
+     - Returns the seed and background sizes, whether the seed passes the k-anonymity gate (`eligible`) and the most distinctive features, without creating an audience. When ineligible, `note` explains why and `topFeatures` is empty. 404/403 when the seed is not owned.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerModeledLookalikePreview200Response> 
      */
-    open class func advertiserControllerModeledLookalikePreviewWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerModeledLookalikePreviewWithRequestBuilder(id: String) -> RequestBuilder<AdvertiserControllerModeledLookalikePreview200Response> {
         var localVariablePath = "/v1/advertiser/audiences/{id}/lookalike-modeled/preview"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1259,29 +1583,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerModeledLookalikePreview200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Activate or pause a promote campaign
+     
      - parameter id: (path)  
      - parameter setPromoteStatusDto: (body)  
-     - returns: Void
+     - returns: AdvStatusResult
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerPromoteStatus(id: String, setPromoteStatusDto: SetPromoteStatusDto) async throws {
+    open class func advertiserControllerPromoteStatus(id: String, setPromoteStatusDto: SetPromoteStatusDto) async throws -> AdvStatusResult {
         return try await advertiserControllerPromoteStatusWithRequestBuilder(id: id, setPromoteStatusDto: setPromoteStatusDto).execute().body
     }
 
     /**
+     Activate or pause a promote campaign
      - POST /v1/advertiser/promote-campaigns/{id}/status
+     - Sets `status` to active or paused and republishes the serving index so the engine adds or removes it from sponsored-product auctions. 404/403 when missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter setPromoteStatusDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvStatusResult> 
      */
-    open class func advertiserControllerPromoteStatusWithRequestBuilder(id: String, setPromoteStatusDto: SetPromoteStatusDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerPromoteStatusWithRequestBuilder(id: String, setPromoteStatusDto: SetPromoteStatusDto) -> RequestBuilder<AdvStatusResult> {
         var localVariablePath = "/v1/advertiser/promote-campaigns/{id}/status"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1297,27 +1630,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvStatusResult>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Estimate daily reach for targeting
+     
      - parameter reachEstimateDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerReach201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerReach(reachEstimateDto: ReachEstimateDto) async throws {
+    open class func advertiserControllerReach(reachEstimateDto: ReachEstimateDto) async throws -> AdvertiserControllerReach201Response {
         return try await advertiserControllerReachWithRequestBuilder(reachEstimateDto: reachEstimateDto).execute().body
     }
 
     /**
+     Estimate daily reach for targeting
      - POST /v1/advertiser/reach-estimate
+     - Estimates available daily impressions as the average daily ad-request volume over the last 7 days, optionally filtered by `geoInclude` (country codes) and `deviceTypes`. The `format` field is accepted but not used in the estimate. If ClickHouse has no usable history the estimate is 0 with a `note`.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter reachEstimateDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerReach201Response> 
      */
-    open class func advertiserControllerReachWithRequestBuilder(reachEstimateDto: ReachEstimateDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerReachWithRequestBuilder(reachEstimateDto: ReachEstimateDto) -> RequestBuilder<AdvertiserControllerReach201Response> {
         let localVariablePath = "/v1/advertiser/reach-estimate"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: reachEstimateDto)
@@ -1330,27 +1672,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerReach201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Register a scheduled catalog feed
+     
      - parameter registerCatalogFeedDto: (body)  
-     - returns: Void
+     - returns: AdvCatalogFeed
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerRegisterCatalogFeed(registerCatalogFeedDto: RegisterCatalogFeedDto) async throws {
+    open class func advertiserControllerRegisterCatalogFeed(registerCatalogFeedDto: RegisterCatalogFeedDto) async throws -> AdvCatalogFeed {
         return try await advertiserControllerRegisterCatalogFeedWithRequestBuilder(registerCatalogFeedDto: registerCatalogFeedDto).execute().body
     }
 
     /**
+     Register a scheduled catalog feed
      - POST /v1/advertiser/catalog-feeds
+     - Registers a hosted JSON or CSV catalog at `feedUrl` (http/https; 400 otherwise) that a background job re-fetches every `intervalMinutes` (minimum 15, default 360) into the catalog. Registering a URL that is already registered updates its interval and reactivates it instead of creating a duplicate.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter registerCatalogFeedDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvCatalogFeed> 
      */
-    open class func advertiserControllerRegisterCatalogFeedWithRequestBuilder(registerCatalogFeedDto: RegisterCatalogFeedDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerRegisterCatalogFeedWithRequestBuilder(registerCatalogFeedDto: RegisterCatalogFeedDto) -> RequestBuilder<AdvCatalogFeed> {
         let localVariablePath = "/v1/advertiser/catalog-feeds"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: registerCatalogFeedDto)
@@ -1363,27 +1714,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvCatalogFeed>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Delete a campaign
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvDeleted
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerRemove(id: String) async throws {
+    open class func advertiserControllerRemove(id: String) async throws -> AdvDeleted {
         return try await advertiserControllerRemoveWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete a campaign
      - DELETE /v1/advertiser/campaigns/{id}
+     - Soft-deletes the campaign and republishes the serving index so it stops serving immediately. Historical spend and stats remain available for reporting. Responds 404 when missing and 403 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvDeleted> 
      */
-    open class func advertiserControllerRemoveWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerRemoveWithRequestBuilder(id: String) -> RequestBuilder<AdvDeleted> {
         var localVariablePath = "/v1/advertiser/campaigns/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1399,27 +1759,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvDeleted>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Delete an audience
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvDeleted
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerRemoveAudience(id: String) async throws {
+    open class func advertiserControllerRemoveAudience(id: String) async throws -> AdvDeleted {
         return try await advertiserControllerRemoveAudienceWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete an audience
      - DELETE /v1/advertiser/audiences/{id}
+     - Permanently deletes the audience row and its member set, so targeting that references it stops matching. Responds 404/403 when missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvDeleted> 
      */
-    open class func advertiserControllerRemoveAudienceWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerRemoveAudienceWithRequestBuilder(id: String) -> RequestBuilder<AdvDeleted> {
         var localVariablePath = "/v1/advertiser/audiences/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1435,27 +1804,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvDeleted>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Delete a scheduled catalog feed
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvDeleted
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerRemoveCatalogFeed(id: String) async throws {
+    open class func advertiserControllerRemoveCatalogFeed(id: String) async throws -> AdvDeleted {
         return try await advertiserControllerRemoveCatalogFeedWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete a scheduled catalog feed
      - DELETE /v1/advertiser/catalog-feeds/{id}
+     - Soft-deletes the feed and stops its scheduled syncs; items already imported stay in the catalog. Returns `deleted: false` (not 404) when no owned, live feed matches.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvDeleted> 
      */
-    open class func advertiserControllerRemoveCatalogFeedWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerRemoveCatalogFeedWithRequestBuilder(id: String) -> RequestBuilder<AdvDeleted> {
         var localVariablePath = "/v1/advertiser/catalog-feeds/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1471,29 +1849,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvDeleted>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Delete a DCO component
+     
      - parameter id: (path)  
      - parameter cid: (path)  
-     - returns: Void
+     - returns: AdvDeleted
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerRemoveComponent(id: String, cid: String) async throws {
+    open class func advertiserControllerRemoveComponent(id: String, cid: String) async throws -> AdvDeleted {
         return try await advertiserControllerRemoveComponentWithRequestBuilder(id: id, cid: cid).execute().body
     }
 
     /**
+     Delete a DCO component
      - DELETE /v1/advertiser/creatives/{id}/components/{cid}
+     - Soft-deletes component `cid` and republishes the serving index. Responds 404 when the creative or the component is not owned by the advertiser.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter cid: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvDeleted> 
      */
-    open class func advertiserControllerRemoveComponentWithRequestBuilder(id: String, cid: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerRemoveComponentWithRequestBuilder(id: String, cid: String) -> RequestBuilder<AdvDeleted> {
         var localVariablePath = "/v1/advertiser/creatives/{id}/components/{cid}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1512,27 +1899,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvDeleted>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Delete a creative
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvDeleted
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerRemoveCreative(id: String) async throws {
+    open class func advertiserControllerRemoveCreative(id: String) async throws -> AdvDeleted {
         return try await advertiserControllerRemoveCreativeWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete a creative
      - DELETE /v1/advertiser/creatives/{id}
+     - Soft-deletes the creative, removes all its campaign attachments, and republishes the serving index. Responds 404 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvDeleted> 
      */
-    open class func advertiserControllerRemoveCreativeWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerRemoveCreativeWithRequestBuilder(id: String) -> RequestBuilder<AdvDeleted> {
         var localVariablePath = "/v1/advertiser/creatives/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1548,27 +1944,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvDeleted>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Delete a sync destination
+     
      - parameter did: (path)  
-     - returns: Void
+     - returns: AdvDeleted
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerRemoveDestination(did: String) async throws {
+    open class func advertiserControllerRemoveDestination(did: String) async throws -> AdvDeleted {
         return try await advertiserControllerRemoveDestinationWithRequestBuilder(did: did).execute().body
     }
 
     /**
+     Delete a sync destination
      - DELETE /v1/advertiser/destinations/{did}
+     - Deletes the destination; members already pushed to the external system are not removed there. 404/403 when missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter did: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvDeleted> 
      */
-    open class func advertiserControllerRemoveDestinationWithRequestBuilder(did: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerRemoveDestinationWithRequestBuilder(did: String) -> RequestBuilder<AdvDeleted> {
         var localVariablePath = "/v1/advertiser/destinations/{did}"
         let didPreEscape = "\(APIHelper.mapValueToPathItem(did))"
         let didPostEscape = didPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1584,27 +1989,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvDeleted>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Delete a campaign group
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvDeleted
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerRemoveGroup(id: String) async throws {
+    open class func advertiserControllerRemoveGroup(id: String) async throws -> AdvDeleted {
         return try await advertiserControllerRemoveGroupWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete a campaign group
      - DELETE /v1/advertiser/campaign-groups/{id}
+     - Soft-deletes the group. Its ad sets are not deleted; they are detached (`group_id` set to null) and keep serving as standalone campaigns. Responds 404 when the group is not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvDeleted> 
      */
-    open class func advertiserControllerRemoveGroupWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerRemoveGroupWithRequestBuilder(id: String) -> RequestBuilder<AdvDeleted> {
         var localVariablePath = "/v1/advertiser/campaign-groups/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1620,29 +2034,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvDeleted>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Set DCO and product-ad flags on a creative
+     
      - parameter id: (path)  
      - parameter setDcoDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerSetDco200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerSetDco(id: String, setDcoDto: SetDcoDto) async throws {
+    open class func advertiserControllerSetDco(id: String, setDcoDto: SetDcoDto) async throws -> AdvertiserControllerSetDco200Response {
         return try await advertiserControllerSetDcoWithRequestBuilder(id: id, setDcoDto: setDcoDto).execute().body
     }
 
     /**
+     Set DCO and product-ad flags on a creative
      - PATCH /v1/advertiser/creatives/{id}/dco
+     - Sets `isDco` (default true) and `dcoContext` (global, geo, device or audience; default global; 400 otherwise), and optionally `productAd` and `defaultProductId` for dynamic product ads. When DCO is on, the engine fills the creative per render from the component pools. 404 when the creative is not owned or has no campaign.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter setDcoDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerSetDco200Response> 
      */
-    open class func advertiserControllerSetDcoWithRequestBuilder(id: String, setDcoDto: SetDcoDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerSetDcoWithRequestBuilder(id: String, setDcoDto: SetDcoDto) -> RequestBuilder<AdvertiserControllerSetDco200Response> {
         var localVariablePath = "/v1/advertiser/creatives/{id}/dco"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1658,27 +2081,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerSetDco200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Activate or pause a campaign
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvStatusResult
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerStatus(id: String) async throws {
+    open class func advertiserControllerStatus(id: String) async throws -> AdvStatusResult {
         return try await advertiserControllerStatusWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Activate or pause a campaign
      - POST /v1/advertiser/campaigns/{id}/status
+     - Sets the campaign status from the body field `status` (`active` or `paused`) and republishes the serving index. Returns the status that was written. 404/403 as for GET campaign.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvStatusResult> 
      */
-    open class func advertiserControllerStatusWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerStatusWithRequestBuilder(id: String) -> RequestBuilder<AdvStatusResult> {
         var localVariablePath = "/v1/advertiser/campaigns/{id}/status"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1694,27 +2126,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvStatusResult>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Submit a campaign for moderation review
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvStatusResult
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerSubmit(id: String) async throws {
+    open class func advertiserControllerSubmit(id: String) async throws -> AdvStatusResult {
         return try await advertiserControllerSubmitWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Submit a campaign for moderation review
      - POST /v1/advertiser/campaigns/{id}/submit
+     - Moves a `draft` campaign to `pending_review` and enqueues it in the moderation queue. A campaign that is not in draft keeps its status, but the response still reports `pending_review`. 404/403 as for GET campaign.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvStatusResult> 
      */
-    open class func advertiserControllerSubmitWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerSubmitWithRequestBuilder(id: String) -> RequestBuilder<AdvStatusResult> {
         var localVariablePath = "/v1/advertiser/campaigns/{id}/submit"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1730,27 +2171,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvStatusResult>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Submit a promote campaign for review
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvStatusResult
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerSubmitPromote(id: String) async throws {
+    open class func advertiserControllerSubmitPromote(id: String) async throws -> AdvStatusResult {
         return try await advertiserControllerSubmitPromoteWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Submit a promote campaign for review
      - POST /v1/advertiser/promote-campaigns/{id}/submit
+     - Moves a draft promote campaign to `pending_review` and enqueues it for moderation; a non-draft keeps its status. Responds 404 when missing and 403 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvStatusResult> 
      */
-    open class func advertiserControllerSubmitPromoteWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerSubmitPromoteWithRequestBuilder(id: String) -> RequestBuilder<AdvStatusResult> {
         var localVariablePath = "/v1/advertiser/promote-campaigns/{id}/submit"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1766,27 +2216,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvStatusResult>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Sync a destination now
+     
      - parameter did: (path)  
-     - returns: Void
+     - returns: AdvertiserControllerSyncDestination201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerSyncDestination(did: String) async throws {
+    open class func advertiserControllerSyncDestination(did: String) async throws -> AdvertiserControllerSyncDestination201Response {
         return try await advertiserControllerSyncDestinationWithRequestBuilder(did: did).execute().body
     }
 
     /**
+     Sync a destination now
      - POST /v1/advertiser/destinations/{did}/sync
+     - Pushes the audience's current members (up to 500,000, excluding opt-outs) to the destination immediately and records the outcome on the destination. Returns the sync status and member count. 404/403 when the destination is missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter did: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerSyncDestination201Response> 
      */
-    open class func advertiserControllerSyncDestinationWithRequestBuilder(did: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerSyncDestinationWithRequestBuilder(did: String) -> RequestBuilder<AdvertiserControllerSyncDestination201Response> {
         var localVariablePath = "/v1/advertiser/destinations/{did}/sync"
         let didPreEscape = "\(APIHelper.mapValueToPathItem(did))"
         let didPostEscape = didPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1802,27 +2261,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerSyncDestination201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Queue HLS transcoding for a video creative
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvertiserControllerTranscodeCreative201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerTranscodeCreative(id: String) async throws {
+    open class func advertiserControllerTranscodeCreative(id: String) async throws -> AdvertiserControllerTranscodeCreative201Response {
         return try await advertiserControllerTranscodeCreativeWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Queue HLS transcoding for a video creative
      - POST /v1/advertiser/creatives/{id}/transcode
+     - Starts (or restarts) transcoding the creative's video to HLS so SSAI can splice its segments. The job runs in the background and errors are not reported; the response only confirms it was queued. Responds 404 when the creative is not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerTranscodeCreative201Response> 
      */
-    open class func advertiserControllerTranscodeCreativeWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func advertiserControllerTranscodeCreativeWithRequestBuilder(id: String) -> RequestBuilder<AdvertiserControllerTranscodeCreative201Response> {
         var localVariablePath = "/v1/advertiser/creatives/{id}/transcode"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1838,29 +2306,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerTranscodeCreative201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update a campaign
+     
      - parameter id: (path)  
      - parameter updateCampaignDto: (body)  
-     - returns: Void
+     - returns: AdvCampaignDetail
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerUpdate(id: String, updateCampaignDto: UpdateCampaignDto) async throws {
+    open class func advertiserControllerUpdate(id: String, updateCampaignDto: UpdateCampaignDto) async throws -> AdvCampaignDetail {
         return try await advertiserControllerUpdateWithRequestBuilder(id: id, updateCampaignDto: updateCampaignDto).execute().body
     }
 
     /**
+     Update a campaign
      - PATCH /v1/advertiser/campaigns/{id}
+     - Patches the campaign. Updatable: name, bidAmount, budgets, pacing, startAt/endAt, SKAdNetwork ids, houseAd, priorityTier, deliveryGoal/goalType, bidModifiers, portfolioFreqCap, sequenceGroup/sequenceOrder, suppressAfterConversion, holdoutPct (clamped 0-1), bidStrategy/targetCpa/targetRoas and utm (null resets to defaults). Passing `targeting` replaces the whole targeting row (omitted targeting fields are cleared). Format, pricing model and currency cannot change. Republishes the serving index and returns the same shape as GET; 404/403 as for GET.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter updateCampaignDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvCampaignDetail> 
      */
-    open class func advertiserControllerUpdateWithRequestBuilder(id: String, updateCampaignDto: UpdateCampaignDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerUpdateWithRequestBuilder(id: String, updateCampaignDto: UpdateCampaignDto) -> RequestBuilder<AdvCampaignDetail> {
         var localVariablePath = "/v1/advertiser/campaigns/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1876,29 +2353,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvCampaignDetail>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update an audience
+     
      - parameter id: (path)  
      - parameter createAudienceDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerCreateAudience201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerUpdateAudience(id: String, createAudienceDto: CreateAudienceDto) async throws {
+    open class func advertiserControllerUpdateAudience(id: String, createAudienceDto: CreateAudienceDto) async throws -> AdvertiserControllerCreateAudience201Response {
         return try await advertiserControllerUpdateAudienceWithRequestBuilder(id: id, createAudienceDto: createAudienceDto).execute().body
     }
 
     /**
+     Update an audience
      - PATCH /v1/advertiser/audiences/{id}
+     - Updates `name` and/or `rule`. Setting a rule converts the audience to type `rule` and re-resolves its membership in the background. Responds 404 when the audience does not exist and 403 when it belongs to another account.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter createAudienceDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerCreateAudience201Response> 
      */
-    open class func advertiserControllerUpdateAudienceWithRequestBuilder(id: String, createAudienceDto: CreateAudienceDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerUpdateAudienceWithRequestBuilder(id: String, createAudienceDto: CreateAudienceDto) -> RequestBuilder<AdvertiserControllerCreateAudience201Response> {
         var localVariablePath = "/v1/advertiser/audiences/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1914,29 +2400,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerCreateAudience201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update a creative
+     
      - parameter id: (path)  
      - parameter updateCreativeDto: (body)  
-     - returns: Void
+     - returns: AdvCreative
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerUpdateCreative(id: String, updateCreativeDto: UpdateCreativeDto) async throws {
+    open class func advertiserControllerUpdateCreative(id: String, updateCreativeDto: UpdateCreativeDto) async throws -> AdvCreative {
         return try await advertiserControllerUpdateCreativeWithRequestBuilder(id: id, updateCreativeDto: updateCreativeDto).execute().body
     }
 
     /**
+     Update a creative
      - PATCH /v1/advertiser/creatives/{id}
+     - Patches the creative's editable fields (asset/landing/icon/main-image URLs, copy, dimensions, weight, carousel items, video and VAST fields). URLs are SSRF-checked and the merged video fields re-validated (400). Any content change (asset, landing, copy, images, VAST tag, VPAID, companions) resets moderation to `pending` and re-runs the malware scan. Republishes the serving index; an empty patch returns the current row. 404 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter updateCreativeDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvCreative> 
      */
-    open class func advertiserControllerUpdateCreativeWithRequestBuilder(id: String, updateCreativeDto: UpdateCreativeDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerUpdateCreativeWithRequestBuilder(id: String, updateCreativeDto: UpdateCreativeDto) -> RequestBuilder<AdvCreative> {
         var localVariablePath = "/v1/advertiser/creatives/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1952,29 +2447,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvCreative>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update a sync destination
+     
      - parameter did: (path)  
      - parameter updateDestinationDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerCreateAudience201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerUpdateDestination(did: String, updateDestinationDto: UpdateDestinationDto) async throws {
+    open class func advertiserControllerUpdateDestination(did: String, updateDestinationDto: UpdateDestinationDto) async throws -> AdvertiserControllerCreateAudience201Response {
         return try await advertiserControllerUpdateDestinationWithRequestBuilder(did: did, updateDestinationDto: updateDestinationDto).execute().body
     }
 
     /**
+     Update a sync destination
      - PATCH /v1/advertiser/destinations/{did}
+     - Updates the destination's `config` and/or `active` flag. Responds 404 when it does not exist and 403 when it belongs to another account.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter did: (path)  
      - parameter updateDestinationDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerCreateAudience201Response> 
      */
-    open class func advertiserControllerUpdateDestinationWithRequestBuilder(did: String, updateDestinationDto: UpdateDestinationDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerUpdateDestinationWithRequestBuilder(did: String, updateDestinationDto: UpdateDestinationDto) -> RequestBuilder<AdvertiserControllerCreateAudience201Response> {
         var localVariablePath = "/v1/advertiser/destinations/{did}"
         let didPreEscape = "\(APIHelper.mapValueToPathItem(did))"
         let didPostEscape = didPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -1990,29 +2494,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerCreateAudience201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update a campaign group
+     
      - parameter id: (path)  
      - parameter updateCampaignGroupDto: (body)  
-     - returns: Void
+     - returns: AdvCampaignGroup
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerUpdateGroup(id: String, updateCampaignGroupDto: UpdateCampaignGroupDto) async throws {
+    open class func advertiserControllerUpdateGroup(id: String, updateCampaignGroupDto: UpdateCampaignGroupDto) async throws -> AdvCampaignGroup {
         return try await advertiserControllerUpdateGroupWithRequestBuilder(id: id, updateCampaignGroupDto: updateCampaignGroupDto).execute().body
     }
 
     /**
+     Update a campaign group
      - PATCH /v1/advertiser/campaign-groups/{id}
+     - Patches `name`, `status` (active | paused | draft) and/or `objective`. Status cascades to the group's ad sets: `paused` pauses every active ad set, `active` re-activates paused ones (drafts stay draft), and the serving index is republished. Responds 404 when the group is not owned.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter updateCampaignGroupDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvCampaignGroup> 
      */
-    open class func advertiserControllerUpdateGroupWithRequestBuilder(id: String, updateCampaignGroupDto: UpdateCampaignGroupDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerUpdateGroupWithRequestBuilder(id: String, updateCampaignGroupDto: UpdateCampaignGroupDto) -> RequestBuilder<AdvCampaignGroup> {
         var localVariablePath = "/v1/advertiser/campaign-groups/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -2028,25 +2541,34 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvCampaignGroup>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Upload a creative asset file
+     
+     - returns: AdvertiserControllerUploadCreative201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerUploadCreative() async throws {
+    open class func advertiserControllerUploadCreative() async throws -> AdvertiserControllerUploadCreative201Response {
         return try await advertiserControllerUploadCreativeWithRequestBuilder().execute().body
     }
 
     /**
+     Upload a creative asset file
      - POST /v1/advertiser/creatives/upload
-     - returns: RequestBuilder<Void> 
+     - Multipart upload with the file in field `file` (400 if missing). The file is ClamAV-scanned (fail-open: `skipped` when the scanner is unavailable), stored on object storage, and PNG/GIF/JPEG dimensions are detected. Pass the returned `assetUrl` to POST /v1/advertiser/creatives; this call does not create a creative.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AdvertiserControllerUploadCreative201Response> 
      */
-    open class func advertiserControllerUploadCreativeWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func advertiserControllerUploadCreativeWithRequestBuilder() -> RequestBuilder<AdvertiserControllerUploadCreative201Response> {
         let localVariablePath = "/v1/advertiser/creatives/upload"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -2059,25 +2581,34 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerUploadCreative201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Upload a playable (HTML5) ZIP bundle
+     
+     - returns: AdvertiserControllerUploadPlayable201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerUploadPlayable() async throws {
+    open class func advertiserControllerUploadPlayable() async throws -> AdvertiserControllerUploadPlayable201Response {
         return try await advertiserControllerUploadPlayableWithRequestBuilder().execute().body
     }
 
     /**
+     Upload a playable (HTML5) ZIP bundle
      - POST /v1/advertiser/creatives/playable
-     - returns: RequestBuilder<Void> 
+     - Multipart upload of a ZIP in field `file`. The bundle is malware-scanned and validated: it must have an `index.html` at its root, only allowed file types, no unsafe paths, and stay within file-count and size limits (400 otherwise, including zip-bomb expansion). The sandbox/MRAID runtime is injected into the entry document and the files are hosted on the CDN. Pass the returned `assetUrl` with `type: html5` to POST creatives.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AdvertiserControllerUploadPlayable201Response> 
      */
-    open class func advertiserControllerUploadPlayableWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func advertiserControllerUploadPlayableWithRequestBuilder() -> RequestBuilder<AdvertiserControllerUploadPlayable201Response> {
         let localVariablePath = "/v1/advertiser/creatives/playable"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -2090,27 +2621,36 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerUploadPlayable201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Bulk upsert marketplace catalog items
+     
      - parameter bulkUpsertCatalogDto: (body)  
-     - returns: Void
+     - returns: AdvertiserControllerUpsertCatalog201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerUpsertCatalog(bulkUpsertCatalogDto: BulkUpsertCatalogDto) async throws {
+    open class func advertiserControllerUpsertCatalog(bulkUpsertCatalogDto: BulkUpsertCatalogDto) async throws -> AdvertiserControllerUpsertCatalog201Response {
         return try await advertiserControllerUpsertCatalogWithRequestBuilder(bulkUpsertCatalogDto: bulkUpsertCatalogDto).execute().body
     }
 
     /**
+     Bulk upsert marketplace catalog items
      - POST /v1/advertiser/marketplace-catalog
+     - Upserts `items` into the marketplace catalog keyed by `externalId` (items without one are dropped) and mirrors each to Redis for serve-time rendering and keyword matching of sponsored products. Responds 400 when `items` is empty, no item has an externalId, or more than 50,000 items are sent.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter bulkUpsertCatalogDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvertiserControllerUpsertCatalog201Response> 
      */
-    open class func advertiserControllerUpsertCatalogWithRequestBuilder(bulkUpsertCatalogDto: BulkUpsertCatalogDto) -> RequestBuilder<Void> {
+    open class func advertiserControllerUpsertCatalogWithRequestBuilder(bulkUpsertCatalogDto: BulkUpsertCatalogDto) -> RequestBuilder<AdvertiserControllerUpsertCatalog201Response> {
         let localVariablePath = "/v1/advertiser/marketplace-catalog"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: bulkUpsertCatalogDto)
@@ -2123,29 +2663,38 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvertiserControllerUpsertCatalog201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create or replace a campaign's conversion config
+     
      - parameter id: (path)  
      - parameter body: (body)  
-     - returns: Void
+     - returns: AdvConversionConfig
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func advertiserControllerUpsertConversionConfig(id: String, body: AnyCodable) async throws {
+    open class func advertiserControllerUpsertConversionConfig(id: String, body: AnyCodable) async throws -> AdvConversionConfig {
         return try await advertiserControllerUpsertConversionConfigWithRequestBuilder(id: id, body: body).execute().body
     }
 
     /**
+     Create or replace a campaign's conversion config
      - POST /v1/advertiser/campaigns/{id}/conversion-config
+     - Upserts the conversion config. Body fields: `eventType` (default purchase), `payoutValue` (also stored as conversion_value), `postbackUrl`, `dedupeWindowSec` (default 0), `attributionWindowDays` (default 30), `cpaMode` flat|percent, `cpaPercent`, `minOrderValue` (fraud floor) and `viewThroughHours`. Omitted fields are reset to their defaults rather than kept. Returns the stored config; 404/403 as for GET.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
      - parameter body: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvConversionConfig> 
      */
-    open class func advertiserControllerUpsertConversionConfigWithRequestBuilder(id: String, body: AnyCodable) -> RequestBuilder<Void> {
+    open class func advertiserControllerUpsertConversionConfigWithRequestBuilder(id: String, body: AnyCodable) -> RequestBuilder<AdvConversionConfig> {
         var localVariablePath = "/v1/advertiser/campaigns/{id}/conversion-config"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -2161,8 +2710,8 @@ open class AdvertiserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvConversionConfig>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

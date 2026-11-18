@@ -13,25 +13,34 @@ import AnyCodable
 open class AdvertiserInsightsAPI {
 
     /**
-
+     Simulate win rate, reach and spend across bids
+     
      - parameter format: (query)  
      - parameter geo: (query)  (optional)
      - parameter bid: (query)  (optional)
-     - returns: Void
+     - returns: InsightsControllerBidSimulator200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func insightsControllerBidSimulator(format: String, geo: String? = nil, bid: Double? = nil) async throws {
+    open class func insightsControllerBidSimulator(format: String, geo: String? = nil, bid: Double? = nil) async throws -> InsightsControllerBidSimulator200Response {
         return try await insightsControllerBidSimulatorWithRequestBuilder(format: format, geo: geo, bid: bid).execute().body
     }
 
     /**
+     Simulate win rate, reach and spend across bids
      - GET /v1/advertiser/insights/bid-simulator
+     - For the required `format` and optional `geo`, takes about 10 candidate bids spanning the advertiser's recent clearing-price range, plus the caller's own `bid` if given. Each bid gets an estimated win rate from the empirical CDF of the advertiser's last-30-day clearing prices, and projected impressions and spend per day. Prices are per impression (CPM = price x 1000). With no auction history for the slice, `points` is empty and `note` explains why.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter format: (query)  
      - parameter geo: (query)  (optional)
      - parameter bid: (query)  (optional)
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<InsightsControllerBidSimulator200Response> 
      */
-    open class func insightsControllerBidSimulatorWithRequestBuilder(format: String, geo: String? = nil, bid: Double? = nil) -> RequestBuilder<Void> {
+    open class func insightsControllerBidSimulatorWithRequestBuilder(format: String, geo: String? = nil, bid: Double? = nil) -> RequestBuilder<InsightsControllerBidSimulator200Response> {
         let localVariablePath = "/v1/advertiser/insights/bid-simulator"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -49,29 +58,38 @@ open class AdvertiserInsightsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<InsightsControllerBidSimulator200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Score how competitive a targeting slice is
+     
      - parameter format: (query)  
      - parameter geo: (query)  (optional)
-     - returns: Void
+     - returns: InsightsControllerCompetitiveness200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func insightsControllerCompetitiveness(format: String, geo: String? = nil) async throws {
+    open class func insightsControllerCompetitiveness(format: String, geo: String? = nil) async throws -> InsightsControllerCompetitiveness200Response {
         return try await insightsControllerCompetitivenessWithRequestBuilder(format: format, geo: geo).execute().body
     }
 
     /**
+     Score how competitive a targeting slice is
      - GET /v1/advertiser/insights/competitiveness
+     - Reads the market-wide clearing-price distribution over the last 30 days for `format` (required) and optional `geo`, and returns p50, p90, the sample size and a low/moderate/high score based on the price spread. The score is \"low\" when there is no data. Uses market data only, not the caller's own history.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter format: (query)  
      - parameter geo: (query)  (optional)
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<InsightsControllerCompetitiveness200Response> 
      */
-    open class func insightsControllerCompetitivenessWithRequestBuilder(format: String, geo: String? = nil) -> RequestBuilder<Void> {
+    open class func insightsControllerCompetitivenessWithRequestBuilder(format: String, geo: String? = nil) -> RequestBuilder<InsightsControllerCompetitiveness200Response> {
         let localVariablePath = "/v1/advertiser/insights/competitiveness"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -88,27 +106,36 @@ open class AdvertiserInsightsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<InsightsControllerCompetitiveness200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Per-creative performance for a campaign
+     
      - parameter campaignId: (query)  
-     - returns: Void
+     - returns: InsightsControllerCreativePerformance200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func insightsControllerCreativePerformance(campaignId: String) async throws {
+    open class func insightsControllerCreativePerformance(campaignId: String) async throws -> InsightsControllerCreativePerformance200Response {
         return try await insightsControllerCreativePerformanceWithRequestBuilder(campaignId: campaignId).execute().body
     }
 
     /**
+     Per-creative performance for a campaign
      - GET /v1/advertiser/insights/creative-performance
+     - Rolls up the last 30 days of valid impressions and spend, clicks and click-attributed conversions by creative for `campaignId` (required). Creative names come from Postgres. Rows include CTR and CVR as percentages and eCPM, sorted by spend. A campaign the advertiser does not own returns an empty list, not an error.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter campaignId: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<InsightsControllerCreativePerformance200Response> 
      */
-    open class func insightsControllerCreativePerformanceWithRequestBuilder(campaignId: String) -> RequestBuilder<Void> {
+    open class func insightsControllerCreativePerformanceWithRequestBuilder(campaignId: String) -> RequestBuilder<InsightsControllerCreativePerformance200Response> {
         let localVariablePath = "/v1/advertiser/insights/creative-performance"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -124,25 +151,34 @@ open class AdvertiserInsightsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<InsightsControllerCreativePerformance200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Delivery pacing per campaign
+     
+     - returns: InsightsControllerPacing200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func insightsControllerPacing() async throws {
+    open class func insightsControllerPacing() async throws -> InsightsControllerPacing200Response {
         return try await insightsControllerPacingWithRequestBuilder().execute().body
     }
 
     /**
+     Delivery pacing per campaign
      - GET /v1/advertiser/insights/pacing
-     - returns: RequestBuilder<Void> 
+     - For each of the advertiser's campaigns, compares the percentage of the delivery goal reached with the percentage of the flight that has elapsed, and flags whether the campaign is on pace. Reuses the billing-reports pacing calculation.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<InsightsControllerPacing200Response> 
      */
-    open class func insightsControllerPacingWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func insightsControllerPacingWithRequestBuilder() -> RequestBuilder<InsightsControllerPacing200Response> {
         let localVariablePath = "/v1/advertiser/insights/pacing"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -155,27 +191,36 @@ open class AdvertiserInsightsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<InsightsControllerPacing200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Estimate savings from bid shading
+     
      - parameter campaignId: (query)  (optional)
-     - returns: Void
+     - returns: InsightsControllerShadingSavings200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func insightsControllerShadingSavings(campaignId: String? = nil) async throws {
+    open class func insightsControllerShadingSavings(campaignId: String? = nil) async throws -> InsightsControllerShadingSavings200Response {
         return try await insightsControllerShadingSavingsWithRequestBuilder(campaignId: campaignId).execute().body
     }
 
     /**
+     Estimate savings from bid shading
      - GET /v1/advertiser/insights/shading-savings
+     - Combines the bid-shading factors the engine publishes for this advertiser with its last-30-day spend (optionally only `campaignId`) to estimate overpay avoided: roughly spend x (1/avgFactor - 1), with the factor floored at 0.5. If shading is not active for the advertiser yet, all values are zero and a note says so. The figures are directional estimates.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter campaignId: (query)  (optional)
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<InsightsControllerShadingSavings200Response> 
      */
-    open class func insightsControllerShadingSavingsWithRequestBuilder(campaignId: String? = nil) -> RequestBuilder<Void> {
+    open class func insightsControllerShadingSavingsWithRequestBuilder(campaignId: String? = nil) -> RequestBuilder<InsightsControllerShadingSavings200Response> {
         let localVariablePath = "/v1/advertiser/insights/shading-savings"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -191,8 +236,8 @@ open class AdvertiserInsightsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<InsightsControllerShadingSavings200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

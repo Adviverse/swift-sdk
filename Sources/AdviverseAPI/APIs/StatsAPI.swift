@@ -13,19 +13,22 @@ import AnyCodable
 open class StatsAPI {
 
     /**
-
-     - returns: Void
+     Get public network stats
+     
+     - returns: StatsControllerGet200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func statsControllerGet() async throws {
+    open class func statsControllerGet() async throws -> StatsControllerGet200Response {
         return try await statsControllerGetWithRequestBuilder().execute().body
     }
 
     /**
+     Get public network stats
      - GET /v1/stats
-     - returns: RequestBuilder<Void> 
+     - Public, unauthenticated marketing figures: total impressions served across the network and total amount paid out to publishers (settled payouts). Cached in Redis for 10 minutes.  Auth: public, no credentials required.
+     - returns: RequestBuilder<StatsControllerGet200Response> 
      */
-    open class func statsControllerGetWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func statsControllerGetWithRequestBuilder() -> RequestBuilder<StatsControllerGet200Response> {
         let localVariablePath = "/v1/stats"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,7 +41,7 @@ open class StatsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<StatsControllerGet200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }

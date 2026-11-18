@@ -13,21 +13,30 @@ import AnyCodable
 open class OptimizationAPI {
 
     /**
-
+     Acknowledge an alert
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: OptimizationControllerAckAlert201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func optimizationControllerAckAlert(id: String) async throws {
+    open class func optimizationControllerAckAlert(id: String) async throws -> OptimizationControllerAckAlert201Response {
         return try await optimizationControllerAckAlertWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Acknowledge an alert
      - POST /v1/alerts/{id}/ack
+     - Marks alert `id` as acknowledged. Ids not owned by the account are silently ignored, and the response is the same either way.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<OptimizationControllerAckAlert201Response> 
      */
-    open class func optimizationControllerAckAlertWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func optimizationControllerAckAlertWithRequestBuilder(id: String) -> RequestBuilder<OptimizationControllerAckAlert201Response> {
         var localVariablePath = "/v1/alerts/{id}/ack"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -43,27 +52,36 @@ open class OptimizationAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<OptimizationControllerAckAlert201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Create an automation rule
+     
      - parameter createAutomationRuleDto: (body)  
-     - returns: Void
+     - returns: AudienceAutomationRule
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func optimizationControllerCreateRule(createAutomationRuleDto: CreateAutomationRuleDto) async throws {
+    open class func optimizationControllerCreateRule(createAutomationRuleDto: CreateAutomationRuleDto) async throws -> AudienceAutomationRule {
         return try await optimizationControllerCreateRuleWithRequestBuilder(createAutomationRuleDto: createAutomationRuleDto).execute().body
     }
 
     /**
+     Create an automation rule
      - POST /v1/automation/rules
+     - Creates a rule of the form \"when `metric` (cpa, ctr, spend, conversions, fill_rate) is `operator` (gt or lt) `threshold` over `windowHours`, apply `action`\" (pause, resume, notify or adjust_bid). `name`, `metric`, `operator`, `threshold` and `action` are required. `scope` is campaign (the default, which requires `targetId`) or all. `windowHours` defaults to 24 and is clamped to 1-720. `actionValue` is kept only for adjust_bid. Invalid input returns 400.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createAutomationRuleDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AudienceAutomationRule> 
      */
-    open class func optimizationControllerCreateRuleWithRequestBuilder(createAutomationRuleDto: CreateAutomationRuleDto) -> RequestBuilder<Void> {
+    open class func optimizationControllerCreateRuleWithRequestBuilder(createAutomationRuleDto: CreateAutomationRuleDto) -> RequestBuilder<AudienceAutomationRule> {
         let localVariablePath = "/v1/automation/rules"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createAutomationRuleDto)
@@ -76,25 +94,34 @@ open class OptimizationAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AudienceAutomationRule>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List anomaly alerts
+     
+     - returns: [OptimizationControllerListAlerts200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func optimizationControllerListAlerts() async throws {
+    open class func optimizationControllerListAlerts() async throws -> [OptimizationControllerListAlerts200ResponseInner] {
         return try await optimizationControllerListAlertsWithRequestBuilder().execute().body
     }
 
     /**
+     List anomaly alerts
      - GET /v1/alerts
-     - returns: RequestBuilder<Void> 
+     - Returns up to 200 of the account's anomaly alerts, newest first. Alerts are raised by the hourly anomaly detector. Kinds include spend and CPA spikes, CTR and CVR drops, fill-rate drops and no-fill spikes.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[OptimizationControllerListAlerts200ResponseInner]> 
      */
-    open class func optimizationControllerListAlertsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func optimizationControllerListAlertsWithRequestBuilder() -> RequestBuilder<[OptimizationControllerListAlerts200ResponseInner]> {
         let localVariablePath = "/v1/alerts"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -107,25 +134,34 @@ open class OptimizationAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[OptimizationControllerListAlerts200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List automation rules
+     
+     - returns: [AudienceAutomationRule]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func optimizationControllerListRules() async throws {
+    open class func optimizationControllerListRules() async throws -> [AudienceAutomationRule] {
         return try await optimizationControllerListRulesWithRequestBuilder().execute().body
     }
 
     /**
+     List automation rules
      - GET /v1/automation/rules
-     - returns: RequestBuilder<Void> 
+     - Returns the account's automation rules, newest first. A background job evaluates each enabled rule's metric over its window and applies the action when the condition holds.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AudienceAutomationRule]> 
      */
-    open class func optimizationControllerListRulesWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func optimizationControllerListRulesWithRequestBuilder() -> RequestBuilder<[AudienceAutomationRule]> {
         let localVariablePath = "/v1/automation/rules"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -138,27 +174,36 @@ open class OptimizationAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AudienceAutomationRule]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     List budget-optimizer reallocations
+     
      - parameter limit: (query)  
-     - returns: Void
+     - returns: [OptimizationControllerOptimizerLog200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func optimizationControllerOptimizerLog(limit: String) async throws {
+    open class func optimizationControllerOptimizerLog(limit: String) async throws -> [OptimizationControllerOptimizerLog200ResponseInner] {
         return try await optimizationControllerOptimizerLogWithRequestBuilder(limit: limit).execute().body
     }
 
     /**
+     List budget-optimizer reallocations
      - GET /v1/optimizer/log
+     - Audit log of the automatic budget reallocator. For auto-strategy campaigns it moves daily budget toward lower-CPA performers, keeps the advertiser's total budget unchanged and limits how far each campaign can move. Each row records the old and new budget and the CPA, conversions and spend that drove the change. `limit` defaults to 100 and is clamped to 1-500; newest first.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter limit: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[OptimizationControllerOptimizerLog200ResponseInner]> 
      */
-    open class func optimizationControllerOptimizerLogWithRequestBuilder(limit: String) -> RequestBuilder<Void> {
+    open class func optimizationControllerOptimizerLogWithRequestBuilder(limit: String) -> RequestBuilder<[OptimizationControllerOptimizerLog200ResponseInner]> {
         let localVariablePath = "/v1/optimizer/log"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -174,27 +219,36 @@ open class OptimizationAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[OptimizationControllerOptimizerLog200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Delete an automation rule
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: PixelControllerDeletePixel200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func optimizationControllerRemoveRule(id: String) async throws {
+    open class func optimizationControllerRemoveRule(id: String) async throws -> PixelControllerDeletePixel200Response {
         return try await optimizationControllerRemoveRuleWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete an automation rule
      - DELETE /v1/automation/rules/{id}
+     - Deletes rule `id` if it belongs to the account. Deleting an id the account does not own is a silent no-op that still returns `{deleted:true}`.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PixelControllerDeletePixel200Response> 
      */
-    open class func optimizationControllerRemoveRuleWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func optimizationControllerRemoveRuleWithRequestBuilder(id: String) -> RequestBuilder<PixelControllerDeletePixel200Response> {
         var localVariablePath = "/v1/automation/rules/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -210,27 +264,36 @@ open class OptimizationAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PixelControllerDeletePixel200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Enable or disable an automation rule
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AudienceAutomationRule
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func optimizationControllerSetRuleEnabled(id: String) async throws {
+    open class func optimizationControllerSetRuleEnabled(id: String) async throws -> AudienceAutomationRule {
         return try await optimizationControllerSetRuleEnabledWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Enable or disable an automation rule
      - PATCH /v1/automation/rules/{id}
+     - Sets `enabled` from the request body on rule `id` without deleting it. Returns the updated rule. If the rule does not exist or is not owned by the account, the response is 400 \"rule not found\".  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AudienceAutomationRule> 
      */
-    open class func optimizationControllerSetRuleEnabledWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func optimizationControllerSetRuleEnabledWithRequestBuilder(id: String) -> RequestBuilder<AudienceAutomationRule> {
         var localVariablePath = "/v1/automation/rules/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -246,8 +309,8 @@ open class OptimizationAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AudienceAutomationRule>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "PATCH", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

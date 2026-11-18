@@ -13,23 +13,32 @@ import AnyCodable
 open class IntegrityAPI {
 
     /**
-
+     Get per-install liveness for your tags
+     
      - parameter client: (query)  
      - parameter days: (query)  
-     - returns: Void
+     - returns: IntegrityControllerLiveness200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func integrityControllerLiveness(client: String, days: String) async throws {
+    open class func integrityControllerLiveness(client: String, days: String) async throws -> IntegrityControllerLiveness200Response {
         return try await integrityControllerLivenessWithRequestBuilder(client: client, days: days).execute().body
     }
 
     /**
+     Get per-install liveness for your tags
      - GET /v1/publisher/liveness
+     - Lists up to 500 installs that pinged any of your tags in the last `days` (default 7, max 30), with last-seen time, latest tag/uid, whether ads are enabled, and `alive` (pinged within ~95 minutes). Optional `?client=` scopes to one client id. The summary counts alive-and-enabled, alive-but-disabled, and stale installs.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter client: (query)  
      - parameter days: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<IntegrityControllerLiveness200Response> 
      */
-    open class func integrityControllerLivenessWithRequestBuilder(client: String, days: String) -> RequestBuilder<Void> {
+    open class func integrityControllerLivenessWithRequestBuilder(client: String, days: String) -> RequestBuilder<IntegrityControllerLiveness200Response> {
         let localVariablePath = "/v1/publisher/liveness"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -46,27 +55,30 @@ open class IntegrityAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<IntegrityControllerLiveness200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Report a client integrity ping
+     
      - parameter clientPingDto: (body)  
-     - returns: Void
+     - returns: AuthControllerResendVerification201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func integrityControllerPing(clientPingDto: ClientPingDto) async throws {
+    open class func integrityControllerPing(clientPingDto: ClientPingDto) async throws -> AuthControllerResendVerification201Response {
         return try await integrityControllerPingWithRequestBuilder(clientPingDto: clientPingDto).execute().body
     }
 
     /**
+     Report a client integrity ping
      - POST /v1/track/client
+     - Public, rate-limited endpoint the terminal SDK calls about hourly per install with the `tag` it serves, its `client` id, `install_id`/`installId`, machine `uid` and `enabled` state. The ping is recorded against the tag's publisher for integrity and liveness reports. For placements with a signing secret, `ts` and `sig` (HMAC-SHA256 of `tag|uid|ts`, within 300s) are required or the ping is ignored. Always returns `{ ok: true }`, even for unknown tags or failures, so it never affects serving.  Auth: public, no credentials required.
      - parameter clientPingDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerResendVerification201Response> 
      */
-    open class func integrityControllerPingWithRequestBuilder(clientPingDto: ClientPingDto) -> RequestBuilder<Void> {
+    open class func integrityControllerPingWithRequestBuilder(clientPingDto: ClientPingDto) -> RequestBuilder<AuthControllerResendVerification201Response> {
         let localVariablePath = "/v1/track/client"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: clientPingDto)
@@ -79,29 +91,38 @@ open class IntegrityAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerResendVerification201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Get the terminal integrity report
+     
      - parameter client: (query)  
      - parameter days: (query)  
-     - returns: Void
+     - returns: IntegrityControllerReport200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func integrityControllerReport(client: String, days: String) async throws {
+    open class func integrityControllerReport(client: String, days: String) async throws -> IntegrityControllerReport200Response {
         return try await integrityControllerReportWithRequestBuilder(client: client, days: days).execute().body
     }
 
     /**
+     Get the terminal integrity report
      - GET /v1/publisher/integrity
+     - Over the last `days` (default 7, max 30) of client pings, lists machines running one of your tags that also run a foreign tag (`competing`), and, when `?client=` is given, installs reporting your client id while serving a tag you don't own (`swapped`). Also returns your tag keys and distinct install/machine counts. Empty result if you have no placements.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter client: (query)  
      - parameter days: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<IntegrityControllerReport200Response> 
      */
-    open class func integrityControllerReportWithRequestBuilder(client: String, days: String) -> RequestBuilder<Void> {
+    open class func integrityControllerReportWithRequestBuilder(client: String, days: String) -> RequestBuilder<IntegrityControllerReport200Response> {
         let localVariablePath = "/v1/publisher/integrity"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -118,8 +139,8 @@ open class IntegrityAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<IntegrityControllerReport200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

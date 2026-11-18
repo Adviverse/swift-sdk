@@ -13,21 +13,30 @@ import AnyCodable
 open class MfaAPI {
 
     /**
-
+     Get my property's MFA score
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: MfaControllerOwn200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func mfaControllerOwn(id: String) async throws {
+    open class func mfaControllerOwn(id: String) async throws -> MfaControllerOwn200Response {
         return try await mfaControllerOwnWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Get my property's MFA score
      - GET /v1/publisher/properties/{id}/mfa
+     - Returns the latest MFA score for one of the caller's properties, whether it crosses the flag threshold, the reasons, raw signals and improvement tips. If no score has been stored yet it is computed on the fly (not persisted) and `computedAt` is null. Returns 404 for an unknown property and 403 if it belongs to another publisher.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<MfaControllerOwn200Response> 
      */
-    open class func mfaControllerOwnWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func mfaControllerOwnWithRequestBuilder(id: String) -> RequestBuilder<MfaControllerOwn200Response> {
         var localVariablePath = "/v1/publisher/properties/{id}/mfa"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -43,27 +52,36 @@ open class MfaAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<MfaControllerOwn200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Rank properties by MFA score (admin)
+     
      - parameter limit: (query)  
-     - returns: Void
+     - returns: [MfaControllerRanked200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func mfaControllerRanked(limit: String) async throws {
+    open class func mfaControllerRanked(limit: String) async throws -> [MfaControllerRanked200ResponseInner] {
         return try await mfaControllerRankedWithRequestBuilder(limit: limit).execute().body
     }
 
     /**
+     Rank properties by MFA score (admin)
      - GET /v1/admin/mfa
+     - Lists properties with their latest made-for-advertising (MFA) score, highest first, including the stored signal breakdown and manual `mfa_flag`. `limit` defaults to 200 (max 1000). Properties never scored are omitted.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter limit: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[MfaControllerRanked200ResponseInner]> 
      */
-    open class func mfaControllerRankedWithRequestBuilder(limit: String) -> RequestBuilder<Void> {
+    open class func mfaControllerRankedWithRequestBuilder(limit: String) -> RequestBuilder<[MfaControllerRanked200ResponseInner]> {
         let localVariablePath = "/v1/admin/mfa"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -79,8 +97,8 @@ open class MfaAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[MfaControllerRanked200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

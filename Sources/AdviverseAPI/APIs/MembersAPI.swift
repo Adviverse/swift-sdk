@@ -13,19 +13,22 @@ import AnyCodable
 open class MembersAPI {
 
     /**
-
-     - returns: Void
+     Accept a team invitation
+     
+     - returns: MembersControllerAccept201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func membersControllerAccept() async throws {
+    open class func membersControllerAccept() async throws -> MembersControllerAccept201Response {
         return try await membersControllerAcceptWithRequestBuilder().execute().body
     }
 
     /**
+     Accept a team invitation
      - POST /v1/team/accept
-     - returns: RequestBuilder<Void> 
+     - Public endpoint. Sets the member's password (minimum 8 characters) and optional `name`, activates the seat, consumes the invite token, and returns a new session token so the dashboard can log in straight away. Responds 400 for a short password or an invalid or expired token.  Auth: public, no credentials required.
+     - returns: RequestBuilder<MembersControllerAccept201Response> 
      */
-    open class func membersControllerAcceptWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func membersControllerAcceptWithRequestBuilder() -> RequestBuilder<MembersControllerAccept201Response> {
         let localVariablePath = "/v1/team/accept"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,25 +41,34 @@ open class MembersAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<MembersControllerAccept201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Invite a team member
+     
+     - returns: AdvTeamMember
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func membersControllerInvite() async throws {
+    open class func membersControllerInvite() async throws -> AdvTeamMember {
         return try await membersControllerInviteWithRequestBuilder().execute().body
     }
 
     /**
+     Invite a team member
      - POST /v1/advertiser/team
-     - returns: RequestBuilder<Void> 
+     - Creates (or refreshes) an invited seat and emails a single-use accept link valid for 7 days. Body: `email`, `name`, `role` (admin, manager or analyst; anything else becomes analyst), `allPixels` and `pixelIds`. Admins always get all pixels. Responds 400 for an invalid email, an email that already has an Adviverse account or a seat on another account, or a pixel id the account does not own.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<AdvTeamMember> 
      */
-    open class func membersControllerInviteWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func membersControllerInviteWithRequestBuilder() -> RequestBuilder<AdvTeamMember> {
         let localVariablePath = "/v1/advertiser/team"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -69,27 +81,30 @@ open class MembersAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvTeamMember>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Look up an invitation by token
+     
      - parameter token: (query)  
-     - returns: Void
+     - returns: MembersControllerInviteInfo200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func membersControllerInviteInfo(token: String) async throws {
+    open class func membersControllerInviteInfo(token: String) async throws -> MembersControllerInviteInfo200Response {
         return try await membersControllerInviteInfoWithRequestBuilder(token: token).execute().body
     }
 
     /**
+     Look up an invitation by token
      - GET /v1/team/invite
+     - Public endpoint for the accept-invite page. Returns the invited email, role and agency name for the `token` query parameter. Responds 404 when the token is invalid or expired.  Auth: public, no credentials required.
      - parameter token: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<MembersControllerInviteInfo200Response> 
      */
-    open class func membersControllerInviteInfoWithRequestBuilder(token: String) -> RequestBuilder<Void> {
+    open class func membersControllerInviteInfoWithRequestBuilder(token: String) -> RequestBuilder<MembersControllerInviteInfo200Response> {
         let localVariablePath = "/v1/team/invite"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -105,25 +120,34 @@ open class MembersAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<MembersControllerInviteInfo200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     List team members
+     
+     - returns: [AdvTeamMember]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func membersControllerList() async throws {
+    open class func membersControllerList() async throws -> [AdvTeamMember] {
         return try await membersControllerListWithRequestBuilder().execute().body
     }
 
     /**
+     List team members
      - GET /v1/advertiser/team
-     - returns: RequestBuilder<Void> 
+     - Returns every seat on the agency account with role, status and pixel grants. Team-management routes are for the account owner and admin seats only; manager and analyst seats cannot reach them.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[AdvTeamMember]> 
      */
-    open class func membersControllerListWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func membersControllerListWithRequestBuilder() -> RequestBuilder<[AdvTeamMember]> {
         let localVariablePath = "/v1/advertiser/team"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -136,27 +160,36 @@ open class MembersAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[AdvTeamMember]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Remove a team member
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvDeleted
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func membersControllerRemove(id: String) async throws {
+    open class func membersControllerRemove(id: String) async throws -> AdvDeleted {
         return try await membersControllerRemoveWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Remove a team member
      - DELETE /v1/advertiser/team/{id}
+     - Deletes the seat. Always returns `deleted: true`, even if no seat matched.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvDeleted> 
      */
-    open class func membersControllerRemoveWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func membersControllerRemoveWithRequestBuilder(id: String) -> RequestBuilder<AdvDeleted> {
         var localVariablePath = "/v1/advertiser/team/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -172,27 +205,36 @@ open class MembersAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvDeleted>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Resend a team invitation
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AuthControllerResendVerification201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func membersControllerResend(id: String) async throws {
+    open class func membersControllerResend(id: String) async throws -> AuthControllerResendVerification201Response {
         return try await membersControllerResendWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Resend a team invitation
      - POST /v1/advertiser/team/{id}/resend
+     - Issues a new invite token (invalidating the previous link), resets the 7-day expiry and emails it again. Responds 404 for an unknown member and 400 when the member is already active.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AuthControllerResendVerification201Response> 
      */
-    open class func membersControllerResendWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func membersControllerResendWithRequestBuilder(id: String) -> RequestBuilder<AuthControllerResendVerification201Response> {
         var localVariablePath = "/v1/advertiser/team/{id}/resend"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -208,27 +250,36 @@ open class MembersAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerResendVerification201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Update a team member
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: AdvTeamMember
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func membersControllerUpdate(id: String) async throws {
+    open class func membersControllerUpdate(id: String) async throws -> AdvTeamMember {
         return try await membersControllerUpdateWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Update a team member
      - POST /v1/advertiser/team/{id}
+     - Changes a seat's `role`, `allPixels`, `pixelIds` (replaces the grants), `status` (active, disabled or invited) and/or `name`. Disabling a member revokes their live sessions immediately. Responds 404 for an unknown member and 400 for a pixel the account does not own.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<AdvTeamMember> 
      */
-    open class func membersControllerUpdateWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func membersControllerUpdateWithRequestBuilder(id: String) -> RequestBuilder<AdvTeamMember> {
         var localVariablePath = "/v1/advertiser/team/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -244,8 +295,8 @@ open class MembersAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<AdvTeamMember>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

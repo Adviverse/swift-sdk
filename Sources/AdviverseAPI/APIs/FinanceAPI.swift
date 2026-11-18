@@ -13,19 +13,28 @@ import AnyCodable
 open class FinanceAPI {
 
     /**
-
-     - returns: Void
+     Get the caller's available and held balance
+     
+     - returns: FinBalance
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerBalance() async throws {
+    open class func financeControllerBalance() async throws -> FinBalance {
         return try await financeControllerBalanceWithRequestBuilder().execute().body
     }
 
     /**
+     Get the caller's available and held balance
      - GET /v1/finance/balance
-     - returns: RequestBuilder<Void> 
+     - Returns the materialized balance row for the caller's account: available funds, funds held (pending payouts and unmatured earnings) and the account currency. Returns zeros in USD when no ledger activity exists.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<FinBalance> 
      */
-    open class func financeControllerBalanceWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func financeControllerBalanceWithRequestBuilder() -> RequestBuilder<FinBalance> {
         let localVariablePath = "/v1/finance/balance"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -38,27 +47,30 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<FinBalance>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Receive OxaPay crypto webhooks
+     
      - parameter hmac: (header)  
-     - returns: Void
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerCryptoWebhook(hmac: String) async throws {
+    open class func financeControllerCryptoWebhook(hmac: String) async throws -> String {
         return try await financeControllerCryptoWebhookWithRequestBuilder(hmac: hmac).execute().body
     }
 
     /**
+     Receive OxaPay crypto webhooks
      - POST /v1/finance/webhook/crypto
+     - Called by OxaPay. Verifies the `hmac` header (HMAC-SHA512 of the raw body). Payment callbacks (merchant key) credit the deposit when status is 'Paid'; payout callbacks (payout key) settle the held funds as paid on 'Confirmed' or return them on 'Failed'/'Rejected'. Always answers 200 with the plain body 'ok' once verified so OxaPay stops retrying.  Auth: public, no credentials required.
      - parameter hmac: (header)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<String> 
      */
-    open class func financeControllerCryptoWebhookWithRequestBuilder(hmac: String) -> RequestBuilder<Void> {
+    open class func financeControllerCryptoWebhookWithRequestBuilder(hmac: String) -> RequestBuilder<String> {
         let localVariablePath = "/v1/finance/webhook/crypto"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -71,25 +83,34 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     List registered currencies and token rates
+     
+     - returns: [FinCurrencyRate]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerCurrencies() async throws {
+    open class func financeControllerCurrencies() async throws -> [FinCurrencyRate] {
         return try await financeControllerCurrenciesWithRequestBuilder().execute().body
     }
 
     /**
+     List registered currencies and token rates
      - GET /v1/finance/currencies
-     - returns: RequestBuilder<Void> 
+     - Returns every row of currency_rates (fiat codes and tenant-registered tokens) with its USD rate in micro-USD, optional live price feed and last update, ordered by most recently updated.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[FinCurrencyRate]> 
      */
-    open class func financeControllerCurrenciesWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func financeControllerCurrenciesWithRequestBuilder() -> RequestBuilder<[FinCurrencyRate]> {
         let localVariablePath = "/v1/finance/currencies"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -102,27 +123,36 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[FinCurrencyRate]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Start a deposit
+     
      - parameter depositDto: (body)  
-     - returns: Void
+     - returns: FinDepositResult
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerDeposit(depositDto: DepositDto) async throws {
+    open class func financeControllerDeposit(depositDto: DepositDto) async throws -> FinDepositResult {
         return try await financeControllerDepositWithRequestBuilder(depositDto: depositDto).execute().body
     }
 
     /**
+     Start a deposit
      - POST /v1/finance/deposit
+     - Creates a pending deposit for `amount` (0.01..1,000,000, 2 dp) through `provider`: stripe (default) / card, paypal, crypto, wire, paxum, or mock (refused in production). The deposit is denominated in the account's currency; tokens not at USD par are charged to the provider in USD. Hosted-checkout providers return a redirectUrl and are credited later by webhook; wire/paxum return transfer instructions and are credited when ops confirm receipt; mock completes immediately. An unconfigured provider is refused.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter depositDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<FinDepositResult> 
      */
-    open class func financeControllerDepositWithRequestBuilder(depositDto: DepositDto) -> RequestBuilder<Void> {
+    open class func financeControllerDepositWithRequestBuilder(depositDto: DepositDto) -> RequestBuilder<FinDepositResult> {
         let localVariablePath = "/v1/finance/deposit"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: depositDto)
@@ -135,25 +165,34 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<FinDepositResult>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List the caller's deposits
+     
+     - returns: [FinDeposit]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerDeposits() async throws {
+    open class func financeControllerDeposits() async throws -> [FinDeposit] {
         return try await financeControllerDepositsWithRequestBuilder().execute().body
     }
 
     /**
+     List the caller's deposits
      - GET /v1/finance/deposits
-     - returns: RequestBuilder<Void> 
+     - Returns the caller's 100 most recent deposits (all statuses), newest first.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[FinDeposit]> 
      */
-    open class func financeControllerDepositsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func financeControllerDepositsWithRequestBuilder() -> RequestBuilder<[FinDeposit]> {
         let localVariablePath = "/v1/finance/deposits"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -166,25 +205,34 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[FinDeposit]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List the caller's ledger entries
+     
+     - returns: [FinLedgerEntry]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerHistory() async throws {
+    open class func financeControllerHistory() async throws -> [FinLedgerEntry] {
         return try await financeControllerHistoryWithRequestBuilder().execute().body
     }
 
     /**
+     List the caller's ledger entries
      - GET /v1/finance/ledger
-     - returns: RequestBuilder<Void> 
+     - Returns the caller's 100 most recent ledger entries, newest first. Every money movement is one immutable, signed entry with a running balance_after and a unique idempotency key.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[FinLedgerEntry]> 
      */
-    open class func financeControllerHistoryWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func financeControllerHistoryWithRequestBuilder() -> RequestBuilder<[FinLedgerEntry]> {
         let localVariablePath = "/v1/finance/ledger"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -197,25 +245,34 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[FinLedgerEntry]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List configured deposit and payout rails
+     
+     - returns: FinanceControllerMethods200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerMethods() async throws {
+    open class func financeControllerMethods() async throws -> FinanceControllerMethods200Response {
         return try await financeControllerMethodsWithRequestBuilder().execute().body
     }
 
     /**
+     List configured deposit and payout rails
      - GET /v1/finance/methods
-     - returns: RequestBuilder<Void> 
+     - Returns the payment rails usable in this environment, derived from configured provider credentials. Deposit rails can include card, crypto, paypal, wire, paxum (and mock outside production); payout rails crypto, paxum and wire (wire payout is always offered as a manual bank transfer).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<FinanceControllerMethods200Response> 
      */
-    open class func financeControllerMethodsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func financeControllerMethodsWithRequestBuilder() -> RequestBuilder<FinanceControllerMethods200Response> {
         let localVariablePath = "/v1/finance/methods"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -228,27 +285,36 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<FinanceControllerMethods200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Request a payout
+     
      - parameter payoutDto: (body)  
-     - returns: Void
+     - returns: FinanceControllerPayout201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerPayout(payoutDto: PayoutDto) async throws {
+    open class func financeControllerPayout(payoutDto: PayoutDto) async throws -> FinanceControllerPayout201Response {
         return try await financeControllerPayoutWithRequestBuilder(payoutDto: payoutDto).execute().body
     }
 
     /**
+     Request a payout
      - POST /v1/finance/payout
+     - Requests a withdrawal of `amount` via `method` (crypto, paxum or wire) to `destination` (method-specific object). Enforces the minimum payout and, when configured, a tax form on file. Inside one transaction the balance row is locked, available funds are re-checked (400 'insufficient available balance'), and the amount is moved from available to held. Dispatch to the provider happens later; the payout starts in status 'requested'.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter payoutDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<FinanceControllerPayout201Response> 
      */
-    open class func financeControllerPayoutWithRequestBuilder(payoutDto: PayoutDto) -> RequestBuilder<Void> {
+    open class func financeControllerPayoutWithRequestBuilder(payoutDto: PayoutDto) -> RequestBuilder<FinanceControllerPayout201Response> {
         let localVariablePath = "/v1/finance/payout"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: payoutDto)
@@ -261,25 +327,34 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<FinanceControllerPayout201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List the caller's payouts
+     
+     - returns: [FinPayout]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerPayouts() async throws {
+    open class func financeControllerPayouts() async throws -> [FinPayout] {
         return try await financeControllerPayoutsWithRequestBuilder().execute().body
     }
 
     /**
+     List the caller's payouts
      - GET /v1/finance/payouts
-     - returns: RequestBuilder<Void> 
+     - Returns the publisher's 100 most recent payout requests, newest first, with status, method, destination and provider reference.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[FinPayout]> 
      */
-    open class func financeControllerPayoutsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func financeControllerPayoutsWithRequestBuilder() -> RequestBuilder<[FinPayout]> {
         let localVariablePath = "/v1/finance/payouts"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -292,35 +367,38 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[FinPayout]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Receive PayPal order webhooks
+     
      - parameter paypalTransmissionId: (header)  
      - parameter paypalTransmissionTime: (header)  
      - parameter paypalCertUrl: (header)  
      - parameter paypalAuthAlgo: (header)  
      - parameter paypalTransmissionSig: (header)  
-     - returns: Void
+     - returns: FinanceControllerPaypalWebhook201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerPaypalWebhook(paypalTransmissionId: String, paypalTransmissionTime: String, paypalCertUrl: String, paypalAuthAlgo: String, paypalTransmissionSig: String) async throws {
+    open class func financeControllerPaypalWebhook(paypalTransmissionId: String, paypalTransmissionTime: String, paypalCertUrl: String, paypalAuthAlgo: String, paypalTransmissionSig: String) async throws -> FinanceControllerPaypalWebhook201Response {
         return try await financeControllerPaypalWebhookWithRequestBuilder(paypalTransmissionId: paypalTransmissionId, paypalTransmissionTime: paypalTransmissionTime, paypalCertUrl: paypalCertUrl, paypalAuthAlgo: paypalAuthAlgo, paypalTransmissionSig: paypalTransmissionSig).execute().body
     }
 
     /**
+     Receive PayPal order webhooks
      - POST /v1/finance/webhook/paypal
+     - Called by PayPal. Verifies the PayPal-Transmission-* headers via PayPal's verify-webhook-signature API before any crediting (400 if unverifiable or PayPal is not configured). CHECKOUT.ORDER.APPROVED captures the order and credits the matching deposit; PAYMENT.CAPTURE.COMPLETED credits directly. Crediting is idempotent; other events are ignored.  Auth: public, no credentials required.
      - parameter paypalTransmissionId: (header)  
      - parameter paypalTransmissionTime: (header)  
      - parameter paypalCertUrl: (header)  
      - parameter paypalAuthAlgo: (header)  
      - parameter paypalTransmissionSig: (header)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<FinanceControllerPaypalWebhook201Response> 
      */
-    open class func financeControllerPaypalWebhookWithRequestBuilder(paypalTransmissionId: String, paypalTransmissionTime: String, paypalCertUrl: String, paypalAuthAlgo: String, paypalTransmissionSig: String) -> RequestBuilder<Void> {
+    open class func financeControllerPaypalWebhookWithRequestBuilder(paypalTransmissionId: String, paypalTransmissionTime: String, paypalCertUrl: String, paypalAuthAlgo: String, paypalTransmissionSig: String) -> RequestBuilder<FinanceControllerPaypalWebhook201Response> {
         let localVariablePath = "/v1/finance/webhook/paypal"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -337,27 +415,30 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<FinanceControllerPaypalWebhook201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Receive Stripe payment webhooks
+     
      - parameter stripeSignature: (header)  
-     - returns: Void
+     - returns: FinanceControllerStripeWebhook201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerStripeWebhook(stripeSignature: String) async throws {
+    open class func financeControllerStripeWebhook(stripeSignature: String) async throws -> FinanceControllerStripeWebhook201Response {
         return try await financeControllerStripeWebhookWithRequestBuilder(stripeSignature: stripeSignature).execute().body
     }
 
     /**
+     Receive Stripe payment webhooks
      - POST /v1/finance/webhook/stripe
+     - Called by Stripe, not by API clients. Verifies the `stripe-signature` header against the raw body (400 on failure or if Stripe is not configured). On checkout.session.completed (paid) or payment_intent.succeeded it resolves the deposit from metadata or provider_ref and credits it to the ledger idempotently; other event types are acknowledged and ignored.  Auth: public, no credentials required.
      - parameter stripeSignature: (header)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<FinanceControllerStripeWebhook201Response> 
      */
-    open class func financeControllerStripeWebhookWithRequestBuilder(stripeSignature: String) -> RequestBuilder<Void> {
+    open class func financeControllerStripeWebhookWithRequestBuilder(stripeSignature: String) -> RequestBuilder<FinanceControllerStripeWebhook201Response> {
         let localVariablePath = "/v1/finance/webhook/stripe"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -370,27 +451,36 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<FinanceControllerStripeWebhook201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
+     Submit or replace the tax form
+     
      - parameter taxFormDto: (body)  
-     - returns: Void
+     - returns: FinTaxForm
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerSubmitTaxForm(taxFormDto: TaxFormDto) async throws {
+    open class func financeControllerSubmitTaxForm(taxFormDto: TaxFormDto) async throws -> FinTaxForm {
         return try await financeControllerSubmitTaxFormWithRequestBuilder(taxFormDto: taxFormDto).execute().body
     }
 
     /**
+     Submit or replace the tax form
      - POST /v1/finance/tax-form
+     - Upserts the publisher's tax form. Body: `formType` (w9|w8ben), `legalName`, optional `taxClassification`, `taxId` (SSN/EIN/TIN, encrypted at rest; only the last 4 digits are kept in clear), `address`, 2-letter `country` and `certified` (must be true). Status resets to 'submitted'. Returns the masked view.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter taxFormDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<FinTaxForm> 
      */
-    open class func financeControllerSubmitTaxFormWithRequestBuilder(taxFormDto: TaxFormDto) -> RequestBuilder<Void> {
+    open class func financeControllerSubmitTaxFormWithRequestBuilder(taxFormDto: TaxFormDto) -> RequestBuilder<FinTaxForm> {
         let localVariablePath = "/v1/finance/tax-form"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: taxFormDto)
@@ -403,25 +493,34 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<FinTaxForm>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get the caller's tax form (masked)
+     
+     - returns: FinTaxForm
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerTaxForm() async throws {
+    open class func financeControllerTaxForm() async throws -> FinTaxForm {
         return try await financeControllerTaxFormWithRequestBuilder().execute().body
     }
 
     /**
+     Get the caller's tax form (masked)
      - GET /v1/finance/tax-form
-     - returns: RequestBuilder<Void> 
+     - Returns the publisher's W-9 / W-8BEN on file with the tax id masked to its last 4 digits, or `{ onFile: false }` if none has been submitted.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<FinTaxForm> 
      */
-    open class func financeControllerTaxFormWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func financeControllerTaxFormWithRequestBuilder() -> RequestBuilder<FinTaxForm> {
         let localVariablePath = "/v1/finance/tax-form"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -434,27 +533,36 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<FinTaxForm>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Register or update the caller's token rate
+     
      - parameter currencyDto: (body)  
-     - returns: Void
+     - returns: FinCurrencyRate
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func financeControllerUpsertCurrency(currencyDto: CurrencyDto) async throws {
+    open class func financeControllerUpsertCurrency(currencyDto: CurrencyDto) async throws -> FinCurrencyRate {
         return try await financeControllerUpsertCurrencyWithRequestBuilder(currencyDto: currencyDto).execute().body
     }
 
     /**
+     Register or update the caller's token rate
      - POST /v1/finance/currencies
+     - Creates or updates a currency code (2-12 uppercase alphanumerics) owned by the caller. Body: `code`, `name`, and either `usdMicro` (micro-USD per unit) or `rateUrl` (a price API polled to keep the rate current, SSRF-guarded) with optional `rateJsonPath` (dot-path to the price). When rateUrl is given it is fetched once to seed the rate. Fails with 400 if the code belongs to another account or no positive rate can be determined.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter currencyDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<FinCurrencyRate> 
      */
-    open class func financeControllerUpsertCurrencyWithRequestBuilder(currencyDto: CurrencyDto) -> RequestBuilder<Void> {
+    open class func financeControllerUpsertCurrencyWithRequestBuilder(currencyDto: CurrencyDto) -> RequestBuilder<FinCurrencyRate> {
         let localVariablePath = "/v1/finance/currencies"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: currencyDto)
@@ -467,8 +575,8 @@ open class FinanceAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<FinCurrencyRate>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

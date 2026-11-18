@@ -13,23 +13,32 @@ import AnyCodable
 open class ReportingAPI {
 
     /**
-
+     Get per-promote-campaign performance
+     
      - parameter to: (query) ISO end (inclusive). (optional)
      - parameter from: (query) ISO start (inclusive). (optional)
-     - returns: Void
+     - returns: [ReportPromoteCampaignRow]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func promoteCampaignReportingControllerReport(to: String? = nil, from: String? = nil) async throws {
+    open class func promoteCampaignReportingControllerReport(to: String? = nil, from: String? = nil) async throws -> [ReportPromoteCampaignRow] {
         return try await promoteCampaignReportingControllerReportWithRequestBuilder(to: to, from: from).execute().body
     }
 
     /**
+     Get per-promote-campaign performance
      - GET /v1/advertiser/promote-campaigns/report
+     - Returns one row for each of the caller's non-deleted promote (Sponsored Products) campaigns, including those with no traffic yet (zeros). Delivery and spend come from stats_hourly and revenue from attributed conversion_value, scoped to the caller's own promote campaign ids. Sorted by spend then impressions. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter to: (query) ISO end (inclusive). (optional)
      - parameter from: (query) ISO start (inclusive). (optional)
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[ReportPromoteCampaignRow]> 
      */
-    open class func promoteCampaignReportingControllerReportWithRequestBuilder(to: String? = nil, from: String? = nil) -> RequestBuilder<Void> {
+    open class func promoteCampaignReportingControllerReportWithRequestBuilder(to: String? = nil, from: String? = nil) -> RequestBuilder<[ReportPromoteCampaignRow]> {
         let localVariablePath = "/v1/advertiser/promote-campaigns/report"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -46,29 +55,38 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportPromoteCampaignRow]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Get totals across promote campaigns
+     
      - parameter to: (query) ISO end (inclusive). (optional)
      - parameter from: (query) ISO start (inclusive). (optional)
-     - returns: Void
+     - returns: PromoteCampaignReportingControllerSummary200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func promoteCampaignReportingControllerSummary(to: String? = nil, from: String? = nil) async throws {
+    open class func promoteCampaignReportingControllerSummary(to: String? = nil, from: String? = nil) async throws -> PromoteCampaignReportingControllerSummary200Response {
         return try await promoteCampaignReportingControllerSummaryWithRequestBuilder(to: to, from: from).execute().body
     }
 
     /**
+     Get totals across promote campaigns
      - GET /v1/advertiser/promote-campaigns/report/summary
+     - Rolls up the per-promote-campaign report into one totals object over the same window, with the campaign count and recomputed CTR and ROAS. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter to: (query) ISO end (inclusive). (optional)
      - parameter from: (query) ISO start (inclusive). (optional)
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<PromoteCampaignReportingControllerSummary200Response> 
      */
-    open class func promoteCampaignReportingControllerSummaryWithRequestBuilder(to: String? = nil, from: String? = nil) -> RequestBuilder<Void> {
+    open class func promoteCampaignReportingControllerSummaryWithRequestBuilder(to: String? = nil, from: String? = nil) -> RequestBuilder<PromoteCampaignReportingControllerSummary200Response> {
         let localVariablePath = "/v1/advertiser/promote-campaigns/report/summary"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -85,25 +103,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<PromoteCampaignReportingControllerSummary200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get advertiser spend and performance by dimension
+     
+     - returns: [ReportAdvertiserStatsRow]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerAdvertiser() async throws {
+    open class func reportingControllerAdvertiser() async throws -> [ReportAdvertiserStatsRow] {
         return try await reportingControllerAdvertiserWithRequestBuilder().execute().body
     }
 
     /**
+     Get advertiser spend and performance by dimension
      - GET /v1/reporting/advertiser
-     - returns: RequestBuilder<Void> 
+     - Aggregates the caller's advertiser delivery from adnet.stats_hourly, grouped by `dim` (day default, hour, geo, device, format, placement_id, campaign_id), with eCPM, eCPC, eCPA and CTR. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportAdvertiserStatsRow]> 
      */
-    open class func reportingControllerAdvertiserWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerAdvertiserWithRequestBuilder() -> RequestBuilder<[ReportAdvertiserStatsRow]> {
         let localVariablePath = "/v1/reporting/advertiser"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -116,9 +143,9 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportAdvertiserStatsRow]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
@@ -133,25 +160,34 @@ open class ReportingAPI {
     }
 
     /**
-
+     Get affiliate sub-id funnel
+     
      - parameter to: (query)  (optional)
      - parameter from: (query)  (optional)
      - parameter sub: (query) Which sub-id to group by (default sub1). (optional)
-     - returns: Void
+     - returns: [ReportingControllerAffiliate200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerAffiliate(to: String? = nil, from: String? = nil, sub: Sub_reportingControllerAffiliate? = nil) async throws {
+    open class func reportingControllerAffiliate(to: String? = nil, from: String? = nil, sub: Sub_reportingControllerAffiliate? = nil) async throws -> [ReportingControllerAffiliate200ResponseInner] {
         return try await reportingControllerAffiliateWithRequestBuilder(to: to, from: from, sub: sub).execute().body
     }
 
     /**
+     Get affiliate sub-id funnel
      - GET /v1/reporting/affiliate
+     - Per sub-id value funnel (impressions, clicks, conversions) with CTR and CVR in percent, revenue (earnings or spend), CPA payout and conversion value. `sub` picks sub1..sub5 (default sub1). Conversions carry no publisher id, so publishers get impressions/clicks/revenue only. Top 100 by revenue. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter to: (query)  (optional)
      - parameter from: (query)  (optional)
      - parameter sub: (query) Which sub-id to group by (default sub1). (optional)
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[ReportingControllerAffiliate200ResponseInner]> 
      */
-    open class func reportingControllerAffiliateWithRequestBuilder(to: String? = nil, from: String? = nil, sub: Sub_reportingControllerAffiliate? = nil) -> RequestBuilder<Void> {
+    open class func reportingControllerAffiliateWithRequestBuilder(to: String? = nil, from: String? = nil, sub: Sub_reportingControllerAffiliate? = nil) -> RequestBuilder<[ReportingControllerAffiliate200ResponseInner]> {
         let localVariablePath = "/v1/reporting/affiliate"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -169,25 +205,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportingControllerAffiliate200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get impressions recovered from adblock visitors
+     
+     - returns: ReportingControllerAntiAdblock200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerAntiAdblock() async throws {
+    open class func reportingControllerAntiAdblock() async throws -> ReportingControllerAntiAdblock200Response {
         return try await reportingControllerAntiAdblockWithRequestBuilder().execute().body
     }
 
     /**
+     Get impressions recovered from adblock visitors
      - GET /v1/reporting/publisher/anti-adblock
-     - returns: RequestBuilder<Void> 
+     - Reports valid impressions served to visitors the SDK detected as running an adblocker (for example via a first-party serving domain), as a daily series and a window total. recovered_pct is the share of valid impressions that came from adblock users. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerAntiAdblock200Response> 
      */
-    open class func reportingControllerAntiAdblockWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerAntiAdblockWithRequestBuilder() -> RequestBuilder<ReportingControllerAntiAdblock200Response> {
         let localVariablePath = "/v1/reporting/publisher/anti-adblock"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -200,25 +245,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerAntiAdblock200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get auction fill rate and top no-fill reasons
+     
+     - returns: ReportingControllerAuction200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerAuction() async throws {
+    open class func reportingControllerAuction() async throws -> ReportingControllerAuction200Response {
         return try await reportingControllerAuctionWithRequestBuilder().execute().body
     }
 
     /**
+     Get auction fill rate and top no-fill reasons
      - GET /v1/reporting/auction
-     - returns: RequestBuilder<Void> 
+     - Request count, filled count and fill rate from adnet.ad_requests plus the top 10 no-fill reasons. Publishers see their own inventory; ad_requests has no advertiser column, so other accounts see network-wide auction health. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerAuction200Response> 
      */
-    open class func reportingControllerAuctionWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerAuctionWithRequestBuilder() -> RequestBuilder<ReportingControllerAuction200Response> {
         let localVariablePath = "/v1/reporting/auction"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -231,25 +285,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerAuction200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Benchmark eCPM, fill and viewability against the network
+     
+     - returns: ReportingControllerBenchmark200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerBenchmark() async throws {
+    open class func reportingControllerBenchmark() async throws -> ReportingControllerBenchmark200Response {
         return try await reportingControllerBenchmarkWithRequestBuilder().execute().body
     }
 
     /**
+     Benchmark eCPM, fill and viewability against the network
      - GET /v1/reporting/benchmark
-     - returns: RequestBuilder<Void> 
+     - Ranks the caller among publishers with enough volume in the window (>= 1000 impressions for eCPM, >= 1000 requests for fill, >= 500 measurable for viewability). Only the caller's own value plus the network median, percentile rank and sample size are returned, never another publisher's data. fillRate and viewableRate are percentages. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerBenchmark200Response> 
      */
-    open class func reportingControllerBenchmarkWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerBenchmarkWithRequestBuilder() -> RequestBuilder<ReportingControllerBenchmark200Response> {
         let localVariablePath = "/v1/reporting/benchmark"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -262,25 +325,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerBenchmark200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get clearing-price percentiles and estimated win curve
+     
+     - returns: ReportingControllerBidLandscape200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerBidLandscape() async throws {
+    open class func reportingControllerBidLandscape() async throws -> ReportingControllerBidLandscape200Response {
         return try await reportingControllerBidLandscapeWithRequestBuilder().execute().body
     }
 
     /**
+     Get clearing-price percentiles and estimated win curve
      - GET /v1/reporting/bid-landscape
-     - returns: RequestBuilder<Void> 
+     - From the caller's valid paid impressions over the last 30 days, returns clearing-price (price_paid) percentiles and a 10-point estimated win-rate curve: for each candidate bid, the fraction of observed won auctions that cleared at or below it. Only won auctions are seen, so the curve is optimistic at low bids. With no history the curve is empty and `note` is set.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerBidLandscape200Response> 
      */
-    open class func reportingControllerBidLandscapeWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerBidLandscapeWithRequestBuilder() -> RequestBuilder<ReportingControllerBidLandscape200Response> {
         let localVariablePath = "/v1/reporting/bid-landscape"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -293,9 +365,9 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerBidLandscape200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
@@ -320,25 +392,34 @@ open class ReportingAPI {
     }
 
     /**
-
+     Break down delivery by OS, browser, deal, page, app or sub-id
+     
      - parameter to: (query) ISO end (inclusive). (optional)
      - parameter from: (query) ISO start (inclusive). (optional)
      - parameter bdim: (query) Breakdown dimension (default os). &#39;page&#39;&#x3D;site (host), &#39;page_url&#39;&#x3D;individual page (host+path), &#39;app&#39;&#x3D;in-app/in-game app id, &#39;property&#39;&#x3D;owning property (app/site). &#39;region&#39;/&#39;make&#39;/&#39;model&#39; &#x3D; deployment region / device make / device model; &#39;sub1&#39;..&#39;sub5&#39; &#x3D; affiliate sub-ids. Use &#39;app&#39;/&#39;property&#39; for per-app earnings, &#39;sub*&#39; for affiliate performance. (optional)
-     - returns: Void
+     - returns: [ReportBreakdownRow]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerBreakdown(to: String? = nil, from: String? = nil, bdim: Bdim_reportingControllerBreakdown? = nil) async throws {
+    open class func reportingControllerBreakdown(to: String? = nil, from: String? = nil, bdim: Bdim_reportingControllerBreakdown? = nil) async throws -> [ReportBreakdownRow] {
         return try await reportingControllerBreakdownWithRequestBuilder(to: to, from: from, bdim: bdim).execute().body
     }
 
     /**
+     Break down delivery by OS, browser, deal, page, app or sub-id
      - GET /v1/reporting/breakdown
+     - Groups valid raw impressions (and matching clicks) by `bdim`: os (default), browser, deal, page (host), page_url (host+path), app, property, region, make, model or sub1..sub5. Unknown values fall back to os. Returns at most 50 rows ordered by revenue (impression-only dims) or impressions (os/browser). Revenue is publisher earnings for publishers and spend for other accounts. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter to: (query) ISO end (inclusive). (optional)
      - parameter from: (query) ISO start (inclusive). (optional)
      - parameter bdim: (query) Breakdown dimension (default os). &#39;page&#39;&#x3D;site (host), &#39;page_url&#39;&#x3D;individual page (host+path), &#39;app&#39;&#x3D;in-app/in-game app id, &#39;property&#39;&#x3D;owning property (app/site). &#39;region&#39;/&#39;make&#39;/&#39;model&#39; &#x3D; deployment region / device make / device model; &#39;sub1&#39;..&#39;sub5&#39; &#x3D; affiliate sub-ids. Use &#39;app&#39;/&#39;property&#39; for per-app earnings, &#39;sub*&#39; for affiliate performance. (optional)
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<[ReportBreakdownRow]> 
      */
-    open class func reportingControllerBreakdownWithRequestBuilder(to: String? = nil, from: String? = nil, bdim: Bdim_reportingControllerBreakdown? = nil) -> RequestBuilder<Void> {
+    open class func reportingControllerBreakdownWithRequestBuilder(to: String? = nil, from: String? = nil, bdim: Bdim_reportingControllerBreakdown? = nil) -> RequestBuilder<[ReportBreakdownRow]> {
         let localVariablePath = "/v1/reporting/breakdown"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -356,25 +437,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportBreakdownRow]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get clicks per carousel card
+     
+     - returns: [ReportingControllerCarousel200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerCarousel() async throws {
+    open class func reportingControllerCarousel() async throws -> [ReportingControllerCarousel200ResponseInner] {
         return try await reportingControllerCarouselWithRequestBuilder().execute().body
     }
 
     /**
+     Get clicks per carousel card
      - GET /v1/reporting/carousel
-     - returns: RequestBuilder<Void> 
+     - Clicks per card (0-based index) of each of the caller's carousel creatives, with the card title and price taken from the creative's stored carousel_items (title defaults to 'Card N'). Top 500 by clicks. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportingControllerCarousel200ResponseInner]> 
      */
-    open class func reportingControllerCarouselWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerCarouselWithRequestBuilder() -> RequestBuilder<[ReportingControllerCarousel200ResponseInner]> {
         let localVariablePath = "/v1/reporting/carousel"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -387,25 +477,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportingControllerCarousel200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get funnel for the account's house campaigns
+     
+     - returns: ReportingControllerClosedLoop200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerClosedLoop() async throws {
+    open class func reportingControllerClosedLoop() async throws -> ReportingControllerClosedLoop200Response {
         return try await reportingControllerClosedLoopWithRequestBuilder().execute().body
     }
 
     /**
+     Get funnel for the account's house campaigns
      - GET /v1/reporting/closed-loop
-     - returns: RequestBuilder<Void> 
+     - Impressions, clicks, conversions and spend (returned as `revenue`) across the caller's house-ad campaigns from stats_hourly, with CTR, CVR and impression-to-conversion rate in percent. Returns zeros (with houseCampaigns) when there are no house campaigns or the query fails. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerClosedLoop200Response> 
      */
-    open class func reportingControllerClosedLoopWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerClosedLoopWithRequestBuilder() -> RequestBuilder<ReportingControllerClosedLoop200Response> {
         let localVariablePath = "/v1/reporting/closed-loop"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -418,25 +517,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerClosedLoop200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get cohort retention and LTV triangle (admin)
+     
+     - returns: ReportingControllerCohorts200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerCohorts() async throws {
+    open class func reportingControllerCohorts() async throws -> ReportingControllerCohorts200Response {
         return try await reportingControllerCohortsWithRequestBuilder().execute().body
     }
 
     /**
+     Get cohort retention and LTV triangle (admin)
      - GET /v1/reporting/admin/cohorts
-     - returns: RequestBuilder<Void> 
+     - Groups accounts by signup month and, for months 0..12 after signup, reports retention (fraction of the cohort with delivery that month) and cumulative average revenue per account. `scope=advertiser` uses spend; anything else (default) uses publisher earnings. Only accounts ever active on the chosen side are counted; cells in the future are null. No date window.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerCohorts200Response> 
      */
-    open class func reportingControllerCohortsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerCohortsWithRequestBuilder() -> RequestBuilder<ReportingControllerCohorts200Response> {
         let localVariablePath = "/v1/reporting/admin/cohorts"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -449,25 +557,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerCohorts200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get pixel consent rate (personalized vs aggregate-only)
+     
+     - returns: ReportingControllerConsentRate200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerConsentRate() async throws {
+    open class func reportingControllerConsentRate() async throws -> ReportingControllerConsentRate200Response {
         return try await reportingControllerConsentRateWithRequestBuilder().execute().body
     }
 
     /**
+     Get pixel consent rate (personalized vs aggregate-only)
      - GET /v1/reporting/consent-rate
-     - returns: RequestBuilder<Void> 
+     - Share of the caller's pixel events (adnet.pixel_events) ingested in personalized mode (consent granted, no GPC) versus aggregate-only, as totals and a daily series. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerConsentRate200Response> 
      */
-    open class func reportingControllerConsentRateWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerConsentRateWithRequestBuilder() -> RequestBuilder<ReportingControllerConsentRate200Response> {
         let localVariablePath = "/v1/reporting/consent-rate"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -480,27 +597,36 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerConsentRate200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Save a report definition
+     
      - parameter createSavedReportDto: (body)  
-     - returns: Void
+     - returns: ReportSavedReport
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerCreateSaved(createSavedReportDto: CreateSavedReportDto) async throws {
+    open class func reportingControllerCreateSaved(createSavedReportDto: CreateSavedReportDto) async throws -> ReportSavedReport {
         return try await reportingControllerCreateSavedWithRequestBuilder(createSavedReportDto: createSavedReportDto).execute().body
     }
 
     /**
+     Save a report definition
      - POST /v1/reporting/saved
+     - Stores a named report definition for the caller. Body: `name` (default 'Untitled report') and `config` (any JSON object, default {}).  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createSavedReportDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ReportSavedReport> 
      */
-    open class func reportingControllerCreateSavedWithRequestBuilder(createSavedReportDto: CreateSavedReportDto) -> RequestBuilder<Void> {
+    open class func reportingControllerCreateSavedWithRequestBuilder(createSavedReportDto: CreateSavedReportDto) -> RequestBuilder<ReportSavedReport> {
         let localVariablePath = "/v1/reporting/saved"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createSavedReportDto)
@@ -513,27 +639,36 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportSavedReport>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Schedule an emailed report
+     
      - parameter createScheduledReportDto: (body)  
-     - returns: Void
+     - returns: ReportScheduledReport
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerCreateScheduled(createScheduledReportDto: CreateScheduledReportDto) async throws {
+    open class func reportingControllerCreateScheduled(createScheduledReportDto: CreateScheduledReportDto) async throws -> ReportScheduledReport {
         return try await reportingControllerCreateScheduledWithRequestBuilder(createScheduledReportDto: createScheduledReportDto).execute().body
     }
 
     /**
+     Schedule an emailed report
      - POST /v1/reporting/scheduled
+     - Creates a scheduled report. Body: `name`, `config` (JSON; `scope` 'advertiser'|'publisher' and `dim` select the stats query), `cadence` ('daily' default, or 'weekly') and `email`. next_run_at is set one day or one week from now; each run emails the stats for the last 1 or 7 days.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter createScheduledReportDto: (body)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ReportScheduledReport> 
      */
-    open class func reportingControllerCreateScheduledWithRequestBuilder(createScheduledReportDto: CreateScheduledReportDto) -> RequestBuilder<Void> {
+    open class func reportingControllerCreateScheduledWithRequestBuilder(createScheduledReportDto: CreateScheduledReportDto) -> RequestBuilder<ReportScheduledReport> {
         let localVariablePath = "/v1/reporting/scheduled"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: createScheduledReportDto)
@@ -546,25 +681,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportScheduledReport>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get per-creative performance and fatigue
+     
+     - returns: ReportingControllerCreatives200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerCreatives() async throws {
+    open class func reportingControllerCreatives() async throws -> ReportingControllerCreatives200Response {
         return try await reportingControllerCreativesWithRequestBuilder().execute().body
     }
 
     /**
+     Get per-creative performance and fatigue
      - GET /v1/reporting/creatives
-     - returns: RequestBuilder<Void> 
+     - For the caller's creatives: valid impressions, clicks, CTR, conversions (attributed through the click that drove them) and CVR, sorted by impressions and capped at 50. Names come from the creative title or brand name. `fatigue` is the daily CTR series of the highest-volume creative so decay is visible. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerCreatives200Response> 
      */
-    open class func reportingControllerCreativesWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerCreativesWithRequestBuilder() -> RequestBuilder<ReportingControllerCreatives200Response> {
         let localVariablePath = "/v1/reporting/creatives"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -577,27 +721,36 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerCreatives200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Delete a saved report
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: ReportingControllerDeleteSaved200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerDeleteSaved(id: String) async throws {
+    open class func reportingControllerDeleteSaved(id: String) async throws -> ReportingControllerDeleteSaved200Response {
         return try await reportingControllerDeleteSavedWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete a saved report
      - DELETE /v1/reporting/saved/{id}
+     - Deletes one of the caller's saved reports by id. Returns 404 if it does not exist or belongs to another account.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ReportingControllerDeleteSaved200Response> 
      */
-    open class func reportingControllerDeleteSavedWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func reportingControllerDeleteSavedWithRequestBuilder(id: String) -> RequestBuilder<ReportingControllerDeleteSaved200Response> {
         var localVariablePath = "/v1/reporting/saved/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -613,27 +766,36 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerDeleteSaved200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Delete a scheduled report
+     
      - parameter id: (path)  
-     - returns: Void
+     - returns: ReportingControllerDeleteSaved200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerDeleteScheduled(id: String) async throws {
+    open class func reportingControllerDeleteScheduled(id: String) async throws -> ReportingControllerDeleteSaved200Response {
         return try await reportingControllerDeleteScheduledWithRequestBuilder(id: id).execute().body
     }
 
     /**
+     Delete a scheduled report
      - DELETE /v1/reporting/scheduled/{id}
+     - Deletes one of the caller's scheduled reports by id. Returns 404 if it does not exist or belongs to another account.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ReportingControllerDeleteSaved200Response> 
      */
-    open class func reportingControllerDeleteScheduledWithRequestBuilder(id: String) -> RequestBuilder<Void> {
+    open class func reportingControllerDeleteScheduledWithRequestBuilder(id: String) -> RequestBuilder<ReportingControllerDeleteSaved200Response> {
         var localVariablePath = "/v1/reporting/scheduled/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -649,25 +811,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerDeleteSaved200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get publisher delivery waterfall
+     
+     - returns: ReportingControllerDeliveryFunnel200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerDeliveryFunnel() async throws {
+    open class func reportingControllerDeliveryFunnel() async throws -> ReportingControllerDeliveryFunnel200Response {
         return try await reportingControllerDeliveryFunnelWithRequestBuilder().execute().body
     }
 
     /**
+     Get publisher delivery waterfall
      - GET /v1/reporting/delivery-funnel
-     - returns: RequestBuilder<Void> 
+     - Requests and filled responses (ad_requests), rendered valid impressions (impressions) and measurable/viewable beacons (viewability) for the caller's inventory, with stage-to-stage rates. `discrepancy` is filled minus rendered (floored at 0). Rates are fractions 0..1. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerDeliveryFunnel200Response> 
      */
-    open class func reportingControllerDeliveryFunnelWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerDeliveryFunnelWithRequestBuilder() -> RequestBuilder<ReportingControllerDeliveryFunnel200Response> {
         let localVariablePath = "/v1/reporting/delivery-funnel"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -680,25 +851,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerDeliveryFunnel200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get delivery pacing for booked and goal campaigns
+     
+     - returns: [ReportingControllerDeliveryPacing200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerDeliveryPacing() async throws {
+    open class func reportingControllerDeliveryPacing() async throws -> [ReportingControllerDeliveryPacing200ResponseInner] {
         return try await reportingControllerDeliveryPacingWithRequestBuilder().execute().body
     }
 
     /**
+     Get delivery pacing for booked and goal campaigns
      - GET /v1/reporting/delivery-pacing
-     - returns: RequestBuilder<Void> 
+     - For each of the caller's campaigns with a delivery_goal or a guaranteed/sponsorship priority tier: the goal, all-time valid delivered impressions or clicks (per goal_type), percent to goal, percent of the flight elapsed, and whether delivery is keeping up (pctToGoal >= flightProgressPct). Open-ended flights count as 100% elapsed once started. No query params.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportingControllerDeliveryPacing200ResponseInner]> 
      */
-    open class func reportingControllerDeliveryPacingWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerDeliveryPacingWithRequestBuilder() -> RequestBuilder<[ReportingControllerDeliveryPacing200ResponseInner]> {
         let localVariablePath = "/v1/reporting/delivery-pacing"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -711,25 +891,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportingControllerDeliveryPacing200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get publisher fill rate and no-fill reasons
+     
+     - returns: ReportingControllerFill200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerFill() async throws {
+    open class func reportingControllerFill() async throws -> ReportingControllerFill200Response {
         return try await reportingControllerFillWithRequestBuilder().execute().body
     }
 
     /**
+     Get publisher fill rate and no-fill reasons
      - GET /v1/reporting/publisher/fill
-     - returns: RequestBuilder<Void> 
+     - Counts the caller's ad requests from adnet.ad_requests, how many were filled, and the fill rate, plus a map of unfilled requests by no-fill reason (empty reasons bucketed as 'unknown'). Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerFill200Response> 
      */
-    open class func reportingControllerFillWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerFillWithRequestBuilder() -> RequestBuilder<ReportingControllerFill200Response> {
         let localVariablePath = "/v1/reporting/publisher/fill"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -742,25 +931,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerFill200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get advertiser impression-click-conversion funnel
+     
+     - returns: ReportingControllerFunnel200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerFunnel() async throws {
+    open class func reportingControllerFunnel() async throws -> ReportingControllerFunnel200Response {
         return try await reportingControllerFunnelWithRequestBuilder().execute().body
     }
 
     /**
+     Get advertiser impression-click-conversion funnel
      - GET /v1/reporting/funnel
-     - returns: RequestBuilder<Void> 
+     - Totals impressions, clicks and conversions for the caller's campaigns from adnet.stats_hourly with CTR, CVR (conversions/clicks) and impression-to-conversion rate, all in percent. Returns zeros when there is no data. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerFunnel200Response> 
      */
-    open class func reportingControllerFunnelWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerFunnelWithRequestBuilder() -> RequestBuilder<ReportingControllerFunnel200Response> {
         let localVariablePath = "/v1/reporting/funnel"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -773,25 +971,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerFunnel200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get per-country delivery breakdown
+     
+     - returns: [ReportingControllerGeo200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerGeo() async throws {
+    open class func reportingControllerGeo() async throws -> [ReportingControllerGeo200ResponseInner] {
         return try await reportingControllerGeoWithRequestBuilder().execute().body
     }
 
     /**
+     Get per-country delivery breakdown
      - GET /v1/reporting/geo
-     - returns: RequestBuilder<Void> 
+     - Impressions, clicks and amount per country from adnet.stats_hourly, ordered by amount. Amount is publisher earnings for publisher accounts and spend for other accounts; rows with an empty geo are skipped. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportingControllerGeo200ResponseInner]> 
      */
-    open class func reportingControllerGeoWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerGeoWithRequestBuilder() -> RequestBuilder<[ReportingControllerGeo200ResponseInner]> {
         let localVariablePath = "/v1/reporting/geo"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -804,25 +1011,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportingControllerGeo200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get per-campaign conversion lift vs holdout
+     
+     - returns: [ReportingControllerIncrementality200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerIncrementality() async throws {
+    open class func reportingControllerIncrementality() async throws -> [ReportingControllerIncrementality200ResponseInner] {
         return try await reportingControllerIncrementalityWithRequestBuilder().execute().body
     }
 
     /**
+     Get per-campaign conversion lift vs holdout
      - GET /v1/reporting/incrementality
-     - returns: RequestBuilder<Void> 
+     - For up to 200 of the caller's campaigns, compares the conversion rate of exposed users (served an impression) with a holdout group (adnet.holdouts). Conversions attribute to users via the click that drove them. lift = (exposedCvr - holdoutCvr) / holdoutCvr; holdout figures and lift are 0 when there is no holdout data. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportingControllerIncrementality200ResponseInner]> 
      */
-    open class func reportingControllerIncrementalityWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerIncrementalityWithRequestBuilder() -> RequestBuilder<[ReportingControllerIncrementality200ResponseInner]> {
         let localVariablePath = "/v1/reporting/incrementality"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -835,25 +1051,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportingControllerIncrementality200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get invalid-traffic breakdown by reason (last 30 days)
+     
+     - returns: [ReportingControllerIvt200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerIvt() async throws {
+    open class func reportingControllerIvt() async throws -> [ReportingControllerIvt200ResponseInner] {
         return try await reportingControllerIvtWithRequestBuilder().execute().body
     }
 
     /**
+     Get invalid-traffic breakdown by reason (last 30 days)
      - GET /v1/reporting/ivt
-     - returns: RequestBuilder<Void> 
+     - Counts impressions flagged invalid (is_valid = 0) in the last 30 days, grouped by IVT reason and ordered by count. Publishers see IVT on their inventory; every other account sees IVT on its campaigns. Takes no window params.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportingControllerIvt200ResponseInner]> 
      */
-    open class func reportingControllerIvtWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerIvtWithRequestBuilder() -> RequestBuilder<[ReportingControllerIvt200ResponseInner]> {
         let localVariablePath = "/v1/reporting/ivt"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -866,25 +1091,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportingControllerIvt200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get top cross-site user paths
+     
+     - returns: [ReportingControllerJourney200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerJourney() async throws {
+    open class func reportingControllerJourney() async throws -> [ReportingControllerJourney200ResponseInner] {
         return try await reportingControllerJourneyWithRequestBuilder().execute().body
     }
 
     /**
+     Get top cross-site user paths
      - GET /v1/reporting/journey
-     - returns: RequestBuilder<Void> 
+     - Builds each user's time-ordered sequence of placements (first 6) from the caller's valid impressions and counts the most common paths, joined with ' > '. `topN` sets the result size (default 20, max 50); at most 50,000 users are scanned. Returns an empty list on query failure. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportingControllerJourney200ResponseInner]> 
      */
-    open class func reportingControllerJourneyWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerJourneyWithRequestBuilder() -> RequestBuilder<[ReportingControllerJourney200ResponseInner]> {
         let localVariablePath = "/v1/reporting/journey"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -897,25 +1131,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportingControllerJourney200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get network-wide marketplace liquidity (admin)
+     
+     - returns: ReportingControllerLiquidity200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerLiquidity() async throws {
+    open class func reportingControllerLiquidity() async throws -> ReportingControllerLiquidity200Response {
         return try await reportingControllerLiquidityWithRequestBuilder().execute().body
     }
 
     /**
+     Get network-wide marketplace liquidity (admin)
      - GET /v1/reporting/admin/liquidity
-     - returns: RequestBuilder<Void> 
+     - Network-wide ad requests, filled and unmatched requests, fill rate, the top 12 no-fill reasons and a daily requests/filled series, from adnet.ad_requests. Not scoped to an account. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerLiquidity200Response> 
      */
-    open class func reportingControllerLiquidityWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerLiquidityWithRequestBuilder() -> RequestBuilder<ReportingControllerLiquidity200Response> {
         let localVariablePath = "/v1/reporting/admin/liquidity"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -928,25 +1171,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerLiquidity200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List saved reports
+     
+     - returns: [ReportSavedReport]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerListSaved() async throws {
+    open class func reportingControllerListSaved() async throws -> [ReportSavedReport] {
         return try await reportingControllerListSavedWithRequestBuilder().execute().body
     }
 
     /**
+     List saved reports
      - GET /v1/reporting/saved
-     - returns: RequestBuilder<Void> 
+     - Returns the caller's saved report definitions, newest first. The config is opaque JSON stored for the dashboard.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportSavedReport]> 
      */
-    open class func reportingControllerListSavedWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerListSavedWithRequestBuilder() -> RequestBuilder<[ReportSavedReport]> {
         let localVariablePath = "/v1/reporting/saved"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -959,25 +1211,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportSavedReport]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     List scheduled email reports
+     
+     - returns: [ReportScheduledReport]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerListScheduled() async throws {
+    open class func reportingControllerListScheduled() async throws -> [ReportScheduledReport] {
         return try await reportingControllerListScheduledWithRequestBuilder().execute().body
     }
 
     /**
+     List scheduled email reports
      - GET /v1/reporting/scheduled
-     - returns: RequestBuilder<Void> 
+     - Returns the caller's scheduled email reports with cadence, recipient and last/next run times, newest first.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportScheduledReport]> 
      */
-    open class func reportingControllerListScheduledWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerListScheduledWithRequestBuilder() -> RequestBuilder<[ReportScheduledReport]> {
         let localVariablePath = "/v1/reporting/scheduled"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -990,25 +1251,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportScheduledReport]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get marketplace economics and concentration (admin)
+     
+     - returns: ReportingControllerMarketplace200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerMarketplace() async throws {
+    open class func reportingControllerMarketplace() async throws -> ReportingControllerMarketplace200Response {
         return try await reportingControllerMarketplaceWithRequestBuilder().execute().body
     }
 
     /**
+     Get marketplace economics and concentration (admin)
      - GET /v1/reporting/admin/marketplace
-     - returns: RequestBuilder<Void> 
+     - Gross advertiser spend, publisher payout, platform margin and take rate over the window (stats_hourly), the top 10 advertisers by spend and publishers by earnings with their share of the total, and monthly signup counts per account type from Postgres (cohorts ignore the window). Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerMarketplace200Response> 
      */
-    open class func reportingControllerMarketplaceWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerMarketplaceWithRequestBuilder() -> RequestBuilder<ReportingControllerMarketplace200Response> {
         let localVariablePath = "/v1/reporting/admin/marketplace"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1021,25 +1291,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerMarketplace200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get Personal Network infra fees and house-ad delivery
+     
+     - returns: ReportingControllerPersonalNetwork200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerPersonalNetwork() async throws {
+    open class func reportingControllerPersonalNetwork() async throws -> ReportingControllerPersonalNetwork200Response {
         return try await reportingControllerPersonalNetworkWithRequestBuilder().execute().body
     }
 
     /**
+     Get Personal Network infra fees and house-ad delivery
      - GET /v1/reporting/personal-network
-     - returns: RequestBuilder<Void> 
+     - Sums the 'infra_fee' ledger entries charged to the caller over the period (absolute value, total and per day) and counts valid impressions of the caller's house-ad campaigns. `from`/`to` are YYYY-MM-DD dates here (default: the last 30 days through today, inclusive). infraFeePct is read from platform_config (default 0.05).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerPersonalNetwork200Response> 
      */
-    open class func reportingControllerPersonalNetworkWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerPersonalNetworkWithRequestBuilder() -> RequestBuilder<ReportingControllerPersonalNetwork200Response> {
         let localVariablePath = "/v1/reporting/personal-network"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1052,25 +1331,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerPersonalNetwork200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Pivot delivery over two dimensions
+     
+     - returns: [ReportingControllerPivot200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerPivot() async throws {
+    open class func reportingControllerPivot() async throws -> [ReportingControllerPivot200ResponseInner] {
         return try await reportingControllerPivotWithRequestBuilder().execute().body
     }
 
     /**
+     Pivot delivery over two dimensions
      - GET /v1/reporting/pivot
-     - returns: RequestBuilder<Void> 
+     - Groups adnet.stats_hourly by `dim1` x `dim2`, each one of day, geo, device, os, browser, format, placement_id, campaign_id (os/browser are not in the rollup and resolve to a constant '(n/a)'). An unknown dimension returns 403 'invalid pivot dimension'. Amount is earnings (publisher) or spend (advertiser); max 1000 rows ordered by amount. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportingControllerPivot200ResponseInner]> 
      */
-    open class func reportingControllerPivotWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerPivotWithRequestBuilder() -> RequestBuilder<[ReportingControllerPivot200ResponseInner]> {
         let localVariablePath = "/v1/reporting/pivot"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1083,25 +1371,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportingControllerPivot200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get publisher earnings grouped by a dimension
+     
+     - returns: [ReportPublisherStatsRow]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerPublisher() async throws {
+    open class func reportingControllerPublisher() async throws -> [ReportPublisherStatsRow] {
         return try await reportingControllerPublisherWithRequestBuilder().execute().body
     }
 
     /**
+     Get publisher earnings grouped by a dimension
      - GET /v1/reporting/publisher
-     - returns: RequestBuilder<Void> 
+     - Aggregates the caller's publisher earnings from the hourly rollup (adnet.stats_hourly). `dim` picks the grouping: day (default), hour, geo, device, format, placement_id or campaign_id; rows are ordered by the dimension. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportPublisherStatsRow]> 
      */
-    open class func reportingControllerPublisherWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerPublisherWithRequestBuilder() -> RequestBuilder<[ReportPublisherStatsRow]> {
         let localVariablePath = "/v1/reporting/publisher"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1114,25 +1411,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportPublisherStatsRow]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get publisher ad-serving consent rate
+     
+     - returns: ReportingControllerPublisherConsent200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerPublisherConsent() async throws {
+    open class func reportingControllerPublisherConsent() async throws -> ReportingControllerPublisherConsent200Response {
         return try await reportingControllerPublisherConsentWithRequestBuilder().execute().body
     }
 
     /**
+     Get publisher ad-serving consent rate
      - GET /v1/reporting/publisher/consent
-     - returns: RequestBuilder<Void> 
+     - Share of the caller's valid impressions served with personalized-processing consent (impressions.consented, set by the engine from the request's privacy signals), as totals and a daily series. Distinct from the advertiser pixel consent rate. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerPublisherConsent200Response> 
      */
-    open class func reportingControllerPublisherConsentWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerPublisherConsentWithRequestBuilder() -> RequestBuilder<ReportingControllerPublisherConsent200Response> {
         let localVariablePath = "/v1/reporting/publisher/consent"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1145,25 +1451,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerPublisherConsent200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get per-placement earnings, fill and viewability
+     
+     - returns: [ReportPlacementRow]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerPublisherPlacements() async throws {
+    open class func reportingControllerPublisherPlacements() async throws -> [ReportPlacementRow] {
         return try await reportingControllerPublisherPlacementsWithRequestBuilder().execute().body
     }
 
     /**
+     Get per-placement earnings, fill and viewability
      - GET /v1/reporting/publisher/placements
-     - returns: RequestBuilder<Void> 
+     - Joins three ClickHouse aggregations by placement_id: earnings (stats_hourly), fill (ad_requests) and viewability (adnet.viewability), then resolves placement names from Postgres. A placement appears if it has activity in any of the three. Sorted by revenue then impressions. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportPlacementRow]> 
      */
-    open class func reportingControllerPublisherPlacementsWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerPublisherPlacementsWithRequestBuilder() -> RequestBuilder<[ReportPlacementRow]> {
         let localVariablePath = "/v1/reporting/publisher/placements"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1176,25 +1491,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportPlacementRow]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get reach and frequency (unique users)
+     
+     - returns: ReportingControllerReach200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerReach() async throws {
+    open class func reportingControllerReach() async throws -> ReportingControllerReach200Response {
         return try await reportingControllerReachWithRequestBuilder().execute().body
     }
 
     /**
+     Get reach and frequency (unique users)
      - GET /v1/reporting/reach
-     - returns: RequestBuilder<Void> 
+     - Computes unique users (by user_id_hash) from valid raw impressions, average frequency, a frequency histogram (buckets 1, 2, 3, 4, 5, 6-10, 11+ in fixed order) and a daily reach series. Publishers measure their inventory's audience; other accounts their campaigns' reach. Impressions without a user hash are excluded. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerReach200Response> 
      */
-    open class func reportingControllerReachWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerReachWithRequestBuilder() -> RequestBuilder<ReportingControllerReach200Response> {
         let localVariablePath = "/v1/reporting/reach"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1207,25 +1531,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerReach200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get last-15-minute impressions, clicks and amount
+     
+     - returns: ReportRealtime
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerRealtime() async throws {
+    open class func reportingControllerRealtime() async throws -> ReportRealtime {
         return try await reportingControllerRealtimeWithRequestBuilder().execute().body
     }
 
     /**
+     Get last-15-minute impressions, clicks and amount
      - GET /v1/reporting/realtime
-     - returns: RequestBuilder<Void> 
+     - Per-minute series of valid impressions and clicks over the last 15 minutes from the raw event tables, with totals. Publisher accounts see their inventory (earnings); other accounts their campaigns (spend).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportRealtime> 
      */
-    open class func reportingControllerRealtimeWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerRealtimeWithRequestBuilder() -> RequestBuilder<ReportRealtime> {
         let localVariablePath = "/v1/reporting/realtime"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1238,27 +1571,30 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportRealtime>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Stream the realtime report as Server-Sent Events
+     
      - parameter scope: (query)  
-     - returns: Void
+     - returns: String
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerRealtimeStream(scope: String) async throws {
+    open class func reportingControllerRealtimeStream(scope: String) async throws -> String {
         return try await reportingControllerRealtimeStreamWithRequestBuilder(scope: scope).execute().body
     }
 
     /**
+     Stream the realtime report as Server-Sent Events
      - GET /v1/reporting/realtime/stream
+     - Pushes the same payload as GET /v1/reporting/realtime as an SSE `data:` event immediately on connect and then every ~3 seconds (a server-side poll, not a sub-second event stream). Because EventSource cannot set headers, this route authenticates with the session token in `?access_token=`. `scope=advertiser|publisher` selects the side of a dual-sided account; it defaults to the account type.  Auth: public, no credentials required. Additionally checked by SseAuthGuard.
      - parameter scope: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<String> 
      */
-    open class func reportingControllerRealtimeStreamWithRequestBuilder(scope: String) -> RequestBuilder<Void> {
+    open class func reportingControllerRealtimeStreamWithRequestBuilder(scope: String) -> RequestBuilder<String> {
         let localVariablePath = "/v1/reporting/realtime/stream"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1274,25 +1610,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<String>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
 
     /**
-
-     - returns: Void
+     Get daily ROAS and conversion-value trend
+     
+     - returns: [ReportingControllerRoas200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerRoas() async throws {
+    open class func reportingControllerRoas() async throws -> [ReportingControllerRoas200ResponseInner] {
         return try await reportingControllerRoasWithRequestBuilder().execute().body
     }
 
     /**
+     Get daily ROAS and conversion-value trend
      - GET /v1/reporting/roas
-     - returns: RequestBuilder<Void> 
+     - Per-day spend (stats_hourly) joined to attributed conversion count and conversion_value (adnet.conversions), with ROAS = conversionValue / spend. Days present in either source are included, sorted ascending. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportingControllerRoas200ResponseInner]> 
      */
-    open class func reportingControllerRoasWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerRoasWithRequestBuilder() -> RequestBuilder<[ReportingControllerRoas200ResponseInner]> {
         let localVariablePath = "/v1/reporting/roas"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1305,25 +1650,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportingControllerRoas200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get ad-serving decision and render latency
+     
+     - returns: ReportingControllerServeLatency200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerServeLatency() async throws {
+    open class func reportingControllerServeLatency() async throws -> ReportingControllerServeLatency200Response {
         return try await reportingControllerServeLatencyWithRequestBuilder().execute().body
     }
 
     /**
+     Get ad-serving decision and render latency
      - GET /v1/reporting/serve-latency
-     - returns: RequestBuilder<Void> 
+     - Engine decision latency percentiles (from ad_requests.decision_us, reported in milliseconds) with the share of requests over the 100 ms soft SLA and a daily p95 series. Also returns client render latency from SDK beacons (null if the tag has not reported any) and client-side load failures (client_timeout/client_error) as a share of all requests. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerServeLatency200Response> 
      */
-    open class func reportingControllerServeLatencyWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerServeLatencyWithRequestBuilder() -> RequestBuilder<ReportingControllerServeLatency200Response> {
         let localVariablePath = "/v1/reporting/serve-latency"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1336,27 +1690,36 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerServeLatency200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
+     Estimate energy and carbon footprint of ad delivery
+     
      - parameter periodDays: (query)  
-     - returns: Void
+     - returns: ReportingControllerSustainability200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerSustainability(periodDays: String) async throws {
+    open class func reportingControllerSustainability(periodDays: String) async throws -> ReportingControllerSustainability200Response {
         return try await reportingControllerSustainabilityWithRequestBuilder(periodDays: periodDays).execute().body
     }
 
     /**
+     Estimate energy and carbon footprint of ad delivery
      - GET /v1/reporting/sustainability
+     - Counts valid impressions over the last `periodDays` days (default 30, min 1) and converts them to kWh and kg CO2e using configurable factors (SUSTAINABILITY_KWH_PER_1K, default 0.0009 kWh per 1000 impressions; SUSTAINABILITY_GRID_GCO2_PER_KWH, default 475). Admins get a network-wide figure; publishers their inventory; other accounts their campaigns.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter periodDays: (query)  
-     - returns: RequestBuilder<Void> 
+     - returns: RequestBuilder<ReportingControllerSustainability200Response> 
      */
-    open class func reportingControllerSustainabilityWithRequestBuilder(periodDays: String) -> RequestBuilder<Void> {
+    open class func reportingControllerSustainabilityWithRequestBuilder(periodDays: String) -> RequestBuilder<ReportingControllerSustainability200Response> {
         let localVariablePath = "/v1/reporting/sustainability"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1372,25 +1735,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerSustainability200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get time-to-click latency distribution
+     
+     - returns: ReportingControllerTimeToClick200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerTimeToClick() async throws {
+    open class func reportingControllerTimeToClick() async throws -> ReportingControllerTimeToClick200Response {
         return try await reportingControllerTimeToClickWithRequestBuilder().execute().body
     }
 
     /**
+     Get time-to-click latency distribution
      - GET /v1/reporting/time-to-click
-     - returns: RequestBuilder<Void> 
+     - Average and median milliseconds between render and click for valid clicks with a recorded time_to_click_ms, plus counts in fixed buckets (<1s, 1-3s, 3-10s, 10-30s, 30s+). Publishers see clicks on their inventory; other accounts on their campaigns. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerTimeToClick200Response> 
      */
-    open class func reportingControllerTimeToClickWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerTimeToClickWithRequestBuilder() -> RequestBuilder<ReportingControllerTimeToClick200Response> {
         let localVariablePath = "/v1/reporting/time-to-click"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1403,25 +1775,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerTimeToClick200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get video completion funnel and breakdown
+     
+     - returns: ReportingControllerVideo200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerVideo() async throws {
+    open class func reportingControllerVideo() async throws -> ReportingControllerVideo200Response {
         return try await reportingControllerVideoWithRequestBuilder().execute().body
     }
 
     /**
+     Get video completion funnel and breakdown
      - GET /v1/reporting/video
-     - returns: RequestBuilder<Void> 
+     - Overall video funnel (starts, quartiles, completes, skips, errors and rates) from adnet.video_events, plus the same metrics per placement (publisher accounts) or per campaign (other accounts), top 100 by starts. Only exact VAST quartile events count toward the funnel. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: advertiser, publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<ReportingControllerVideo200Response> 
      */
-    open class func reportingControllerVideoWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerVideoWithRequestBuilder() -> RequestBuilder<ReportingControllerVideo200Response> {
         let localVariablePath = "/v1/reporting/video"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1434,25 +1815,34 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ReportingControllerVideo200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 
     /**
-
-     - returns: Void
+     Get viewability by placement or campaign
+     
+     - returns: [ReportingControllerViewability200ResponseInner]
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func reportingControllerViewability() async throws {
+    open class func reportingControllerViewability() async throws -> [ReportingControllerViewability200ResponseInner] {
         return try await reportingControllerViewabilityWithRequestBuilder().execute().body
     }
 
     /**
+     Get viewability by placement or campaign
      - GET /v1/reporting/viewability
-     - returns: RequestBuilder<Void> 
+     - Measurable and viewable beacon counts, viewable rate, and average in-view percent and duration (of viewable events) from adnet.viewability. `groupBy=campaign` groups by campaign, anything else by placement. Advertisers see their own campaigns, publishers their own inventory, admins the whole network. Max 1000 rows ordered by measurable. Optional `from`/`to` query params bound the window (ClickHouse DateTime, e.g. `2026-01-01 00:00:00`, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, publisher, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<[ReportingControllerViewability200ResponseInner]> 
      */
-    open class func reportingControllerViewabilityWithRequestBuilder() -> RequestBuilder<Void> {
+    open class func reportingControllerViewabilityWithRequestBuilder() -> RequestBuilder<[ReportingControllerViewability200ResponseInner]> {
         let localVariablePath = "/v1/reporting/viewability"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters: [String: Any]? = nil
@@ -1465,8 +1855,8 @@ open class ReportingAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Void>.Type = AdviverseAPIAPI.requestBuilderFactory.getNonDecodableBuilder()
+        let localVariableRequestBuilder: RequestBuilder<[ReportingControllerViewability200ResponseInner]>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }
