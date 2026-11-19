@@ -18,16 +18,22 @@ public struct WebhookEndpoint: Codable, JSONEncodable, Hashable {
     public var active: Bool
     /** Not returned on create. */
     public var createdAt: Date?
-    /** HMAC-SHA256 signing secret (whsec_...). */
-    public var secret: String
+    /** HMAC-SHA256 signing secret (whsec_...). Returned only by create and rotate-secret. */
+    public var secret: String?
+    /** List/update only: whether a signing secret is set. */
+    public var hasSecret: Bool?
+    /** List/update only: last 4 characters of the secret. */
+    public var secretHint: String?
 
-    public init(id: UUID, url: String, events: [String], active: Bool, createdAt: Date? = nil, secret: String) {
+    public init(id: UUID, url: String, events: [String], active: Bool, createdAt: Date? = nil, secret: String? = nil, hasSecret: Bool? = nil, secretHint: String? = nil) {
         self.id = id
         self.url = url
         self.events = events
         self.active = active
         self.createdAt = createdAt
         self.secret = secret
+        self.hasSecret = hasSecret
+        self.secretHint = secretHint
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
@@ -37,6 +43,8 @@ public struct WebhookEndpoint: Codable, JSONEncodable, Hashable {
         case active
         case createdAt = "created_at"
         case secret
+        case hasSecret = "has_secret"
+        case secretHint = "secret_hint"
     }
 
     // Encodable protocol methods
@@ -48,7 +56,9 @@ public struct WebhookEndpoint: Codable, JSONEncodable, Hashable {
         try container.encode(events, forKey: .events)
         try container.encode(active, forKey: .active)
         try container.encodeIfPresent(createdAt, forKey: .createdAt)
-        try container.encode(secret, forKey: .secret)
+        try container.encodeIfPresent(secret, forKey: .secret)
+        try container.encodeIfPresent(hasSecret, forKey: .hasSecret)
+        try container.encodeIfPresent(secretHint, forKey: .secretHint)
     }
 }
 

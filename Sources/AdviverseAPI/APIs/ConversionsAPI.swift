@@ -130,7 +130,13 @@ open class ConversionsAPI {
     /**
      Report a refund or chargeback for an order
      - POST /v1/track/refund
-     - Claws back a held or settled per-checkout CPA conversion identified by `orderId`/`order_id`, optionally narrowed by `advertiserId`/`advertiser_id`. Emits a compensating conversion event carrying the original payout and publisher earnings so the ledger posts exact reversing entries, then marks the row refunded. A missing order id returns `error`, an unknown order `not_found`, and a repeat call `already_refunded`.  Auth: public, no credentials required.
+     - Claws back a held or settled per-checkout CPA conversion identified by `orderId`/`order_id`. Requires the advertiser API key (scope `write`) or session, and only touches that advertiser’s own orders (admins may pass `advertiserId`). Emits a compensating conversion event carrying the original payout and publisher earnings so the ledger posts exact reversing entries, then marks the row refunded. A missing order id returns `error`, an unknown order `not_found`, and a repeat call `already_refunded`.  Auth: session bearer token, or API key (x-api-key) with scope `admin` (or `*`). Roles: advertiser, admin.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
      - parameter refundDto: (body)  
      - returns: RequestBuilder<ConversionsControllerTrackRefund201Response> 
      */
@@ -149,6 +155,6 @@ open class ConversionsAPI {
 
         let localVariableRequestBuilder: RequestBuilder<ConversionsControllerTrackRefund201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
-        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
 }

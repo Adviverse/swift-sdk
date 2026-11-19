@@ -10,7 +10,7 @@ import Foundation
 import AnyCodable
 #endif
 
-/** A &#x60;surfaces&#x60; row plus its placement &#x60;tag_key&#x60;. */
+/** A &#x60;surfaces&#x60; row plus its placement &#x60;tag_key&#x60;. Player credentials (&#x60;poll_token&#x60;, &#x60;pairing_token&#x60;) are never returned. */
 public struct SupSurface: Codable, JSONEncodable, Hashable {
 
     public enum SurfaceType: String, Codable, CaseIterable {
@@ -34,12 +34,11 @@ public struct SupSurface: Codable, JSONEncodable, Hashable {
     public var audienceMultiplier: String?
     public var status: String?
     public var pairingCode: String?
-    public var pollToken: String?
     public var lastHeartbeatAt: Date?
     public var tagKey: String?
     public var createdAt: Date?
 
-    public init(id: UUID? = nil, placementId: UUID? = nil, accountId: UUID? = nil, worldIntegrationId: UUID? = nil, shopId: String? = nil, world: String? = nil, surfaceType: SurfaceType? = nil, posX: Double? = nil, posY: Double? = nil, posZ: Double? = nil, widthM: Double? = nil, heightM: Double? = nil, audienceMultiplier: String? = nil, status: String? = nil, pairingCode: String? = nil, pollToken: String? = nil, lastHeartbeatAt: Date? = nil, tagKey: String? = nil, createdAt: Date? = nil) {
+    public init(id: UUID? = nil, placementId: UUID? = nil, accountId: UUID? = nil, worldIntegrationId: UUID? = nil, shopId: String? = nil, world: String? = nil, surfaceType: SurfaceType? = nil, posX: Double? = nil, posY: Double? = nil, posZ: Double? = nil, widthM: Double? = nil, heightM: Double? = nil, audienceMultiplier: String? = nil, status: String? = nil, pairingCode: String? = nil, lastHeartbeatAt: Date? = nil, tagKey: String? = nil, createdAt: Date? = nil) {
         self.id = id
         self.placementId = placementId
         self.accountId = accountId
@@ -55,7 +54,6 @@ public struct SupSurface: Codable, JSONEncodable, Hashable {
         self.audienceMultiplier = audienceMultiplier
         self.status = status
         self.pairingCode = pairingCode
-        self.pollToken = pollToken
         self.lastHeartbeatAt = lastHeartbeatAt
         self.tagKey = tagKey
         self.createdAt = createdAt
@@ -77,7 +75,6 @@ public struct SupSurface: Codable, JSONEncodable, Hashable {
         case audienceMultiplier = "audience_multiplier"
         case status
         case pairingCode = "pairing_code"
-        case pollToken = "poll_token"
         case lastHeartbeatAt = "last_heartbeat_at"
         case tagKey = "tag_key"
         case createdAt = "created_at"
@@ -117,7 +114,6 @@ public struct SupSurface: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(audienceMultiplier, forKey: .audienceMultiplier)
         try container.encodeIfPresent(status, forKey: .status)
         try container.encodeIfPresent(pairingCode, forKey: .pairingCode)
-        try container.encodeIfPresent(pollToken, forKey: .pollToken)
         try container.encodeIfPresent(lastHeartbeatAt, forKey: .lastHeartbeatAt)
         try container.encodeIfPresent(tagKey, forKey: .tagKey)
         try container.encodeIfPresent(createdAt, forKey: .createdAt)
@@ -145,7 +141,6 @@ public struct SupSurface: Codable, JSONEncodable, Hashable {
         audienceMultiplier = try container.decodeIfPresent(String.self, forKey: .audienceMultiplier)
         status = try container.decodeIfPresent(String.self, forKey: .status)
         pairingCode = try container.decodeIfPresent(String.self, forKey: .pairingCode)
-        pollToken = try container.decodeIfPresent(String.self, forKey: .pollToken)
         lastHeartbeatAt = try container.decodeIfPresent(Date.self, forKey: .lastHeartbeatAt)
         tagKey = try container.decodeIfPresent(String.self, forKey: .tagKey)
         createdAt = try container.decodeIfPresent(Date.self, forKey: .createdAt)
@@ -165,7 +160,6 @@ public struct SupSurface: Codable, JSONEncodable, Hashable {
         nonAdditionalPropertyKeys.insert("audience_multiplier")
         nonAdditionalPropertyKeys.insert("status")
         nonAdditionalPropertyKeys.insert("pairing_code")
-        nonAdditionalPropertyKeys.insert("poll_token")
         nonAdditionalPropertyKeys.insert("last_heartbeat_at")
         nonAdditionalPropertyKeys.insert("tag_key")
         nonAdditionalPropertyKeys.insert("created_at")

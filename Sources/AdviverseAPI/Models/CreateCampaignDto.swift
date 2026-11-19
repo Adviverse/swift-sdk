@@ -57,6 +57,8 @@ public struct CreateCampaignDto: Codable, JSONEncodable, Hashable {
     public var targeting: AnyCodable?
     public var conversion: AnyCodable?
     public var houseAd: Bool?
+    public var autoOwnPlacements: Bool?
+    public var networkExpansion: Bool?
     public var priorityTier: PriorityTier?
     public var deliveryGoal: Double?
     public var goalType: GoalType?
@@ -70,7 +72,7 @@ public struct CreateCampaignDto: Codable, JSONEncodable, Hashable {
     public var targetRoas: Double?
     public var utm: AnyCodable?
 
-    public init(name: String? = nil, groupId: String? = nil, pricingModel: String? = nil, bidAmount: Double? = nil, format: String? = nil, budgetTotal: Double? = nil, budgetDaily: Double? = nil, pacing: String? = nil, startAt: String? = nil, endAt: String? = nil, timezone: String? = nil, currency: String? = nil, dealType: String? = nil, skanAppStoreId: String? = nil, skanSourceId: String? = nil, brandSafety: AnyCodable? = nil, bidModifiers: AnyCodable? = nil, targeting: AnyCodable? = nil, conversion: AnyCodable? = nil, houseAd: Bool? = nil, priorityTier: PriorityTier? = nil, deliveryGoal: Double? = nil, goalType: GoalType? = nil, portfolioFreqCap: AnyCodable? = nil, sequenceGroup: String? = nil, sequenceOrder: Double? = nil, suppressAfterConversion: Bool? = nil, holdoutPct: Double? = nil, bidStrategy: BidStrategy? = nil, targetCpa: Double? = nil, targetRoas: Double? = nil, utm: AnyCodable? = nil) {
+    public init(name: String? = nil, groupId: String? = nil, pricingModel: String? = nil, bidAmount: Double? = nil, format: String? = nil, budgetTotal: Double? = nil, budgetDaily: Double? = nil, pacing: String? = nil, startAt: String? = nil, endAt: String? = nil, timezone: String? = nil, currency: String? = nil, dealType: String? = nil, skanAppStoreId: String? = nil, skanSourceId: String? = nil, brandSafety: AnyCodable? = nil, bidModifiers: AnyCodable? = nil, targeting: AnyCodable? = nil, conversion: AnyCodable? = nil, houseAd: Bool? = nil, autoOwnPlacements: Bool? = nil, networkExpansion: Bool? = nil, priorityTier: PriorityTier? = nil, deliveryGoal: Double? = nil, goalType: GoalType? = nil, portfolioFreqCap: AnyCodable? = nil, sequenceGroup: String? = nil, sequenceOrder: Double? = nil, suppressAfterConversion: Bool? = nil, holdoutPct: Double? = nil, bidStrategy: BidStrategy? = nil, targetCpa: Double? = nil, targetRoas: Double? = nil, utm: AnyCodable? = nil) {
         self.name = name
         self.groupId = groupId
         self.pricingModel = pricingModel
@@ -91,6 +93,8 @@ public struct CreateCampaignDto: Codable, JSONEncodable, Hashable {
         self.targeting = targeting
         self.conversion = conversion
         self.houseAd = houseAd
+        self.autoOwnPlacements = autoOwnPlacements
+        self.networkExpansion = networkExpansion
         self.priorityTier = priorityTier
         self.deliveryGoal = deliveryGoal
         self.goalType = goalType
@@ -126,6 +130,8 @@ public struct CreateCampaignDto: Codable, JSONEncodable, Hashable {
         case targeting
         case conversion
         case houseAd
+        case autoOwnPlacements
+        case networkExpansion
         case priorityTier
         case deliveryGoal
         case goalType
@@ -164,6 +170,8 @@ public struct CreateCampaignDto: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(targeting, forKey: .targeting)
         try container.encodeIfPresent(conversion, forKey: .conversion)
         try container.encodeIfPresent(houseAd, forKey: .houseAd)
+        try container.encodeIfPresent(autoOwnPlacements, forKey: .autoOwnPlacements)
+        try container.encodeIfPresent(networkExpansion, forKey: .networkExpansion)
         try container.encodeIfPresent(priorityTier, forKey: .priorityTier)
         try container.encodeIfPresent(deliveryGoal, forKey: .deliveryGoal)
         try container.encodeIfPresent(goalType, forKey: .goalType)

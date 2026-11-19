@@ -32,6 +32,7 @@ Sources/AdviverseAPI/APIs/MfaAPI.swift
 Sources/AdviverseAPI/APIs/OptimizationAPI.swift
 Sources/AdviverseAPI/APIs/PixelAPI.swift
 Sources/AdviverseAPI/APIs/PortalAPI.swift
+Sources/AdviverseAPI/APIs/PropertyTrustAPI.swift
 Sources/AdviverseAPI/APIs/PublisherAPI.swift
 Sources/AdviverseAPI/APIs/PublisherInsightsAPI.swift
 Sources/AdviverseAPI/APIs/ReferralsAPI.swift
@@ -61,6 +62,7 @@ Sources/AdviverseAPI/Models/AdminControllerProcessPayout201Response.swift
 Sources/AdviverseAPI/Models/AdminControllerQuality200ResponseInner.swift
 Sources/AdviverseAPI/Models/AdminControllerRescan201Response.swift
 Sources/AdviverseAPI/Models/AdminControllerSetStatus201Response.swift
+Sources/AdviverseAPI/Models/AdminTrustDto.swift
 Sources/AdviverseAPI/Models/AdvAdSetSummary.swift
 Sources/AdviverseAPI/Models/AdvAudience.swift
 Sources/AdviverseAPI/Models/AdvAudienceDestination.swift
@@ -283,6 +285,8 @@ Sources/AdviverseAPI/Models/MfaControllerRanked200ResponseInner.swift
 Sources/AdviverseAPI/Models/ModeledLookalikeDto.swift
 Sources/AdviverseAPI/Models/ModerationDecisionDto.swift
 Sources/AdviverseAPI/Models/NetworkSettingsDto.swift
+Sources/AdviverseAPI/Models/NicheClassification.swift
+Sources/AdviverseAPI/Models/NicheScore.swift
 Sources/AdviverseAPI/Models/OauthDiscordDto.swift
 Sources/AdviverseAPI/Models/OauthGoogleDto.swift
 Sources/AdviverseAPI/Models/OauthStartDto.swift
@@ -314,10 +318,13 @@ Sources/AdviverseAPI/Models/PortalTemplatesControllerListTemplates200ResponseInn
 Sources/AdviverseAPI/Models/PortalTemplatesControllerListTemplates200ResponseInnerFieldsInner.swift
 Sources/AdviverseAPI/Models/ProfileDto.swift
 Sources/AdviverseAPI/Models/PromoteCampaignReportingControllerSummary200Response.swift
+Sources/AdviverseAPI/Models/PropertyTrustControllerAdminList200ResponseInner.swift
+Sources/AdviverseAPI/Models/PropertyTrustControllerAdminSet201Response.swift
 Sources/AdviverseAPI/Models/PubComboPreset.swift
 Sources/AdviverseAPI/Models/PubComboPresetUnitsInner.swift
 Sources/AdviverseAPI/Models/PubPlacement.swift
 Sources/AdviverseAPI/Models/PubProperty.swift
+Sources/AdviverseAPI/Models/PubPropertyCategoriesInner.swift
 Sources/AdviverseAPI/Models/PubServingDomain.swift
 Sources/AdviverseAPI/Models/PublisherControllerDisableSigning200Response.swift
 Sources/AdviverseAPI/Models/PublisherControllerDomainConnect201Response.swift
@@ -468,6 +475,7 @@ Sources/AdviverseAPI/Models/SettingsControllerRotateTerminalToken201Response.swi
 Sources/AdviverseAPI/Models/SettingsControllerSetTerminalTokenPolicy200Response.swift
 Sources/AdviverseAPI/Models/SettingsControllerUpdateNetwork200Response.swift
 Sources/AdviverseAPI/Models/SignupDto.swift
+Sources/AdviverseAPI/Models/SiteNiche.swift
 Sources/AdviverseAPI/Models/SkadnetworkControllerHealth200Response.swift
 Sources/AdviverseAPI/Models/SkadnetworkControllerPostback200Response.swift
 Sources/AdviverseAPI/Models/StatsControllerGet200Response.swift
@@ -486,6 +494,8 @@ Sources/AdviverseAPI/Models/SurfacePairInitDto.swift
 Sources/AdviverseAPI/Models/TaxFormDto.swift
 Sources/AdviverseAPI/Models/TerminalSwitchDto.swift
 Sources/AdviverseAPI/Models/TrackConversionDto.swift
+Sources/AdviverseAPI/Models/TrustEvent.swift
+Sources/AdviverseAPI/Models/TrustProgress.swift
 Sources/AdviverseAPI/Models/UpdateAppDto.swift
 Sources/AdviverseAPI/Models/UpdateCampaignDto.swift
 Sources/AdviverseAPI/Models/UpdateCampaignGroupDto.swift
@@ -504,6 +514,7 @@ Sources/AdviverseAPI/Models/WebhookDelivery.swift
 Sources/AdviverseAPI/Models/WebhookDeliveryResult.swift
 Sources/AdviverseAPI/Models/WebhookEndpoint.swift
 Sources/AdviverseAPI/Models/WebhooksControllerEvents200Response.swift
+Sources/AdviverseAPI/Models/WebhooksControllerRevealSecret201Response.swift
 Sources/AdviverseAPI/Models/WebhooksControllerUnsubscribe200Response.swift
 Sources/AdviverseAPI/OpenISO8601DateFormatter.swift
 Sources/AdviverseAPI/SynchronizedDictionary.swift

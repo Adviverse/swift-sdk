@@ -10,7 +10,7 @@ import Foundation
 import AnyCodable
 #endif
 
-/** A &#x60;placements&#x60; row. All columns are returned, including &#x60;signing_secret&#x60;. */
+/** A &#x60;placements&#x60; row. The signing secret itself is never returned here (only from POST /v1/publisher/placements/{id}/signing-secret); &#x60;has_signing_secret&#x60; says whether one is set. */
 public struct PubPlacement: Codable, JSONEncodable, Hashable {
 
     public enum Status: String, Codable, CaseIterable {
@@ -42,7 +42,8 @@ public struct PubPlacement: Codable, JSONEncodable, Hashable {
     public var houseShare: String?
     public var houseBackfill: Bool?
     public var floorFallback: Bool?
-    public var signingSecret: String?
+    /** True when a signing secret is set (signed-tag enforcement is on) */
+    public var hasSigningSecret: Bool?
     public var comboId: UUID?
     public var comboLabel: String?
     public var lastActiveAt: Date?
@@ -50,7 +51,7 @@ public struct PubPlacement: Codable, JSONEncodable, Hashable {
     public var updatedAt: Date?
     public var deletedAt: Date?
 
-    public init(id: UUID? = nil, propertyId: UUID? = nil, name: String? = nil, format: String? = nil, width: Int? = nil, height: Int? = nil, responsive: Bool? = nil, floorCpm: String? = nil, floorSoft: String? = nil, floorAuto: Bool? = nil, revShare: String? = nil, auctionType: String? = nil, passbackUrl: String? = nil, frequencyCap: [String: AnyCodable]? = nil, status: Status? = nil, tagKey: String? = nil, settings: [String: AnyCodable]? = nil, houseOnly: Bool? = nil, houseShare: String? = nil, houseBackfill: Bool? = nil, floorFallback: Bool? = nil, signingSecret: String? = nil, comboId: UUID? = nil, comboLabel: String? = nil, lastActiveAt: Date? = nil, createdAt: Date? = nil, updatedAt: Date? = nil, deletedAt: Date? = nil) {
+    public init(id: UUID? = nil, propertyId: UUID? = nil, name: String? = nil, format: String? = nil, width: Int? = nil, height: Int? = nil, responsive: Bool? = nil, floorCpm: String? = nil, floorSoft: String? = nil, floorAuto: Bool? = nil, revShare: String? = nil, auctionType: String? = nil, passbackUrl: String? = nil, frequencyCap: [String: AnyCodable]? = nil, status: Status? = nil, tagKey: String? = nil, settings: [String: AnyCodable]? = nil, houseOnly: Bool? = nil, houseShare: String? = nil, houseBackfill: Bool? = nil, floorFallback: Bool? = nil, hasSigningSecret: Bool? = nil, comboId: UUID? = nil, comboLabel: String? = nil, lastActiveAt: Date? = nil, createdAt: Date? = nil, updatedAt: Date? = nil, deletedAt: Date? = nil) {
         self.id = id
         self.propertyId = propertyId
         self.name = name
@@ -72,7 +73,7 @@ public struct PubPlacement: Codable, JSONEncodable, Hashable {
         self.houseShare = houseShare
         self.houseBackfill = houseBackfill
         self.floorFallback = floorFallback
-        self.signingSecret = signingSecret
+        self.hasSigningSecret = hasSigningSecret
         self.comboId = comboId
         self.comboLabel = comboLabel
         self.lastActiveAt = lastActiveAt
@@ -103,7 +104,7 @@ public struct PubPlacement: Codable, JSONEncodable, Hashable {
         case houseShare = "house_share"
         case houseBackfill = "house_backfill"
         case floorFallback = "floor_fallback"
-        case signingSecret = "signing_secret"
+        case hasSigningSecret = "has_signing_secret"
         case comboId = "combo_id"
         case comboLabel = "combo_label"
         case lastActiveAt = "last_active_at"
@@ -152,7 +153,7 @@ public struct PubPlacement: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(houseShare, forKey: .houseShare)
         try container.encodeIfPresent(houseBackfill, forKey: .houseBackfill)
         try container.encodeIfPresent(floorFallback, forKey: .floorFallback)
-        try container.encodeIfPresent(signingSecret, forKey: .signingSecret)
+        try container.encodeIfPresent(hasSigningSecret, forKey: .hasSigningSecret)
         try container.encodeIfPresent(comboId, forKey: .comboId)
         try container.encodeIfPresent(comboLabel, forKey: .comboLabel)
         try container.encodeIfPresent(lastActiveAt, forKey: .lastActiveAt)
@@ -189,7 +190,7 @@ public struct PubPlacement: Codable, JSONEncodable, Hashable {
         houseShare = try container.decodeIfPresent(String.self, forKey: .houseShare)
         houseBackfill = try container.decodeIfPresent(Bool.self, forKey: .houseBackfill)
         floorFallback = try container.decodeIfPresent(Bool.self, forKey: .floorFallback)
-        signingSecret = try container.decodeIfPresent(String.self, forKey: .signingSecret)
+        hasSigningSecret = try container.decodeIfPresent(Bool.self, forKey: .hasSigningSecret)
         comboId = try container.decodeIfPresent(UUID.self, forKey: .comboId)
         comboLabel = try container.decodeIfPresent(String.self, forKey: .comboLabel)
         lastActiveAt = try container.decodeIfPresent(Date.self, forKey: .lastActiveAt)
@@ -218,7 +219,7 @@ public struct PubPlacement: Codable, JSONEncodable, Hashable {
         nonAdditionalPropertyKeys.insert("house_share")
         nonAdditionalPropertyKeys.insert("house_backfill")
         nonAdditionalPropertyKeys.insert("floor_fallback")
-        nonAdditionalPropertyKeys.insert("signing_secret")
+        nonAdditionalPropertyKeys.insert("has_signing_secret")
         nonAdditionalPropertyKeys.insert("combo_id")
         nonAdditionalPropertyKeys.insert("combo_label")
         nonAdditionalPropertyKeys.insert("last_active_at")

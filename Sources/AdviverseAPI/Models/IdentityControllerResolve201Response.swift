@@ -18,6 +18,7 @@ public struct IdentityControllerResolve201Response: Codable, JSONEncodable, Hash
         case unknown = "unknown"
     }
     public var canonicalId: UUID?
+    /** Per-advertiser id for advertisers; the global email-derived id (or null) for admins */
     public var unifiedId: String?
     public var consentState: ConsentState?
     /** Signals actually linked from this request (all supplied by the caller). */

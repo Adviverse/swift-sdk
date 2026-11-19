@@ -19,8 +19,10 @@ public struct IdentityControllerGet200ResponseIdentity: Codable, JSONEncodable, 
     }
     public var canonicalId: UUID?
     public var unifiedId: String?
+    /** Admins only */
     public var householdId: String?
     public var consentState: ConsentState?
+    /** Admins only */
     public var attributes: [String: AnyCodable]?
     public var firstSeen: Date?
     public var lastSeen: Date?

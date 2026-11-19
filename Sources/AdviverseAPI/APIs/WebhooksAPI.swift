@@ -115,7 +115,7 @@ open class WebhooksAPI {
     /**
      List webhook endpoints
      - GET /v1/webhooks
-     - Lists the account's webhook subscriptions, newest first. Includes each endpoint's HMAC signing `secret` so the dashboard can show it for verifying the `X-Adviverse-Signature` header.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
+     - Lists the account's webhook subscriptions, newest first. The signing secret is not returned: each endpoint has `has_secret` and `secret_hint` (its last 4 characters). Use POST /v1/webhooks/{id}/secret/reveal to fetch the secret.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`).
      - API Key:
        - type: apiKey x-api-key (HEADER)
        - name: apiKey
@@ -228,6 +228,51 @@ open class WebhooksAPI {
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
         let localVariableRequestBuilder: RequestBuilder<WebhookDeliveryResult>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
+    }
+
+    /**
+     Reveal a webhook signing secret
+     
+     - parameter id: (path)  
+     - returns: WebhooksControllerRevealSecret201Response
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    open class func webhooksControllerRevealSecret(id: String) async throws -> WebhooksControllerRevealSecret201Response {
+        return try await webhooksControllerRevealSecretWithRequestBuilder(id: id).execute().body
+    }
+
+    /**
+     Reveal a webhook signing secret
+     - POST /v1/webhooks/{id}/secret/reveal
+     - Returns the endpoint's current `whsec_` HMAC signing secret, used to verify the `X-Adviverse-Signature` header. List and update never return it. Returns 400 if the endpoint is not found for this account.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - parameter id: (path)  
+     - returns: RequestBuilder<WebhooksControllerRevealSecret201Response> 
+     */
+    open class func webhooksControllerRevealSecretWithRequestBuilder(id: String) -> RequestBuilder<WebhooksControllerRevealSecret201Response> {
+        var localVariablePath = "/v1/webhooks/{id}/secret/reveal"
+        let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
+        let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        localVariablePath = localVariablePath.replacingOccurrences(of: "{id}", with: idPostEscape, options: .literal, range: nil)
+        let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
+        let localVariableParameters: [String: Any]? = nil
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            :
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<WebhooksControllerRevealSecret201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
@@ -379,7 +424,7 @@ open class WebhooksAPI {
     /**
      Update a webhook endpoint
      - PATCH /v1/webhooks/{id}
-     - Changes an endpoint's `url`, `events` and/or `active` flag (set false to pause deliveries); omitted fields are kept. A new URL goes through the SSRF guard and unknown event names are rejected with 400. Returns 400 if the endpoint is not found for this account.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - Changes an endpoint's `url`, `events` and/or `active` flag (set false to pause deliveries); omitted fields are kept. A new URL goes through the SSRF guard and unknown event names are rejected with 400. Returns 400 if the endpoint is not found for this account. The secret is not returned (`has_secret` + `secret_hint` instead).  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
      - API Key:
        - type: apiKey x-api-key (HEADER)
        - name: apiKey

@@ -13,6 +13,14 @@ import AnyCodable
 /** A &#x60;properties&#x60; row (website, cli, mobile_app or ctv). All columns are returned. */
 public struct PubProperty: Codable, JSONEncodable, Hashable {
 
+    public enum CategorySource: String, Codable, CaseIterable {
+        case auto = "auto"
+        case manual = "manual"
+    }
+    public enum TrustTier: String, Codable, CaseIterable {
+        case unverified = "unverified"
+        case trusted = "trusted"
+    }
     public enum VerificationStatus: String, Codable, CaseIterable {
         case unverified = "unverified"
         case verified = "verified"
@@ -28,7 +36,18 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
     public var name: String?
     /** Hostname, CLI slug, or app bundle id */
     public var domain: String?
+    /** Site-niche id (GET /v1/site-niches); null when unknown */
     public var category: Int?
+    public var categorySource: CategorySource?
+    public var categories: [PubPropertyCategoriesInner]?
+    public var classifiedAt: Date?
+    public var classifyError: String?
+    /** unverified = CPA-only demand; promoted automatically once proven clean */
+    public var trustTier: TrustTier?
+    /** An admin pinned the trust tier; automatic changes are off */
+    public var trustLocked: Bool?
+    public var verifiedAt: Date?
+    public var trustProgress: TrustProgress?
     public var verificationStatus: VerificationStatus?
     public var verificationMethod: String?
     public var verificationToken: String?
@@ -50,13 +69,21 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
     public var updatedAt: Date?
     public var deletedAt: Date?
 
-    public init(id: UUID? = nil, publisherId: UUID? = nil, kind: String? = nil, name: String? = nil, domain: String? = nil, category: Int? = nil, verificationStatus: VerificationStatus? = nil, verificationMethod: String? = nil, verificationToken: String? = nil, status: Status? = nil, qualityScore: String? = nil, crossFill: Bool? = nil, servingDomain: String? = nil, servingDomainVerified: Bool? = nil, servingDomainCheckedAt: Date? = nil, bundleId: String? = nil, storeUrl: String? = nil, platform: String? = nil, appStoreId: String? = nil, appAdsTxt: [[String: AnyCodable]]? = nil, skadnetworkIds: [String]? = nil, ctvMeta: [String: AnyCodable]? = nil, createdAt: Date? = nil, updatedAt: Date? = nil, deletedAt: Date? = nil) {
+    public init(id: UUID? = nil, publisherId: UUID? = nil, kind: String? = nil, name: String? = nil, domain: String? = nil, category: Int? = nil, categorySource: CategorySource? = nil, categories: [PubPropertyCategoriesInner]? = nil, classifiedAt: Date? = nil, classifyError: String? = nil, trustTier: TrustTier? = nil, trustLocked: Bool? = nil, verifiedAt: Date? = nil, trustProgress: TrustProgress? = nil, verificationStatus: VerificationStatus? = nil, verificationMethod: String? = nil, verificationToken: String? = nil, status: Status? = nil, qualityScore: String? = nil, crossFill: Bool? = nil, servingDomain: String? = nil, servingDomainVerified: Bool? = nil, servingDomainCheckedAt: Date? = nil, bundleId: String? = nil, storeUrl: String? = nil, platform: String? = nil, appStoreId: String? = nil, appAdsTxt: [[String: AnyCodable]]? = nil, skadnetworkIds: [String]? = nil, ctvMeta: [String: AnyCodable]? = nil, createdAt: Date? = nil, updatedAt: Date? = nil, deletedAt: Date? = nil) {
         self.id = id
         self.publisherId = publisherId
         self.kind = kind
         self.name = name
         self.domain = domain
         self.category = category
+        self.categorySource = categorySource
+        self.categories = categories
+        self.classifiedAt = classifiedAt
+        self.classifyError = classifyError
+        self.trustTier = trustTier
+        self.trustLocked = trustLocked
+        self.verifiedAt = verifiedAt
+        self.trustProgress = trustProgress
         self.verificationStatus = verificationStatus
         self.verificationMethod = verificationMethod
         self.verificationToken = verificationToken
@@ -85,6 +112,14 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         case name
         case domain
         case category
+        case categorySource = "category_source"
+        case categories
+        case classifiedAt = "classified_at"
+        case classifyError = "classify_error"
+        case trustTier = "trust_tier"
+        case trustLocked = "trust_locked"
+        case verifiedAt = "verified_at"
+        case trustProgress = "trust_progress"
         case verificationStatus = "verification_status"
         case verificationMethod = "verification_method"
         case verificationToken = "verification_token"
@@ -131,6 +166,14 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(name, forKey: .name)
         try container.encodeIfPresent(domain, forKey: .domain)
         try container.encodeIfPresent(category, forKey: .category)
+        try container.encodeIfPresent(categorySource, forKey: .categorySource)
+        try container.encodeIfPresent(categories, forKey: .categories)
+        try container.encodeIfPresent(classifiedAt, forKey: .classifiedAt)
+        try container.encodeIfPresent(classifyError, forKey: .classifyError)
+        try container.encodeIfPresent(trustTier, forKey: .trustTier)
+        try container.encodeIfPresent(trustLocked, forKey: .trustLocked)
+        try container.encodeIfPresent(verifiedAt, forKey: .verifiedAt)
+        try container.encodeIfPresent(trustProgress, forKey: .trustProgress)
         try container.encodeIfPresent(verificationStatus, forKey: .verificationStatus)
         try container.encodeIfPresent(verificationMethod, forKey: .verificationMethod)
         try container.encodeIfPresent(verificationToken, forKey: .verificationToken)
@@ -165,6 +208,14 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         name = try container.decodeIfPresent(String.self, forKey: .name)
         domain = try container.decodeIfPresent(String.self, forKey: .domain)
         category = try container.decodeIfPresent(Int.self, forKey: .category)
+        categorySource = try container.decodeIfPresent(CategorySource.self, forKey: .categorySource)
+        categories = try container.decodeIfPresent([PubPropertyCategoriesInner].self, forKey: .categories)
+        classifiedAt = try container.decodeIfPresent(Date.self, forKey: .classifiedAt)
+        classifyError = try container.decodeIfPresent(String.self, forKey: .classifyError)
+        trustTier = try container.decodeIfPresent(TrustTier.self, forKey: .trustTier)
+        trustLocked = try container.decodeIfPresent(Bool.self, forKey: .trustLocked)
+        verifiedAt = try container.decodeIfPresent(Date.self, forKey: .verifiedAt)
+        trustProgress = try container.decodeIfPresent(TrustProgress.self, forKey: .trustProgress)
         verificationStatus = try container.decodeIfPresent(VerificationStatus.self, forKey: .verificationStatus)
         verificationMethod = try container.decodeIfPresent(String.self, forKey: .verificationMethod)
         verificationToken = try container.decodeIfPresent(String.self, forKey: .verificationToken)
@@ -191,6 +242,14 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         nonAdditionalPropertyKeys.insert("name")
         nonAdditionalPropertyKeys.insert("domain")
         nonAdditionalPropertyKeys.insert("category")
+        nonAdditionalPropertyKeys.insert("category_source")
+        nonAdditionalPropertyKeys.insert("categories")
+        nonAdditionalPropertyKeys.insert("classified_at")
+        nonAdditionalPropertyKeys.insert("classify_error")
+        nonAdditionalPropertyKeys.insert("trust_tier")
+        nonAdditionalPropertyKeys.insert("trust_locked")
+        nonAdditionalPropertyKeys.insert("verified_at")
+        nonAdditionalPropertyKeys.insert("trust_progress")
         nonAdditionalPropertyKeys.insert("verification_status")
         nonAdditionalPropertyKeys.insert("verification_method")
         nonAdditionalPropertyKeys.insert("verification_token")

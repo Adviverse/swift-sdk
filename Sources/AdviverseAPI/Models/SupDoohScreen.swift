@@ -10,7 +10,7 @@ import Foundation
 import AnyCodable
 #endif
 
-/** A &#x60;dooh_screens&#x60; row plus its placement &#x60;tag_key&#x60;. */
+/** A &#x60;dooh_screens&#x60; row plus its placement &#x60;tag_key&#x60;. Player credentials (&#x60;poll_token&#x60;, &#x60;pairing_token&#x60;) are never returned. */
 public struct SupDoohScreen: Codable, JSONEncodable, Hashable {
 
     public enum Status: String, Codable, CaseIterable {
@@ -35,8 +35,6 @@ public struct SupDoohScreen: Codable, JSONEncodable, Hashable {
     public var audienceMultiplier: String?
     public var status: Status?
     public var pairingCode: String?
-    public var pollToken: String?
-    public var pairingToken: String?
     public var pairedAt: Date?
     public var lastHeartbeatAt: Date?
     public var playerVersion: String?
@@ -44,7 +42,7 @@ public struct SupDoohScreen: Codable, JSONEncodable, Hashable {
     public var createdAt: Date?
     public var updatedAt: Date?
 
-    public init(id: UUID? = nil, placementId: UUID? = nil, accountId: UUID? = nil, venueName: String? = nil, venueType: String? = nil, orientation: String? = nil, resolutionW: Int? = nil, resolutionH: Int? = nil, lat: Double? = nil, lng: Double? = nil, timezone: String? = nil, loopSeconds: Int? = nil, audienceMultiplier: String? = nil, status: Status? = nil, pairingCode: String? = nil, pollToken: String? = nil, pairingToken: String? = nil, pairedAt: Date? = nil, lastHeartbeatAt: Date? = nil, playerVersion: String? = nil, tagKey: String? = nil, createdAt: Date? = nil, updatedAt: Date? = nil) {
+    public init(id: UUID? = nil, placementId: UUID? = nil, accountId: UUID? = nil, venueName: String? = nil, venueType: String? = nil, orientation: String? = nil, resolutionW: Int? = nil, resolutionH: Int? = nil, lat: Double? = nil, lng: Double? = nil, timezone: String? = nil, loopSeconds: Int? = nil, audienceMultiplier: String? = nil, status: Status? = nil, pairingCode: String? = nil, pairedAt: Date? = nil, lastHeartbeatAt: Date? = nil, playerVersion: String? = nil, tagKey: String? = nil, createdAt: Date? = nil, updatedAt: Date? = nil) {
         self.id = id
         self.placementId = placementId
         self.accountId = accountId
@@ -60,8 +58,6 @@ public struct SupDoohScreen: Codable, JSONEncodable, Hashable {
         self.audienceMultiplier = audienceMultiplier
         self.status = status
         self.pairingCode = pairingCode
-        self.pollToken = pollToken
-        self.pairingToken = pairingToken
         self.pairedAt = pairedAt
         self.lastHeartbeatAt = lastHeartbeatAt
         self.playerVersion = playerVersion
@@ -86,8 +82,6 @@ public struct SupDoohScreen: Codable, JSONEncodable, Hashable {
         case audienceMultiplier = "audience_multiplier"
         case status
         case pairingCode = "pairing_code"
-        case pollToken = "poll_token"
-        case pairingToken = "pairing_token"
         case pairedAt = "paired_at"
         case lastHeartbeatAt = "last_heartbeat_at"
         case playerVersion = "player_version"
@@ -130,8 +124,6 @@ public struct SupDoohScreen: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(audienceMultiplier, forKey: .audienceMultiplier)
         try container.encodeIfPresent(status, forKey: .status)
         try container.encodeIfPresent(pairingCode, forKey: .pairingCode)
-        try container.encodeIfPresent(pollToken, forKey: .pollToken)
-        try container.encodeIfPresent(pairingToken, forKey: .pairingToken)
         try container.encodeIfPresent(pairedAt, forKey: .pairedAt)
         try container.encodeIfPresent(lastHeartbeatAt, forKey: .lastHeartbeatAt)
         try container.encodeIfPresent(playerVersion, forKey: .playerVersion)
@@ -162,8 +154,6 @@ public struct SupDoohScreen: Codable, JSONEncodable, Hashable {
         audienceMultiplier = try container.decodeIfPresent(String.self, forKey: .audienceMultiplier)
         status = try container.decodeIfPresent(Status.self, forKey: .status)
         pairingCode = try container.decodeIfPresent(String.self, forKey: .pairingCode)
-        pollToken = try container.decodeIfPresent(String.self, forKey: .pollToken)
-        pairingToken = try container.decodeIfPresent(String.self, forKey: .pairingToken)
         pairedAt = try container.decodeIfPresent(Date.self, forKey: .pairedAt)
         lastHeartbeatAt = try container.decodeIfPresent(Date.self, forKey: .lastHeartbeatAt)
         playerVersion = try container.decodeIfPresent(String.self, forKey: .playerVersion)
@@ -186,8 +176,6 @@ public struct SupDoohScreen: Codable, JSONEncodable, Hashable {
         nonAdditionalPropertyKeys.insert("audience_multiplier")
         nonAdditionalPropertyKeys.insert("status")
         nonAdditionalPropertyKeys.insert("pairing_code")
-        nonAdditionalPropertyKeys.insert("poll_token")
-        nonAdditionalPropertyKeys.insert("pairing_token")
         nonAdditionalPropertyKeys.insert("paired_at")
         nonAdditionalPropertyKeys.insert("last_heartbeat_at")
         nonAdditionalPropertyKeys.insert("player_version")
