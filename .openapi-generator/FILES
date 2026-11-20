@@ -61,7 +61,6 @@ Sources/AdviverseAPI/Models/AdminControllerConfig200ResponseInner.swift
 Sources/AdviverseAPI/Models/AdminControllerProcessPayout201Response.swift
 Sources/AdviverseAPI/Models/AdminControllerQuality200ResponseInner.swift
 Sources/AdviverseAPI/Models/AdminControllerRescan201Response.swift
-Sources/AdviverseAPI/Models/AdminControllerSetStatus201Response.swift
 Sources/AdviverseAPI/Models/AdminTrustDto.swift
 Sources/AdviverseAPI/Models/AdvAdSetSummary.swift
 Sources/AdviverseAPI/Models/AdvAudience.swift
@@ -180,6 +179,7 @@ Sources/AdviverseAPI/Models/ComboControllerListPresets200Response.swift
 Sources/AdviverseAPI/Models/ComboUnitDto.swift
 Sources/AdviverseAPI/Models/CompanionDto.swift
 Sources/AdviverseAPI/Models/ComplianceConsentConfig.swift
+Sources/AdviverseAPI/Models/ComplianceControllerComplete201Response.swift
 Sources/AdviverseAPI/Models/ComplianceControllerConsent201Response.swift
 Sources/AdviverseAPI/Models/ComplianceControllerConsentLog200ResponseInner.swift
 Sources/AdviverseAPI/Models/ComplianceControllerSellers200Response.swift
@@ -331,6 +331,7 @@ Sources/AdviverseAPI/Models/PublisherControllerDomainConnect201Response.swift
 Sources/AdviverseAPI/Models/PublisherControllerRotateSigningSecret201Response.swift
 Sources/AdviverseAPI/Models/PublisherControllerTag200Response.swift
 Sources/AdviverseAPI/Models/PublisherControllerVerify201Response.swift
+Sources/AdviverseAPI/Models/PublisherControllerVerify201ResponseCheck.swift
 Sources/AdviverseAPI/Models/PublisherControllerVerifyServingDomain201Response.swift
 Sources/AdviverseAPI/Models/PublisherInsightsControllerClearing200Response.swift
 Sources/AdviverseAPI/Models/PublisherInsightsControllerClearing200ResponsePointsInner.swift

@@ -61,10 +61,10 @@ open class AdminAPI {
      Add a fraud blocklist entry
      
      - parameter addBlockDto: (body)  
-     - returns: AdminControllerSetStatus201Response
+     - returns: ComplianceControllerComplete201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerAddBlock(addBlockDto: AddBlockDto) async throws -> AdminControllerSetStatus201Response {
+    open class func adminControllerAddBlock(addBlockDto: AddBlockDto) async throws -> ComplianceControllerComplete201Response {
         return try await adminControllerAddBlockWithRequestBuilder(addBlockDto: addBlockDto).execute().body
     }
 
@@ -79,9 +79,9 @@ open class AdminAPI {
        - type: http
        - name: bearer
      - parameter addBlockDto: (body)  
-     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
+     - returns: RequestBuilder<ComplianceControllerComplete201Response> 
      */
-    open class func adminControllerAddBlockWithRequestBuilder(addBlockDto: AddBlockDto) -> RequestBuilder<AdminControllerSetStatus201Response> {
+    open class func adminControllerAddBlockWithRequestBuilder(addBlockDto: AddBlockDto) -> RequestBuilder<ComplianceControllerComplete201Response> {
         let localVariablePath = "/v1/admin/fraud/blocklist"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: addBlockDto)
@@ -94,7 +94,7 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceControllerComplete201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
@@ -223,10 +223,10 @@ open class AdminAPI {
      Confirm a manual deposit
      
      - parameter id: (path)  
-     - returns: AdminControllerSetStatus201Response
+     - returns: ComplianceControllerComplete201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerConfirmDeposit(id: String) async throws -> AdminControllerSetStatus201Response {
+    open class func adminControllerConfirmDeposit(id: String) async throws -> ComplianceControllerComplete201Response {
         return try await adminControllerConfirmDepositWithRequestBuilder(id: id).execute().body
     }
 
@@ -241,9 +241,9 @@ open class AdminAPI {
        - type: http
        - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
+     - returns: RequestBuilder<ComplianceControllerComplete201Response> 
      */
-    open class func adminControllerConfirmDepositWithRequestBuilder(id: String) -> RequestBuilder<AdminControllerSetStatus201Response> {
+    open class func adminControllerConfirmDepositWithRequestBuilder(id: String) -> RequestBuilder<ComplianceControllerComplete201Response> {
         var localVariablePath = "/v1/admin/deposits/{id}/confirm"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -259,7 +259,7 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceControllerComplete201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
@@ -268,10 +268,10 @@ open class AdminAPI {
      Confirm a manual payout
      
      - parameter id: (path)  
-     - returns: AdminControllerSetStatus201Response
+     - returns: ComplianceControllerComplete201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerConfirmPayout(id: String) async throws -> AdminControllerSetStatus201Response {
+    open class func adminControllerConfirmPayout(id: String) async throws -> ComplianceControllerComplete201Response {
         return try await adminControllerConfirmPayoutWithRequestBuilder(id: id).execute().body
     }
 
@@ -286,9 +286,9 @@ open class AdminAPI {
        - type: http
        - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
+     - returns: RequestBuilder<ComplianceControllerComplete201Response> 
      */
-    open class func adminControllerConfirmPayoutWithRequestBuilder(id: String) -> RequestBuilder<AdminControllerSetStatus201Response> {
+    open class func adminControllerConfirmPayoutWithRequestBuilder(id: String) -> RequestBuilder<ComplianceControllerComplete201Response> {
         var localVariablePath = "/v1/admin/payouts/{id}/confirm"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -304,7 +304,7 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceControllerComplete201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
@@ -314,10 +314,10 @@ open class AdminAPI {
      
      - parameter id: (path)  
      - parameter moderationDecisionDto: (body)  
-     - returns: AdminControllerSetStatus201Response
+     - returns: ComplianceControllerComplete201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerDecide(id: String, moderationDecisionDto: ModerationDecisionDto) async throws -> AdminControllerSetStatus201Response {
+    open class func adminControllerDecide(id: String, moderationDecisionDto: ModerationDecisionDto) async throws -> ComplianceControllerComplete201Response {
         return try await adminControllerDecideWithRequestBuilder(id: id, moderationDecisionDto: moderationDecisionDto).execute().body
     }
 
@@ -333,9 +333,9 @@ open class AdminAPI {
        - name: bearer
      - parameter id: (path)  
      - parameter moderationDecisionDto: (body)  
-     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
+     - returns: RequestBuilder<ComplianceControllerComplete201Response> 
      */
-    open class func adminControllerDecideWithRequestBuilder(id: String, moderationDecisionDto: ModerationDecisionDto) -> RequestBuilder<AdminControllerSetStatus201Response> {
+    open class func adminControllerDecideWithRequestBuilder(id: String, moderationDecisionDto: ModerationDecisionDto) -> RequestBuilder<ComplianceControllerComplete201Response> {
         var localVariablePath = "/v1/admin/moderation/{id}/decide"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -351,7 +351,7 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceControllerComplete201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
@@ -615,10 +615,10 @@ open class AdminAPI {
      Set a platform config value
      
      - parameter setConfigDto: (body)  
-     - returns: AdminControllerSetStatus201Response
+     - returns: ComplianceControllerComplete201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerSetConfig(setConfigDto: SetConfigDto) async throws -> AdminControllerSetStatus201Response {
+    open class func adminControllerSetConfig(setConfigDto: SetConfigDto) async throws -> ComplianceControllerComplete201Response {
         return try await adminControllerSetConfigWithRequestBuilder(setConfigDto: setConfigDto).execute().body
     }
 
@@ -633,9 +633,9 @@ open class AdminAPI {
        - type: http
        - name: bearer
      - parameter setConfigDto: (body)  
-     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
+     - returns: RequestBuilder<ComplianceControllerComplete201Response> 
      */
-    open class func adminControllerSetConfigWithRequestBuilder(setConfigDto: SetConfigDto) -> RequestBuilder<AdminControllerSetStatus201Response> {
+    open class func adminControllerSetConfigWithRequestBuilder(setConfigDto: SetConfigDto) -> RequestBuilder<ComplianceControllerComplete201Response> {
         let localVariablePath = "/v1/admin/config"
         let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: setConfigDto)
@@ -648,7 +648,7 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceControllerComplete201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }
@@ -658,10 +658,10 @@ open class AdminAPI {
      
      - parameter id: (path)  
      - parameter setAccountStatusDto: (body)  
-     - returns: AdminControllerSetStatus201Response
+     - returns: ComplianceControllerComplete201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func adminControllerSetStatus(id: String, setAccountStatusDto: SetAccountStatusDto) async throws -> AdminControllerSetStatus201Response {
+    open class func adminControllerSetStatus(id: String, setAccountStatusDto: SetAccountStatusDto) async throws -> ComplianceControllerComplete201Response {
         return try await adminControllerSetStatusWithRequestBuilder(id: id, setAccountStatusDto: setAccountStatusDto).execute().body
     }
 
@@ -677,9 +677,9 @@ open class AdminAPI {
        - name: bearer
      - parameter id: (path)  
      - parameter setAccountStatusDto: (body)  
-     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
+     - returns: RequestBuilder<ComplianceControllerComplete201Response> 
      */
-    open class func adminControllerSetStatusWithRequestBuilder(id: String, setAccountStatusDto: SetAccountStatusDto) -> RequestBuilder<AdminControllerSetStatus201Response> {
+    open class func adminControllerSetStatusWithRequestBuilder(id: String, setAccountStatusDto: SetAccountStatusDto) -> RequestBuilder<ComplianceControllerComplete201Response> {
         var localVariablePath = "/v1/admin/accounts/{id}/status"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -695,7 +695,7 @@ open class AdminAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceControllerComplete201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }

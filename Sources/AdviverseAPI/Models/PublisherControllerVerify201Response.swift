@@ -15,17 +15,26 @@ public struct PublisherControllerVerify201Response: Codable, JSONEncodable, Hash
     public var verified: Bool
     public var token: String
     public var method: String?
+    public var error: String?
+    public var message: String?
+    public var check: PublisherControllerVerify201ResponseCheck
 
-    public init(verified: Bool, token: String, method: String?) {
+    public init(verified: Bool, token: String, method: String?, error: String?, message: String?, check: PublisherControllerVerify201ResponseCheck) {
         self.verified = verified
         self.token = token
         self.method = method
+        self.error = error
+        self.message = message
+        self.check = check
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case verified
         case token
         case method
+        case error
+        case message
+        case check
     }
 
     // Encodable protocol methods
@@ -35,6 +44,9 @@ public struct PublisherControllerVerify201Response: Codable, JSONEncodable, Hash
         try container.encode(verified, forKey: .verified)
         try container.encode(token, forKey: .token)
         try container.encode(method, forKey: .method)
+        try container.encode(error, forKey: .error)
+        try container.encode(message, forKey: .message)
+        try container.encode(check, forKey: .check)
     }
 }
 

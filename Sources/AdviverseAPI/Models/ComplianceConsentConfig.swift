@@ -38,8 +38,12 @@ public struct ComplianceConsentConfig: Codable, JSONEncodable, Hashable {
     public var consentGrantValue: String?
     public var tcfPurpose: Int?
     public var tcfVendorId: Int?
+    /** Ads always load: visitors who have not answered (or rejected) the CMP get contextual ads with no identifier; personalized still waits for consent. Same as the page flag window.ADVIVERSE_MIN_AC = 0. */
+    public var contextualWithoutConsent: Bool?
+    /** Enhanced frequency capping: outside the EEA/UK, for visitors with no opt-out signal (GPC, US-privacy opt-out), contextual frequency caps also use browser signals and an SDK canvas hash (daily-rotating, per-site, never stored on the device). Off: caps use IP + user agent only and unusual contextual traffic is not served. Declare it in your privacy policy if you turn it on. */
+    public var enhancedCapping: Bool?
 
-    public init(publisherId: String? = nil, propertyId: String? = nil, mode: Mode? = nil, defaultConsent: Bool? = nil, honorGpc: Bool? = nil, collectTcf: Bool? = nil, collectGpp: Bool? = nil, collectGpc: Bool? = nil, resendOnChange: Bool? = nil, consentSource: ConsentSource? = nil, consentKey: String? = nil, consentGrantValue: String? = nil, tcfPurpose: Int? = nil, tcfVendorId: Int? = nil) {
+    public init(publisherId: String? = nil, propertyId: String? = nil, mode: Mode? = nil, defaultConsent: Bool? = nil, honorGpc: Bool? = nil, collectTcf: Bool? = nil, collectGpp: Bool? = nil, collectGpc: Bool? = nil, resendOnChange: Bool? = nil, consentSource: ConsentSource? = nil, consentKey: String? = nil, consentGrantValue: String? = nil, tcfPurpose: Int? = nil, tcfVendorId: Int? = nil, contextualWithoutConsent: Bool? = nil, enhancedCapping: Bool? = nil) {
         self.publisherId = publisherId
         self.propertyId = propertyId
         self.mode = mode
@@ -54,6 +58,8 @@ public struct ComplianceConsentConfig: Codable, JSONEncodable, Hashable {
         self.consentGrantValue = consentGrantValue
         self.tcfPurpose = tcfPurpose
         self.tcfVendorId = tcfVendorId
+        self.contextualWithoutConsent = contextualWithoutConsent
+        self.enhancedCapping = enhancedCapping
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
@@ -71,6 +77,8 @@ public struct ComplianceConsentConfig: Codable, JSONEncodable, Hashable {
         case consentGrantValue
         case tcfPurpose
         case tcfVendorId
+        case contextualWithoutConsent
+        case enhancedCapping
     }
 
     // Encodable protocol methods
@@ -91,6 +99,8 @@ public struct ComplianceConsentConfig: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(consentGrantValue, forKey: .consentGrantValue)
         try container.encodeIfPresent(tcfPurpose, forKey: .tcfPurpose)
         try container.encodeIfPresent(tcfVendorId, forKey: .tcfVendorId)
+        try container.encodeIfPresent(contextualWithoutConsent, forKey: .contextualWithoutConsent)
+        try container.encodeIfPresent(enhancedCapping, forKey: .enhancedCapping)
     }
 }
 

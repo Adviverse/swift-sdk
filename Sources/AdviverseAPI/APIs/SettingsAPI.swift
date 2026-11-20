@@ -65,10 +65,10 @@ open class SettingsAPI {
      
      - parameter id: (path)  
      - parameter brandSafetyDto: (body)  
-     - returns: AdminControllerSetStatus201Response
+     - returns: ComplianceControllerComplete201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerBrandSafety(id: String, brandSafetyDto: BrandSafetyDto) async throws -> AdminControllerSetStatus201Response {
+    open class func settingsControllerBrandSafety(id: String, brandSafetyDto: BrandSafetyDto) async throws -> ComplianceControllerComplete201Response {
         return try await settingsControllerBrandSafetyWithRequestBuilder(id: id, brandSafetyDto: brandSafetyDto).execute().body
     }
 
@@ -84,9 +84,9 @@ open class SettingsAPI {
        - name: bearer
      - parameter id: (path)  
      - parameter brandSafetyDto: (body)  
-     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
+     - returns: RequestBuilder<ComplianceControllerComplete201Response> 
      */
-    open class func settingsControllerBrandSafetyWithRequestBuilder(id: String, brandSafetyDto: BrandSafetyDto) -> RequestBuilder<AdminControllerSetStatus201Response> {
+    open class func settingsControllerBrandSafetyWithRequestBuilder(id: String, brandSafetyDto: BrandSafetyDto) -> RequestBuilder<ComplianceControllerComplete201Response> {
         var localVariablePath = "/v1/advertiser/campaigns/{id}/brand-safety"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -102,7 +102,7 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceControllerComplete201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }

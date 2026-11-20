@@ -28,8 +28,9 @@ public struct UpdatePlacementDto: Codable, JSONEncodable, Hashable {
     public var floorAuto: Bool?
     public var floorSoft: Double?
     public var autoAds: AnyCodable?
+    public var frequencyCap: AnyCodable?
 
-    public init(name: String? = nil, floorCpm: Double? = nil, revShare: Double? = nil, auctionType: String? = nil, passbackUrl: String? = nil, status: String? = nil, houseOnly: Bool? = nil, houseShare: Double? = nil, houseBackfill: Bool? = nil, floorFallback: Bool? = nil, floorAuto: Bool? = nil, floorSoft: Double? = nil, autoAds: AnyCodable? = nil) {
+    public init(name: String? = nil, floorCpm: Double? = nil, revShare: Double? = nil, auctionType: String? = nil, passbackUrl: String? = nil, status: String? = nil, houseOnly: Bool? = nil, houseShare: Double? = nil, houseBackfill: Bool? = nil, floorFallback: Bool? = nil, floorAuto: Bool? = nil, floorSoft: Double? = nil, autoAds: AnyCodable? = nil, frequencyCap: AnyCodable? = nil) {
         self.name = name
         self.floorCpm = floorCpm
         self.revShare = revShare
@@ -43,6 +44,7 @@ public struct UpdatePlacementDto: Codable, JSONEncodable, Hashable {
         self.floorAuto = floorAuto
         self.floorSoft = floorSoft
         self.autoAds = autoAds
+        self.frequencyCap = frequencyCap
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
@@ -59,6 +61,7 @@ public struct UpdatePlacementDto: Codable, JSONEncodable, Hashable {
         case floorAuto
         case floorSoft
         case autoAds
+        case frequencyCap
     }
 
     // Encodable protocol methods
@@ -78,6 +81,7 @@ public struct UpdatePlacementDto: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(floorAuto, forKey: .floorAuto)
         try container.encodeIfPresent(floorSoft, forKey: .floorSoft)
         try container.encodeIfPresent(autoAds, forKey: .autoAds)
+        try container.encodeIfPresent(frequencyCap, forKey: .frequencyCap)
     }
 }
 

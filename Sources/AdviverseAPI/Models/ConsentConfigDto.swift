@@ -36,8 +36,10 @@ public struct ConsentConfigDto: Codable, JSONEncodable, Hashable {
     public var consentGrantValue: String?
     public var tcfPurpose: Double?
     public var tcfVendorId: Double?
+    public var contextualWithoutConsent: Bool?
+    public var enhancedCapping: Bool?
 
-    public init(propertyId: String? = nil, mode: Mode, defaultConsent: Bool, honorGpc: Bool? = nil, collectTcf: Bool? = nil, collectGpp: Bool? = nil, collectGpc: Bool? = nil, resendOnChange: Bool? = nil, consentSource: ConsentSource? = nil, consentKey: String? = nil, consentGrantValue: String? = nil, tcfPurpose: Double? = nil, tcfVendorId: Double? = nil) {
+    public init(propertyId: String? = nil, mode: Mode, defaultConsent: Bool, honorGpc: Bool? = nil, collectTcf: Bool? = nil, collectGpp: Bool? = nil, collectGpc: Bool? = nil, resendOnChange: Bool? = nil, consentSource: ConsentSource? = nil, consentKey: String? = nil, consentGrantValue: String? = nil, tcfPurpose: Double? = nil, tcfVendorId: Double? = nil, contextualWithoutConsent: Bool? = nil, enhancedCapping: Bool? = nil) {
         self.propertyId = propertyId
         self.mode = mode
         self.defaultConsent = defaultConsent
@@ -51,6 +53,8 @@ public struct ConsentConfigDto: Codable, JSONEncodable, Hashable {
         self.consentGrantValue = consentGrantValue
         self.tcfPurpose = tcfPurpose
         self.tcfVendorId = tcfVendorId
+        self.contextualWithoutConsent = contextualWithoutConsent
+        self.enhancedCapping = enhancedCapping
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
@@ -67,6 +71,8 @@ public struct ConsentConfigDto: Codable, JSONEncodable, Hashable {
         case consentGrantValue
         case tcfPurpose
         case tcfVendorId
+        case contextualWithoutConsent
+        case enhancedCapping
     }
 
     // Encodable protocol methods
@@ -86,6 +92,8 @@ public struct ConsentConfigDto: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(consentGrantValue, forKey: .consentGrantValue)
         try container.encodeIfPresent(tcfPurpose, forKey: .tcfPurpose)
         try container.encodeIfPresent(tcfVendorId, forKey: .tcfVendorId)
+        try container.encodeIfPresent(contextualWithoutConsent, forKey: .contextualWithoutConsent)
+        try container.encodeIfPresent(enhancedCapping, forKey: .enhancedCapping)
     }
 }
 

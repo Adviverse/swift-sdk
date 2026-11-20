@@ -17,13 +17,17 @@ public struct UpdatePropertyDto: Codable, JSONEncodable, Hashable {
     public var category: Double?
     public var verificationMethod: String?
     public var crossFill: Bool?
+    public var contextualWithoutConsent: Bool?
+    public var enhancedCapping: Bool?
 
-    public init(name: String? = nil, domain: String? = nil, category: Double? = nil, verificationMethod: String? = nil, crossFill: Bool? = nil) {
+    public init(name: String? = nil, domain: String? = nil, category: Double? = nil, verificationMethod: String? = nil, crossFill: Bool? = nil, contextualWithoutConsent: Bool? = nil, enhancedCapping: Bool? = nil) {
         self.name = name
         self.domain = domain
         self.category = category
         self.verificationMethod = verificationMethod
         self.crossFill = crossFill
+        self.contextualWithoutConsent = contextualWithoutConsent
+        self.enhancedCapping = enhancedCapping
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
@@ -32,6 +36,8 @@ public struct UpdatePropertyDto: Codable, JSONEncodable, Hashable {
         case category
         case verificationMethod
         case crossFill
+        case contextualWithoutConsent
+        case enhancedCapping
     }
 
     // Encodable protocol methods
@@ -43,6 +49,8 @@ public struct UpdatePropertyDto: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(category, forKey: .category)
         try container.encodeIfPresent(verificationMethod, forKey: .verificationMethod)
         try container.encodeIfPresent(crossFill, forKey: .crossFill)
+        try container.encodeIfPresent(contextualWithoutConsent, forKey: .contextualWithoutConsent)
+        try container.encodeIfPresent(enhancedCapping, forKey: .enhancedCapping)
     }
 }
 

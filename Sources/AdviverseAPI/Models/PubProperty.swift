@@ -55,6 +55,10 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
     /** Postgres NUMERIC, serialized as a decimal string */
     public var qualityScore: String?
     public var crossFill: Bool?
+    /** Ads before consent (resolved: property consent config, else account default) */
+    public var contextualWithoutConsent: Bool?
+    /** Enhanced frequency capping (resolved like contextual_without_consent) */
+    public var enhancedCapping: Bool?
     public var servingDomain: String?
     public var servingDomainVerified: Bool?
     public var servingDomainCheckedAt: Date?
@@ -69,7 +73,7 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
     public var updatedAt: Date?
     public var deletedAt: Date?
 
-    public init(id: UUID? = nil, publisherId: UUID? = nil, kind: String? = nil, name: String? = nil, domain: String? = nil, category: Int? = nil, categorySource: CategorySource? = nil, categories: [PubPropertyCategoriesInner]? = nil, classifiedAt: Date? = nil, classifyError: String? = nil, trustTier: TrustTier? = nil, trustLocked: Bool? = nil, verifiedAt: Date? = nil, trustProgress: TrustProgress? = nil, verificationStatus: VerificationStatus? = nil, verificationMethod: String? = nil, verificationToken: String? = nil, status: Status? = nil, qualityScore: String? = nil, crossFill: Bool? = nil, servingDomain: String? = nil, servingDomainVerified: Bool? = nil, servingDomainCheckedAt: Date? = nil, bundleId: String? = nil, storeUrl: String? = nil, platform: String? = nil, appStoreId: String? = nil, appAdsTxt: [[String: AnyCodable]]? = nil, skadnetworkIds: [String]? = nil, ctvMeta: [String: AnyCodable]? = nil, createdAt: Date? = nil, updatedAt: Date? = nil, deletedAt: Date? = nil) {
+    public init(id: UUID? = nil, publisherId: UUID? = nil, kind: String? = nil, name: String? = nil, domain: String? = nil, category: Int? = nil, categorySource: CategorySource? = nil, categories: [PubPropertyCategoriesInner]? = nil, classifiedAt: Date? = nil, classifyError: String? = nil, trustTier: TrustTier? = nil, trustLocked: Bool? = nil, verifiedAt: Date? = nil, trustProgress: TrustProgress? = nil, verificationStatus: VerificationStatus? = nil, verificationMethod: String? = nil, verificationToken: String? = nil, status: Status? = nil, qualityScore: String? = nil, crossFill: Bool? = nil, contextualWithoutConsent: Bool? = nil, enhancedCapping: Bool? = nil, servingDomain: String? = nil, servingDomainVerified: Bool? = nil, servingDomainCheckedAt: Date? = nil, bundleId: String? = nil, storeUrl: String? = nil, platform: String? = nil, appStoreId: String? = nil, appAdsTxt: [[String: AnyCodable]]? = nil, skadnetworkIds: [String]? = nil, ctvMeta: [String: AnyCodable]? = nil, createdAt: Date? = nil, updatedAt: Date? = nil, deletedAt: Date? = nil) {
         self.id = id
         self.publisherId = publisherId
         self.kind = kind
@@ -90,6 +94,8 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         self.status = status
         self.qualityScore = qualityScore
         self.crossFill = crossFill
+        self.contextualWithoutConsent = contextualWithoutConsent
+        self.enhancedCapping = enhancedCapping
         self.servingDomain = servingDomain
         self.servingDomainVerified = servingDomainVerified
         self.servingDomainCheckedAt = servingDomainCheckedAt
@@ -126,6 +132,8 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         case status
         case qualityScore = "quality_score"
         case crossFill = "cross_fill"
+        case contextualWithoutConsent = "contextual_without_consent"
+        case enhancedCapping = "enhanced_capping"
         case servingDomain = "serving_domain"
         case servingDomainVerified = "serving_domain_verified"
         case servingDomainCheckedAt = "serving_domain_checked_at"
@@ -180,6 +188,8 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(status, forKey: .status)
         try container.encodeIfPresent(qualityScore, forKey: .qualityScore)
         try container.encodeIfPresent(crossFill, forKey: .crossFill)
+        try container.encodeIfPresent(contextualWithoutConsent, forKey: .contextualWithoutConsent)
+        try container.encodeIfPresent(enhancedCapping, forKey: .enhancedCapping)
         try container.encodeIfPresent(servingDomain, forKey: .servingDomain)
         try container.encodeIfPresent(servingDomainVerified, forKey: .servingDomainVerified)
         try container.encodeIfPresent(servingDomainCheckedAt, forKey: .servingDomainCheckedAt)
@@ -222,6 +232,8 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         status = try container.decodeIfPresent(Status.self, forKey: .status)
         qualityScore = try container.decodeIfPresent(String.self, forKey: .qualityScore)
         crossFill = try container.decodeIfPresent(Bool.self, forKey: .crossFill)
+        contextualWithoutConsent = try container.decodeIfPresent(Bool.self, forKey: .contextualWithoutConsent)
+        enhancedCapping = try container.decodeIfPresent(Bool.self, forKey: .enhancedCapping)
         servingDomain = try container.decodeIfPresent(String.self, forKey: .servingDomain)
         servingDomainVerified = try container.decodeIfPresent(Bool.self, forKey: .servingDomainVerified)
         servingDomainCheckedAt = try container.decodeIfPresent(Date.self, forKey: .servingDomainCheckedAt)
@@ -256,6 +268,8 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         nonAdditionalPropertyKeys.insert("status")
         nonAdditionalPropertyKeys.insert("quality_score")
         nonAdditionalPropertyKeys.insert("cross_fill")
+        nonAdditionalPropertyKeys.insert("contextual_without_consent")
+        nonAdditionalPropertyKeys.insert("enhanced_capping")
         nonAdditionalPropertyKeys.insert("serving_domain")
         nonAdditionalPropertyKeys.insert("serving_domain_verified")
         nonAdditionalPropertyKeys.insert("serving_domain_checked_at")

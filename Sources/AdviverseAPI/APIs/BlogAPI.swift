@@ -262,10 +262,10 @@ open class BlogAPI {
      Delete a blog post
      
      - parameter id: (path)  
-     - returns: AdminControllerSetStatus201Response
+     - returns: ComplianceControllerComplete201Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func blogControllerRemove(id: String) async throws -> AdminControllerSetStatus201Response {
+    open class func blogControllerRemove(id: String) async throws -> ComplianceControllerComplete201Response {
         return try await blogControllerRemoveWithRequestBuilder(id: id).execute().body
     }
 
@@ -280,9 +280,9 @@ open class BlogAPI {
        - type: http
        - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<AdminControllerSetStatus201Response> 
+     - returns: RequestBuilder<ComplianceControllerComplete201Response> 
      */
-    open class func blogControllerRemoveWithRequestBuilder(id: String) -> RequestBuilder<AdminControllerSetStatus201Response> {
+    open class func blogControllerRemoveWithRequestBuilder(id: String) -> RequestBuilder<ComplianceControllerComplete201Response> {
         var localVariablePath = "/v1/admin/blog/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -298,7 +298,7 @@ open class BlogAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<AdminControllerSetStatus201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<ComplianceControllerComplete201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }

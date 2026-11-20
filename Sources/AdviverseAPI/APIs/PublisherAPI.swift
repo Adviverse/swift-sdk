@@ -319,6 +319,51 @@ open class PublisherAPI {
     }
 
     /**
+     Get one property
+     
+     - parameter id: (path)  
+     - returns: PubProperty
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    open class func publisherControllerGetProperty(id: String) async throws -> PubProperty {
+        return try await publisherControllerGetPropertyWithRequestBuilder(id: id).execute().body
+    }
+
+    /**
+     Get one property
+     - GET /v1/publisher/properties/{id}
+     - Returns one property (same shape as an item of the list, including `trust_progress` and the resolved consent switches `contextual_without_consent` / `enhanced_capping`). 404 if not found, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope `read` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - parameter id: (path)  
+     - returns: RequestBuilder<PubProperty> 
+     */
+    open class func publisherControllerGetPropertyWithRequestBuilder(id: String) -> RequestBuilder<PubProperty> {
+        var localVariablePath = "/v1/publisher/properties/{id}"
+        let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
+        let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        localVariablePath = localVariablePath.replacingOccurrences(of: "{id}", with: idPostEscape, options: .literal, range: nil)
+        let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
+        let localVariableParameters: [String: Any]? = nil
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            :
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<PubProperty>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
+    }
+
+    /**
      List your mobile and CTV apps
      
      - returns: [PubProperty]
@@ -772,7 +817,7 @@ open class PublisherAPI {
     /**
      Update a placement
      - PATCH /v1/publisher/placements/{id}
-     - Patches `name`, `floorCpm`, `revShare`, `auctionType`, `passbackUrl`, `status` (`active`/`paused`), house/yield flags, and the dynamic-floor settings `floorAuto` (let the yield optimizer manage the floor) and `floorSoft` (soft reserve). Returns the updated row and republishes the serving index. 404 if the placement is not found among your properties.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - Patches `name`, `floorCpm`, `revShare`, `auctionType`, `passbackUrl`, `status` (`active`/`paused`), house/yield flags, and the dynamic-floor settings `floorAuto` (let the yield optimizer manage the floor) and `floorSoft` (soft reserve), and `frequencyCap` (`{ impressions, windowSeconds }`; `{}` or `null` removes it). Returns the updated row and republishes the serving index. 404 if the placement is not found among your properties.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
      - API Key:
        - type: apiKey x-api-key (HEADER)
        - name: apiKey
@@ -819,7 +864,7 @@ open class PublisherAPI {
     /**
      Update a property
      - PATCH /v1/publisher/properties/{id}
-     - Patches `name`, `domain`, `category`, `verificationMethod` and `crossFill` (opt in to filling this property with other-network demand). `category` is a site-niche id from GET /v1/site-niches and marks the niche as set by hand (`category_source: manual`, never overwritten by auto-detection); send 0 to hand it back to auto-detection. 400 for an unknown id. Changing `domain` also drops a trusted property back to `unverified` (unless an admin locked its trust). Changing `domain` resets `verification_status` to `unverified`, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - Patches `name`, `domain`, `category`, `verificationMethod` and `crossFill` (opt in to filling this property with other-network demand). `contextualWithoutConsent` (Ads before consent: unanswered/rejected visitors get contextual ads, no identifier) and `enhancedCapping` (Enhanced frequency capping: outside the EEA/UK/CH, no GPC/opt-out, contextual caps add browser signals and an SDK canvas hash) are written to this property's consent config — the same settings as POST /v1/publisher/consent-config with this propertyId; the rest of that config is kept. `category` is a site-niche id from GET /v1/site-niches and marks the niche as set by hand (`category_source: manual`, never overwritten by auto-detection); send 0 to hand it back to auto-detection. 400 for an unknown id. Changing `domain` also drops a trusted property back to `unverified` (unless an admin locked its trust). Changing `domain` resets `verification_status` to `unverified`, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
      - API Key:
        - type: apiKey x-api-key (HEADER)
        - name: apiKey
@@ -865,7 +910,7 @@ open class PublisherAPI {
     /**
      Verify property ownership
      - POST /v1/publisher/properties/{id}/verify
-     - Checks the property for its verification token using its method: `dns` looks up a TXT record at `adviverse-verify.<domain>`, `file` fetches `http://<domain>/.well-known/adviverse-verify.txt`, `meta` fetches the homepage and looks for the token. On success the property becomes `verified`, a `pending` property is auto-approved, and the serving index is republished so its placements start serving. A failed check is not an error: it returns `verified: false` with the token and method to show the publisher.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - Checks the property for its verification token using its method: `dns` looks up a TXT record at `adviverse-verify.<domain>`, `file` fetches `http://<domain>/.well-known/adviverse-verify.txt`, `meta` fetches the homepage and looks for the token. On success the property becomes `verified`, a `pending` property is auto-approved, and the serving index is republished so its placements start serving. File and meta checks add a cache-busting `?adviverse_verify=<ms>` query so a CDN-cached page cannot fail them. A failed check is not an error: it returns `verified: false` with `error` (dns_lookup_failed | token_not_found | http_error | fetch_failed), a human `message`, and `check` (what was fetched or queried and what it answered, including `age` and `cf-cache-status`).  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
      - API Key:
        - type: apiKey x-api-key (HEADER)
        - name: apiKey
