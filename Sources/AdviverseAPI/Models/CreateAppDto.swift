@@ -33,8 +33,9 @@ public struct CreateAppDto: Codable, JSONEncodable, Hashable {
     public var appStoreId: String?
     public var category: Double?
     public var ctvMeta: AnyCodable?
+    public var developerPropertyId: String?
 
-    public init(kind: Kind, name: String, bundleId: String, platform: Platform, storeUrl: String? = nil, appStoreId: String? = nil, category: Double? = nil, ctvMeta: AnyCodable? = nil) {
+    public init(kind: Kind, name: String, bundleId: String, platform: Platform, storeUrl: String? = nil, appStoreId: String? = nil, category: Double? = nil, ctvMeta: AnyCodable? = nil, developerPropertyId: String? = nil) {
         self.kind = kind
         self.name = name
         self.bundleId = bundleId
@@ -43,6 +44,7 @@ public struct CreateAppDto: Codable, JSONEncodable, Hashable {
         self.appStoreId = appStoreId
         self.category = category
         self.ctvMeta = ctvMeta
+        self.developerPropertyId = developerPropertyId
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
@@ -54,6 +56,7 @@ public struct CreateAppDto: Codable, JSONEncodable, Hashable {
         case appStoreId
         case category
         case ctvMeta
+        case developerPropertyId
     }
 
     // Encodable protocol methods
@@ -68,6 +71,7 @@ public struct CreateAppDto: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(appStoreId, forKey: .appStoreId)
         try container.encodeIfPresent(category, forKey: .category)
         try container.encodeIfPresent(ctvMeta, forKey: .ctvMeta)
+        try container.encodeIfPresent(developerPropertyId, forKey: .developerPropertyId)
     }
 }
 

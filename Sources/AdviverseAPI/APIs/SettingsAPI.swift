@@ -272,13 +272,53 @@ open class SettingsAPI {
     }
 
     /**
+     Revoke the API key making this request
+     
+     - returns: SettingsControllerRevokeCurrentKey200Response
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    open class func settingsControllerRevokeCurrentKey() async throws -> SettingsControllerRevokeCurrentKey200Response {
+        return try await settingsControllerRevokeCurrentKeyWithRequestBuilder().execute().body
+    }
+
+    /**
+     Revoke the API key making this request
+     - DELETE /v1/keys/current
+     - Revokes the key sent in `x-api-key` (used by `adviverse logout`) and removes it from the engine's Redis credential map. 400 when called with a session token instead of an API key.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`).
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - returns: RequestBuilder<SettingsControllerRevokeCurrentKey200Response> 
+     */
+    open class func settingsControllerRevokeCurrentKeyWithRequestBuilder() -> RequestBuilder<SettingsControllerRevokeCurrentKey200Response> {
+        let localVariablePath = "/v1/keys/current"
+        let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
+        let localVariableParameters: [String: Any]? = nil
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            :
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<SettingsControllerRevokeCurrentKey200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
+    }
+
+    /**
      Revoke an API key
      
      - parameter id: (path)  
-     - returns: SettingsControllerRevokeKey200Response
+     - returns: SettingsControllerRevokeCurrentKey200Response
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func settingsControllerRevokeKey(id: String) async throws -> SettingsControllerRevokeKey200Response {
+    open class func settingsControllerRevokeKey(id: String) async throws -> SettingsControllerRevokeCurrentKey200Response {
         return try await settingsControllerRevokeKeyWithRequestBuilder(id: id).execute().body
     }
 
@@ -293,9 +333,9 @@ open class SettingsAPI {
        - type: http
        - name: bearer
      - parameter id: (path)  
-     - returns: RequestBuilder<SettingsControllerRevokeKey200Response> 
+     - returns: RequestBuilder<SettingsControllerRevokeCurrentKey200Response> 
      */
-    open class func settingsControllerRevokeKeyWithRequestBuilder(id: String) -> RequestBuilder<SettingsControllerRevokeKey200Response> {
+    open class func settingsControllerRevokeKeyWithRequestBuilder(id: String) -> RequestBuilder<SettingsControllerRevokeCurrentKey200Response> {
         var localVariablePath = "/v1/keys/{id}"
         let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
         let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -311,7 +351,7 @@ open class SettingsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<SettingsControllerRevokeKey200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<SettingsControllerRevokeCurrentKey200Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
     }

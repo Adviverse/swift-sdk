@@ -26,13 +26,15 @@ public struct UpdateAppDto: Codable, JSONEncodable, Hashable {
     public var ctvMeta: AnyCodable?
     public var storeUrl: String?
     public var platform: Platform?
+    public var developerPropertyId: String?
 
-    public init(appAdsTxt: [AppAdsTxtEntryDto]? = nil, skadnetworkIds: [String]? = nil, ctvMeta: AnyCodable? = nil, storeUrl: String? = nil, platform: Platform? = nil) {
+    public init(appAdsTxt: [AppAdsTxtEntryDto]? = nil, skadnetworkIds: [String]? = nil, ctvMeta: AnyCodable? = nil, storeUrl: String? = nil, platform: Platform? = nil, developerPropertyId: String? = nil) {
         self.appAdsTxt = appAdsTxt
         self.skadnetworkIds = skadnetworkIds
         self.ctvMeta = ctvMeta
         self.storeUrl = storeUrl
         self.platform = platform
+        self.developerPropertyId = developerPropertyId
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
@@ -41,6 +43,7 @@ public struct UpdateAppDto: Codable, JSONEncodable, Hashable {
         case ctvMeta
         case storeUrl
         case platform
+        case developerPropertyId
     }
 
     // Encodable protocol methods
@@ -52,6 +55,7 @@ public struct UpdateAppDto: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(ctvMeta, forKey: .ctvMeta)
         try container.encodeIfPresent(storeUrl, forKey: .storeUrl)
         try container.encodeIfPresent(platform, forKey: .platform)
+        try container.encodeIfPresent(developerPropertyId, forKey: .developerPropertyId)
     }
 }
 

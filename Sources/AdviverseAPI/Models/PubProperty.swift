@@ -69,11 +69,13 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
     public var appAdsTxt: [[String: AnyCodable]]?
     public var skadnetworkIds: [String]?
     public var ctvMeta: [String: AnyCodable]?
+    /** Apps: the website property whose /app-ads.txt verifies the app */
+    public var developerPropertyId: UUID?
     public var createdAt: Date?
     public var updatedAt: Date?
     public var deletedAt: Date?
 
-    public init(id: UUID? = nil, publisherId: UUID? = nil, kind: String? = nil, name: String? = nil, domain: String? = nil, category: Int? = nil, categorySource: CategorySource? = nil, categories: [PubPropertyCategoriesInner]? = nil, classifiedAt: Date? = nil, classifyError: String? = nil, trustTier: TrustTier? = nil, trustLocked: Bool? = nil, verifiedAt: Date? = nil, trustProgress: TrustProgress? = nil, verificationStatus: VerificationStatus? = nil, verificationMethod: String? = nil, verificationToken: String? = nil, status: Status? = nil, qualityScore: String? = nil, crossFill: Bool? = nil, contextualWithoutConsent: Bool? = nil, enhancedCapping: Bool? = nil, servingDomain: String? = nil, servingDomainVerified: Bool? = nil, servingDomainCheckedAt: Date? = nil, bundleId: String? = nil, storeUrl: String? = nil, platform: String? = nil, appStoreId: String? = nil, appAdsTxt: [[String: AnyCodable]]? = nil, skadnetworkIds: [String]? = nil, ctvMeta: [String: AnyCodable]? = nil, createdAt: Date? = nil, updatedAt: Date? = nil, deletedAt: Date? = nil) {
+    public init(id: UUID? = nil, publisherId: UUID? = nil, kind: String? = nil, name: String? = nil, domain: String? = nil, category: Int? = nil, categorySource: CategorySource? = nil, categories: [PubPropertyCategoriesInner]? = nil, classifiedAt: Date? = nil, classifyError: String? = nil, trustTier: TrustTier? = nil, trustLocked: Bool? = nil, verifiedAt: Date? = nil, trustProgress: TrustProgress? = nil, verificationStatus: VerificationStatus? = nil, verificationMethod: String? = nil, verificationToken: String? = nil, status: Status? = nil, qualityScore: String? = nil, crossFill: Bool? = nil, contextualWithoutConsent: Bool? = nil, enhancedCapping: Bool? = nil, servingDomain: String? = nil, servingDomainVerified: Bool? = nil, servingDomainCheckedAt: Date? = nil, bundleId: String? = nil, storeUrl: String? = nil, platform: String? = nil, appStoreId: String? = nil, appAdsTxt: [[String: AnyCodable]]? = nil, skadnetworkIds: [String]? = nil, ctvMeta: [String: AnyCodable]? = nil, developerPropertyId: UUID? = nil, createdAt: Date? = nil, updatedAt: Date? = nil, deletedAt: Date? = nil) {
         self.id = id
         self.publisherId = publisherId
         self.kind = kind
@@ -106,6 +108,7 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         self.appAdsTxt = appAdsTxt
         self.skadnetworkIds = skadnetworkIds
         self.ctvMeta = ctvMeta
+        self.developerPropertyId = developerPropertyId
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.deletedAt = deletedAt
@@ -144,6 +147,7 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         case appAdsTxt = "app_ads_txt"
         case skadnetworkIds = "skadnetwork_ids"
         case ctvMeta = "ctv_meta"
+        case developerPropertyId = "developer_property_id"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case deletedAt = "deleted_at"
@@ -200,6 +204,7 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         try container.encodeIfPresent(appAdsTxt, forKey: .appAdsTxt)
         try container.encodeIfPresent(skadnetworkIds, forKey: .skadnetworkIds)
         try container.encodeIfPresent(ctvMeta, forKey: .ctvMeta)
+        try container.encodeIfPresent(developerPropertyId, forKey: .developerPropertyId)
         try container.encodeIfPresent(createdAt, forKey: .createdAt)
         try container.encodeIfPresent(updatedAt, forKey: .updatedAt)
         try container.encodeIfPresent(deletedAt, forKey: .deletedAt)
@@ -244,6 +249,7 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         appAdsTxt = try container.decodeIfPresent([[String: AnyCodable]].self, forKey: .appAdsTxt)
         skadnetworkIds = try container.decodeIfPresent([String].self, forKey: .skadnetworkIds)
         ctvMeta = try container.decodeIfPresent([String: AnyCodable].self, forKey: .ctvMeta)
+        developerPropertyId = try container.decodeIfPresent(UUID.self, forKey: .developerPropertyId)
         createdAt = try container.decodeIfPresent(Date.self, forKey: .createdAt)
         updatedAt = try container.decodeIfPresent(Date.self, forKey: .updatedAt)
         deletedAt = try container.decodeIfPresent(Date.self, forKey: .deletedAt)
@@ -280,6 +286,7 @@ public struct PubProperty: Codable, JSONEncodable, Hashable {
         nonAdditionalPropertyKeys.insert("app_ads_txt")
         nonAdditionalPropertyKeys.insert("skadnetwork_ids")
         nonAdditionalPropertyKeys.insert("ctv_meta")
+        nonAdditionalPropertyKeys.insert("developer_property_id")
         nonAdditionalPropertyKeys.insert("created_at")
         nonAdditionalPropertyKeys.insert("updated_at")
         nonAdditionalPropertyKeys.insert("deleted_at")

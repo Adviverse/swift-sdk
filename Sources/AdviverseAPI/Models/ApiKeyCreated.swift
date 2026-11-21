@@ -12,13 +12,16 @@ import AnyCodable
 
 public struct ApiKeyCreated: Codable, JSONEncodable, Hashable {
 
+    /** The key id (for DELETE /v1/keys/{id}). */
+    public var id: UUID?
     /** Full key, shown only once. */
     public var key: String
     public var _prefix: String
     public var scopes: [String]
     public var expiresAt: Date?
 
-    public init(key: String, _prefix: String, scopes: [String], expiresAt: Date?) {
+    public init(id: UUID? = nil, key: String, _prefix: String, scopes: [String], expiresAt: Date?) {
+        self.id = id
         self.key = key
         self._prefix = _prefix
         self.scopes = scopes
@@ -26,6 +29,7 @@ public struct ApiKeyCreated: Codable, JSONEncodable, Hashable {
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
+        case id
         case key
         case _prefix = "prefix"
         case scopes
@@ -36,6 +40,7 @@ public struct ApiKeyCreated: Codable, JSONEncodable, Hashable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(id, forKey: .id)
         try container.encode(key, forKey: .key)
         try container.encode(_prefix, forKey: ._prefix)
         try container.encode(scopes, forKey: .scopes)

@@ -14,7 +14,8 @@ public struct CreatePlacementDto: Codable, JSONEncodable, Hashable {
 
     static let floorCpmRule = NumericRule<Double>(minimum: 0, exclusiveMinimum: false, maximum: nil, exclusiveMaximum: false, multipleOf: nil)
     static let houseShareRule = NumericRule<Double>(minimum: 0, exclusiveMinimum: false, maximum: 1, exclusiveMaximum: false, multipleOf: nil)
-    public var propertyId: String
+    public var propertyId: String?
+    public var appId: String?
     public var name: String
     public var format: String
     public var width: Double?
@@ -31,8 +32,9 @@ public struct CreatePlacementDto: Codable, JSONEncodable, Hashable {
     public var houseBackfill: Bool?
     public var floorFallback: Bool?
 
-    public init(propertyId: String, name: String, format: String, width: Double? = nil, height: Double? = nil, responsive: Bool? = nil, floorCpm: Double? = nil, revShare: Double? = nil, auctionType: String? = nil, passbackUrl: String? = nil, frequencyCap: AnyCodable? = nil, settings: AnyCodable? = nil, houseOnly: Bool? = nil, houseShare: Double? = nil, houseBackfill: Bool? = nil, floorFallback: Bool? = nil) {
+    public init(propertyId: String? = nil, appId: String? = nil, name: String, format: String, width: Double? = nil, height: Double? = nil, responsive: Bool? = nil, floorCpm: Double? = nil, revShare: Double? = nil, auctionType: String? = nil, passbackUrl: String? = nil, frequencyCap: AnyCodable? = nil, settings: AnyCodable? = nil, houseOnly: Bool? = nil, houseShare: Double? = nil, houseBackfill: Bool? = nil, floorFallback: Bool? = nil) {
         self.propertyId = propertyId
+        self.appId = appId
         self.name = name
         self.format = format
         self.width = width
@@ -52,6 +54,7 @@ public struct CreatePlacementDto: Codable, JSONEncodable, Hashable {
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case propertyId
+        case appId
         case name
         case format
         case width
@@ -73,7 +76,8 @@ public struct CreatePlacementDto: Codable, JSONEncodable, Hashable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(propertyId, forKey: .propertyId)
+        try container.encodeIfPresent(propertyId, forKey: .propertyId)
+        try container.encodeIfPresent(appId, forKey: .appId)
         try container.encode(name, forKey: .name)
         try container.encode(format, forKey: .format)
         try container.encodeIfPresent(width, forKey: .width)

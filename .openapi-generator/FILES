@@ -18,6 +18,7 @@ Sources/AdviverseAPI/APIs/ComboAPI.swift
 Sources/AdviverseAPI/APIs/ComplianceAPI.swift
 Sources/AdviverseAPI/APIs/ConversionsAPI.swift
 Sources/AdviverseAPI/APIs/DealsAPI.swift
+Sources/AdviverseAPI/APIs/DeviceAuthAPI.swift
 Sources/AdviverseAPI/APIs/DoohAPI.swift
 Sources/AdviverseAPI/APIs/EdgeAPI.swift
 Sources/AdviverseAPI/APIs/ExportsAPI.swift
@@ -220,6 +221,13 @@ Sources/AdviverseAPI/Models/DealsControllerLookupAdvertiser200Response.swift
 Sources/AdviverseAPI/Models/DealsControllerPreviewClaim200Response.swift
 Sources/AdviverseAPI/Models/DealsControllerStatus201Response.swift
 Sources/AdviverseAPI/Models/DepositDto.swift
+Sources/AdviverseAPI/Models/DeviceApproveDto.swift
+Sources/AdviverseAPI/Models/DeviceAuthControllerApprove201Response.swift
+Sources/AdviverseAPI/Models/DeviceAuthControllerCode200Response.swift
+Sources/AdviverseAPI/Models/DeviceAuthControllerDescribe200Response.swift
+Sources/AdviverseAPI/Models/DeviceAuthControllerToken200Response.swift
+Sources/AdviverseAPI/Models/DeviceCodeDto.swift
+Sources/AdviverseAPI/Models/DeviceTokenDto.swift
 Sources/AdviverseAPI/Models/DoohControllerList200ResponseInner.swift
 Sources/AdviverseAPI/Models/DoohControllerSaveSetup201Response.swift
 Sources/AdviverseAPI/Models/DoohSetupDto.swift
@@ -471,7 +479,7 @@ Sources/AdviverseAPI/Models/SettingsControllerBidRec200Response.swift
 Sources/AdviverseAPI/Models/SettingsControllerCreateTerminalToken201Response.swift
 Sources/AdviverseAPI/Models/SettingsControllerCreateTerminalToken201ResponseSwitch.swift
 Sources/AdviverseAPI/Models/SettingsControllerListTerminalTokens200ResponseInner.swift
-Sources/AdviverseAPI/Models/SettingsControllerRevokeKey200Response.swift
+Sources/AdviverseAPI/Models/SettingsControllerRevokeCurrentKey200Response.swift
 Sources/AdviverseAPI/Models/SettingsControllerRotateTerminalToken201Response.swift
 Sources/AdviverseAPI/Models/SettingsControllerSetTerminalTokenPolicy200Response.swift
 Sources/AdviverseAPI/Models/SettingsControllerUpdateNetwork200Response.swift
@@ -511,6 +519,7 @@ Sources/AdviverseAPI/Models/UpdateScreenDto.swift
 Sources/AdviverseAPI/Models/UpdateSurfaceDto.swift
 Sources/AdviverseAPI/Models/UpdateWebhookDto.swift
 Sources/AdviverseAPI/Models/VerificationControllerCategories200ResponseInner.swift
+Sources/AdviverseAPI/Models/VerifyAppDto.swift
 Sources/AdviverseAPI/Models/WebhookDelivery.swift
 Sources/AdviverseAPI/Models/WebhookDeliveryResult.swift
 Sources/AdviverseAPI/Models/WebhookEndpoint.swift

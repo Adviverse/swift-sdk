@@ -13,7 +13,7 @@ import AnyCodable
 public struct PublisherControllerVerify201ResponseCheck: Codable, JSONEncodable, Hashable {
 
     public var method: String?
-    /** URL fetched (file/meta) or DNS name queried (dns) */
+    /** URL fetched (file/meta/app-ads.txt/store listing) or DNS name queried (dns) */
     public var target: String
     public var status: Int?
     public var finalUrl: String?

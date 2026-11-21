@@ -71,7 +71,7 @@ open class PublisherAPI {
     /**
      Register a mobile or CTV app
      - POST /v1/publisher/apps
-     - Creates a `mobile_app` or `ctv` property from `kind`, `name`, `bundleId` and `platform` (ios, android, roku, firetv, appletv, androidtv, web), with optional `storeUrl`, `appStoreId`, `category` and `ctvMeta`. The bundle id is stored in both `bundle_id` and `domain`; the app enters the normal `pending` approval flow with file verification.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - Creates a `mobile_app` or `ctv` property from `kind`, `name`, `bundleId` and `platform` (ios, android, roku, firetv, appletv, androidtv, web), with optional `storeUrl`, `appStoreId`, `category` and `ctvMeta`. The bundle id is stored in both `bundle_id` and `domain`. Optional `developerPropertyId` links one of your website properties as the developer site. The app starts `pending` / `unverified`; prove it with POST /v1/publisher/apps/{id}/verify (IAB app-ads.txt on the verified developer site, optionally plus the store listing), which approves it. For QA before verification, request ads with the test tag `tk_test`, which always fills. 400 if `developerPropertyId` is not one of your website properties.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
      - API Key:
        - type: apiKey x-api-key (HEADER)
        - name: apiKey
@@ -113,7 +113,7 @@ open class PublisherAPI {
     /**
      Create a placement
      - POST /v1/publisher/placements
-     - Creates an ad unit on one of your properties (`propertyId`, `name`, `format` required) with a generated `tag_key`. Optional fields cover size (`width`/`height` or `responsive`), `floorCpm`, `revShare` (defaults to the network rev-share), `auctionType` (default `first_price`), `passbackUrl`, `frequencyCap`, format `settings`, and yield fill (`houseOnly`, `houseShare` clamped to 0-1, `houseBackfill`, `floorFallback`). Popunders default to a 1-per-visitor-per-24h frequency cap unless `frequencyCap` is given (`{}` opts out). The serving index is republished. 404 if the property is missing, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - Creates an ad unit on one of your properties (`name`, `format` and exactly one of `propertyId` / `appId` required; an app id from /v1/publisher/apps is a valid property id) with a generated `tag_key`. On a mobile_app or ctv property only app formats are accepted (banner, native, interstitial, rewarded, app_open, video, audio, carousel, pod, direct_link); web-only formats such as popunder, social_bar and in_page_push return 400. Optional fields cover size (`width`/`height` or `responsive`), `floorCpm`, `revShare` (defaults to the network rev-share), `auctionType` (default `first_price`), `passbackUrl`, `frequencyCap`, format `settings`, and yield fill (`houseOnly`, `houseShare` clamped to 0-1, `houseBackfill`, `floorFallback`). Popunders default to a 1-per-visitor-per-24h frequency cap unless `frequencyCap` is given (`{}` opts out). The serving index is republished. 404 if the property is missing, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
      - API Key:
        - type: apiKey x-api-key (HEADER)
        - name: apiKey
@@ -529,6 +529,51 @@ open class PublisherAPI {
     }
 
     /**
+     Delete a mobile or CTV app
+     
+     - parameter id: (path)  
+     - returns: AuthControllerResendVerification201Response
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    open class func publisherControllerRemoveApp(id: String) async throws -> AuthControllerResendVerification201Response {
+        return try await publisherControllerRemoveAppWithRequestBuilder(id: id).execute().body
+    }
+
+    /**
+     Delete a mobile or CTV app
+     - DELETE /v1/publisher/apps/{id}
+     - Soft-deletes the app and all of its placements, then republishes the serving index so ads stop promptly (same as deleting a property). 404 if not found or not an app, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - parameter id: (path)  
+     - returns: RequestBuilder<AuthControllerResendVerification201Response> 
+     */
+    open class func publisherControllerRemoveAppWithRequestBuilder(id: String) -> RequestBuilder<AuthControllerResendVerification201Response> {
+        var localVariablePath = "/v1/publisher/apps/{id}"
+        let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
+        let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        localVariablePath = localVariablePath.replacingOccurrences(of: "{id}", with: idPostEscape, options: .literal, range: nil)
+        let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
+        let localVariableParameters: [String: Any]? = nil
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            :
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<AuthControllerResendVerification201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "DELETE", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
+    }
+
+    /**
      Delete a property
      
      - parameter id: (path)  
@@ -770,7 +815,7 @@ open class PublisherAPI {
     /**
      Update app-ads.txt, SKAdNetwork and CTV metadata
      - PATCH /v1/publisher/apps/{id}
-     - Patches only the fields sent: `appAdsTxt` (authorized-seller entries `{domain, sellerId, relationship?, certId?}`, normalized and invalid ones dropped), `skadnetworkIds`, `ctvMeta`, `storeUrl`, `platform`. Republishes the serving index. 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - Patches only the fields sent: `appAdsTxt` (authorized-seller entries `{domain, sellerId, relationship?, certId?}`, normalized and invalid ones dropped), `skadnetworkIds`, `ctvMeta`, `storeUrl`, `platform`, `developerPropertyId` (one of your website properties; `null` unlinks; 400 otherwise). Republishes the serving index. 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
      - API Key:
        - type: apiKey x-api-key (HEADER)
        - name: apiKey
@@ -932,6 +977,53 @@ open class PublisherAPI {
 
         let localVariableNillableHeaders: [String: Any?] = [
             :
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<PublisherControllerVerify201Response>.Type = AdviverseAPIAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true)
+    }
+
+    /**
+     Verify a mobile or CTV app
+     
+     - parameter id: (path)  
+     - parameter verifyAppDto: (body)  
+     - returns: PublisherControllerVerify201Response
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    open class func publisherControllerVerifyApp(id: String, verifyAppDto: VerifyAppDto) async throws -> PublisherControllerVerify201Response {
+        return try await publisherControllerVerifyAppWithRequestBuilder(id: id, verifyAppDto: verifyAppDto).execute().body
+    }
+
+    /**
+     Verify a mobile or CTV app
+     - POST /v1/publisher/apps/{id}/verify
+     - Body `{method?: \"developer_site\" | \"store_listing\"}` (default `developer_site`). `developer_site`: the app's `developerPropertyId` must be one of your website properties and already verified; its `https://<domain>/app-ads.txt` (cache-busted, http fallback) must contain `adviverse.com, <publisherAccountId>, DIRECT` (case/space-insensitive; see GET /v1/publisher/apps/{id}/app-ads.txt). `store_listing`: `storeUrl` must be on apps.apple.com or play.google.com, answer 200 and show the Play package id (`id=`) or the App Store id; then the developer_site check also runs. On success the app becomes `verified`, a `pending` app is approved and the serving index is republished. A failed check returns `verified: false` with `error` (no_developer_property | developer_property_unverified | app_ads_txt_missing_line | http_error | fetch_failed | store_listing_not_found), a `message` saying what to put where, and `check`. Same shape as property verify.  Auth: session bearer token, or API key (x-api-key) with scope `write` (or `*`). Roles: publisher.
+     - API Key:
+       - type: apiKey x-api-key (HEADER)
+       - name: apiKey
+     - Bearer Token:
+       - type: http
+       - name: bearer
+     - parameter id: (path)  
+     - parameter verifyAppDto: (body)  
+     - returns: RequestBuilder<PublisherControllerVerify201Response> 
+     */
+    open class func publisherControllerVerifyAppWithRequestBuilder(id: String, verifyAppDto: VerifyAppDto) -> RequestBuilder<PublisherControllerVerify201Response> {
+        var localVariablePath = "/v1/publisher/apps/{id}/verify"
+        let idPreEscape = "\(APIHelper.mapValueToPathItem(id))"
+        let idPostEscape = idPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        localVariablePath = localVariablePath.replacingOccurrences(of: "{id}", with: idPostEscape, options: .literal, range: nil)
+        let localVariableURLString = AdviverseAPIAPI.basePath + localVariablePath
+        let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: verifyAppDto)
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            "Content-Type": "application/json",
         ]
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
